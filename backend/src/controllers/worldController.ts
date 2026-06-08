@@ -1,87 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-
-// Stub persona used inside post responses
-const STUB_PERSONA = {
-  id: 'stub-persona-id',
-  name: 'Charles Babbage III',
-  handle: 'steam_coder_99',
-  avatar: '',
-  role: 'SCIENTIST',
-  influence_score: 87,
-};
-
-// Stub world used in world responses
-const STUB_WORLD = {
-  id: 'stub-world-id',
-  prompt: 'What if the internet was invented in 1890?',
-  name: 'The Victorian Web',
-  summary:
-    'In 1890, Charles Babbage completed the Analytical Engine, leading to a primitive steam-powered global network.',
-  era: 'Victorian Cyberpunk',
-  tech_level: 'Mechanical steam computation, punch-card data transfer',
-  gov_type: 'Corporatist Monarchy',
-  status: 'ready',
-  created_at: new Date().toISOString(),
-  updated_at: new Date().toISOString(),
-  events: [
-    {
-      id: 'stub-event-1',
-      world_id: 'stub-world-id',
-      year: '1890',
-      title: 'The Analytical Engine Completed',
-      description:
-        'Babbage finalizes the Analytical Engine with funding from the Crown.',
-      impact:
-        'Triggered a computing revolution 60 years ahead of real history.',
-    },
-    {
-      id: 'stub-event-2',
-      world_id: 'stub-world-id',
-      year: '1895',
-      title: 'The Mechanical Net Goes Live',
-      description:
-        'The first inter-city punch-card telegraph network connects London and Edinburgh.',
-      impact: 'Enabled real-time financial and political communication.',
-    },
-  ],
-};
-
-const STUB_POST = {
-  id: 'stub-post-id',
-  world_id: 'stub-world-id',
-  persona_id: 'stub-persona-id',
-  content:
-    'Just upgraded the central steam-router. Speed is now up to 10 punch-cards per minute! #SteamNet #Innovation',
-  media_url: null,
-  media_type: 'TEXT',
-  likes_count: 420,
-  reposts_count: 17,
-  created_at: new Date().toISOString(),
-  persona: STUB_PERSONA,
-};
-
-const STUB_NEWS = {
-  id: 'stub-news-id',
-  world_id: 'stub-world-id',
-  title: 'Steam Parliament Passes Net Expansion Act',
-  content:
-    'The Imperial Steam Parliament voted 312-88 to fund expansion of the Mechanical Net to all major colonies.',
-  category: 'POLITICS',
-  publisher: 'The Chronos Daily',
-  created_at: new Date().toISOString(),
-};
-
-const STUB_AD = {
-  id: 'stub-ad-id',
-  world_id: 'stub-world-id',
-  company_name: 'BabbageCo Steam Solutions',
-  tagline: 'Compute at the speed of steam.',
-  description:
-    'Our Mark VII Analytical Coprocessor handles 500 calculations per hour. Order yours today.',
-  image_url: null,
-  price: '3 Sovereigns',
-  created_at: new Date().toISOString(),
-};
+import { worldService } from '../services/worldService';
 
 // POST /api/worlds
 export const createWorld = async (
@@ -91,12 +9,12 @@ export const createWorld = async (
 ): Promise<void> => {
   try {
     const { prompt } = req.body;
-    console.log(`[STUB] createWorld called with prompt: "${prompt}"`);
+    const world = await worldService.createWorldStub(String(prompt).trim());
 
     res.status(202).json({
       data: {
-        worldId: 'stub-world-id',
-        status: 'generating',
+        worldId: world.id,
+        status: world.status,
       },
       message: 'World generation started',
     });
@@ -112,8 +30,8 @@ export const getWorlds = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    console.log('[STUB] getWorlds called');
-    res.status(200).json({ data: [STUB_WORLD] });
+    const worlds = await worldService.getAllWorlds();
+    res.status(200).json({ data: worlds });
   } catch (err) {
     next(err);
   }
@@ -126,10 +44,15 @@ export const getWorldById = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const { id } = req.params;
-    console.log(`[STUB] getWorldById called with id: ${id}`);
+    const worldId = String(req.params.id);
+    const world = await worldService.getWorldById(worldId);
 
-    res.status(200).json({ data: STUB_WORLD });
+    if (!world) {
+      res.status(404).json({ error: 'World not found' });
+      return;
+    }
+
+    res.status(200).json({ data: world });
   } catch (err) {
     next(err);
   }
@@ -142,17 +65,18 @@ export const getWorldFeed = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const { id } = req.params;
+    const worldId = String(req.params.id);
     const limit = Math.min(parseInt(req.query.limit as string) || 10, 20);
-    console.log(`[STUB] getWorldFeed called — worldId: ${id}, limit: ${limit}`);
+    const cursor = req.query.cursor ? String(req.query.cursor) : undefined;
 
-    res.status(200).json({
-      data: {
-        posts: Array(limit).fill(STUB_POST),
-        nextCursor: new Date(Date.now() - 3600000).toISOString(),
-        hasMore: true,
-      },
-    });
+    const world = await worldService.getWorldById(worldId);
+    if (!world) {
+      res.status(404).json({ error: 'World not found' });
+      return;
+    }
+
+    const result = await worldService.getFeed(worldId, limit, cursor);
+    res.status(200).json({ data: result });
   } catch (err) {
     next(err);
   }
@@ -165,22 +89,16 @@ export const getWorldPersonas = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const { id } = req.params;
-    console.log(`[STUB] getWorldPersonas called — worldId: ${id}`);
+    const worldId = String(req.params.id);
 
-    res.status(200).json({
-      data: [
-        {
-          ...STUB_PERSONA,
-          world_id: 'stub-world-id',
-          bio: 'Lead engineer at His Majesty\'s Steam-Net Registry.',
-          followers_count: 14200,
-          following_count: 88,
-          interests: ['gears', 'punch-cards', 'tea'],
-          personality: 'Eccentric, highly technical, easily excited',
-        },
-      ],
-    });
+    const world = await worldService.getWorldById(worldId);
+    if (!world) {
+      res.status(404).json({ error: 'World not found' });
+      return;
+    }
+
+    const personas = await worldService.getPersonas(worldId);
+    res.status(200).json({ data: personas });
   } catch (err) {
     next(err);
   }
@@ -193,13 +111,17 @@ export const getWorldNews = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const { id } = req.params;
-    const { category } = req.query;
-    console.log(
-      `[STUB] getWorldNews called — worldId: ${id}, category: ${category || 'all'}`
-    );
+    const worldId = String(req.params.id);
+    const category = req.query.category ? String(req.query.category) : undefined;
 
-    res.status(200).json({ data: [STUB_NEWS] });
+    const world = await worldService.getWorldById(worldId);
+    if (!world) {
+      res.status(404).json({ error: 'World not found' });
+      return;
+    }
+
+    const news = await worldService.getNews(worldId, category);
+    res.status(200).json({ data: news });
   } catch (err) {
     next(err);
   }
@@ -212,10 +134,16 @@ export const getWorldAds = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const { id } = req.params;
-    console.log(`[STUB] getWorldAds called — worldId: ${id}`);
+    const worldId = String(req.params.id);
 
-    res.status(200).json({ data: [STUB_AD] });
+    const world = await worldService.getWorldById(worldId);
+    if (!world) {
+      res.status(404).json({ error: 'World not found' });
+      return;
+    }
+
+    const ads = await worldService.getAds(worldId);
+    res.status(200).json({ data: ads });
   } catch (err) {
     next(err);
   }
