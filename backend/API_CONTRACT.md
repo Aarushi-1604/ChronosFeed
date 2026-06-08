@@ -319,3 +319,5 @@ Returns alternate-era advertisements for the world.
 
 ## Field Name Convention (for Yeshwanth)
 All JSON output from AI prompts must use **snake_case** matching these exact field names. No camelCase. No renaming.
+
+**Base URL (production):** https://chronosfeed-production.up.railway.app
