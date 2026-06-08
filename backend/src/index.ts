@@ -2,6 +2,10 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 
+import worldRoutes from './routes/worlds';
+import personaRoutes from './routes/personas';
+import { errorHandler } from './middleware/errorHandler';
+
 dotenv.config();
 
 const app = express();
@@ -17,7 +21,7 @@ app.use(
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
-// Health check — confirms server + Supabase client loaded without error
+// Health check
 app.get('/health', (_req, res) => {
   res.json({
     status: 'ok',
@@ -26,10 +30,17 @@ app.get('/health', (_req, res) => {
   });
 });
 
+// API routes
+app.use('/api/worlds', worldRoutes);
+app.use('/api/personas', personaRoutes);
+
 // 404 fallback
 app.use((_req, res) => {
   res.status(404).json({ error: 'Route not found' });
 });
+
+// Global error handler — must be last
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(`ChronosFeed backend running on http://localhost:${PORT}`);
