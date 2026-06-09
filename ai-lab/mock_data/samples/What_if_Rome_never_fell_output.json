@@ -1,0 +1,39 @@
+{
+  "name": "The Eternal Imperium of Aeterna",
+  "summary": "Following the successful stabilization of the frontiers by Marcus Aurelius and the subsequent industrial integration of the steam-driven Antikythera mechanisms, Rome consolidated its reach across all habitable continents. The Empire transformed into a globe-spanning hegemony that successfully suppressed the tribal migrations through bureaucratic technological dominance. Today, the Eagle banners fly from the misty coasts of Britannia to the silk-laden markets of the Far Orient.",
+  "era": "2777 A.U.C. (Anno Urbis Conditae)",
+  "tech_level": "The Empire utilizes advanced steam-pneumatic logic engines developed from the rediscovered scrolls of Hero of Alexandria. These complex brass-wrought systems facilitate automated agricultural distribution and high-speed rail networks connecting the far-flung provinces.",
+  "gov_type": "The governance is a refined Technocratic Principate, where the Emperor rules in concert with a life-tenured Senate of appointed engineers and legal jurists. Every citizen's civic contribution is measured and optimized by the centralized archival systems located within the Palatine Hill.",
+  "events": [
+    {
+      "year": "235 AD",
+      "title": "The Alexandrian Industrial Accord",
+      "description": "Emperor Severus Alexander officially sanctioned the widespread implementation of refined steam power to alleviate the labor shortages caused by the plague. Guilds of master engineers were granted aristocratic privileges to oversee the construction of massive pneumatic irrigation pumps.",
+      "impact": "This initiative effectively ended the reliance on volatile slave labor and stabilized the grain supply across the Mediterranean. The resulting economic surplus allowed the legions to be equipped with standardized modular armor."
+    },
+    {
+      "year": "476 AD",
+      "title": "The Submission of Odoacer",
+      "description": "Rather than sacking the city, the Germanic chieftain Odoacer was defeated by the Empire's newly deployed thunder-cannons near the banks of the Po. He was forced to swear the Oath of Ravenna, pledging his people as auxiliary citizens tasked with manning the northern frontiers.",
+      "impact": "This singular victory established a precedent for integrating nomadic tribes as permanent imperial clients rather than enemies. It successfully prevented the fragmentation of the Western provinces for centuries to come."
+    },
+    {
+      "year": "1054 AD",
+      "title": "The Mapping of the Great Western Sea",
+      "description": "Admiral Caius Valerius successfully navigated the reinforced triremes powered by pressurized steam across the Atlantic Ocean. He planted the bronze laurel of Augustus upon the shores of the continent now known as Nova Roma.",
+      "impact": "The discovery brought untold wealth in silver and rubber to the imperial treasury, further cementing the Emperor's divine authority. This expanded the map of the known world and initiated a massive colonial expansion project."
+    },
+    {
+      "year": "1620 AD",
+      "title": "The Synthesis of Legal Calculus",
+      "description": "Jurists and mathematicians finalized the Lex Computus, a binary system of governance designed to adjudicate disputes based on impartial logical parameters. This system removed the influence of corrupt provincial governors by subjecting all financial transactions to automated auditing.",
+      "impact": "Internal revolts became virtually non-existent as the populace gained faith in the absolute impartiality of the state's digital-mechanical logic. The Empire reached an unprecedented state of domestic tranquility."
+    },
+    {
+      "year": "2024 AD",
+      "title": "The Launch of the Celestial Aquila",
+      "description": "The Imperial Space Agency utilized a massive electromagnetic catapult, the Caelum Cannon, to propel the first manned vessel into orbit around the moon. This achievement serves as a testament to the eternal ingenuity of the Roman spirit.",
+      "impact": "Dominion over the stars now beckons as the next frontier for the expansion of the Pax Romana. This feat solidified the Empire's status as the sole, eternal apex of human civilization."
+    }
+  ]
+}

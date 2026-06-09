@@ -1,0 +1,39 @@
+{
+  "name": "The Eternal Yassa Hegemony",
+  "summary": "Following the survival of Möngke Khan and the successful implementation of a digitized administrative courier system, the Mongol Empire avoided fragmentation to consolidate a global Pax Mongolica. The Great Khanate now spans the entirety of Eurasia, governing through a sophisticated synthesis of Steppe meritocracy and Persian bureaucracy. Through centralized control of the Silk Roads, the Empire has fostered a singular, borderless world-state that emphasizes trade, religious tolerance, and iron-fisted stability.",
+  "era": "14th Century of the Common Era (Commonly referenced as the Era of the Unified Sun)",
+  "tech_level": "Technological progress is focused heavily on logistical efficiency, utilizing advanced hydraulic engineering and mechanical clockwork for regional navigation. While alchemy has advanced to include early chemical explosives and improved steel smelting, academic focus remains strictly on mathematics, linguistics, and the sciences of imperial administration.",
+  "gov_type": "The state operates as an absolute hereditary autocracy supported by the Yassa, a rigid and comprehensive legal code that dictates all social interactions. Provincial governors, known as Darughachi, are rotated every seven years to ensure that local loyalties never supersede the authority of the Great Khan in Karakorum.",
+  "events": [
+    {
+      "year": "1260",
+      "title": "The Decree of Perpetual Succession",
+      "description": "Möngke Khan officially establishes the Council of Nine, a permanent bureaucratic body tasked with succession planning to prevent the chaos of previous Kurultais. This decree binds all branches of the Borjigin clan to a strictly enforced system of seniority and merit-based administrative appointment.",
+      "impact": "The fractious internal wars that historically plagued the empire were permanently stifled by this rigid legal framework. It successfully concentrated fiscal power into the central treasury, enabling the construction of the Great Trans-Continental Road."
+    },
+    {
+      "year": "1298",
+      "title": "The Integration of the Yam-Intelligence Network",
+      "description": "The Empire implements the 'Golden Thread' system, an exhaustive network of relay stations that utilize semaphore towers alongside traditional horse couriers. This system allows for information to travel from Khanbaliq to the gates of Vienna in less than fifteen days.",
+      "impact": "This instantaneous communication effectively negated the possibility of local rebellions by ensuring the Imperial Guard could respond to unrest before it organized. It turned the vast distances of the empire into a manageable, singular domestic landscape."
+    },
+    {
+      "year": "1342",
+      "title": "The Great Sinicization of Law",
+      "description": "The Khanate mandates that all legal records and imperial correspondence be written in a standardized hybrid script derived from Uighur, Phags-pa, and Han characters. This linguistic reform establishes a singular administrative identity across the diverse ethnic landscapes of the occupied territories.",
+      "impact": "Bureaucratic friction between the Persian, Chinese, and Kipchak administrative zones was largely eliminated through this common intellectual language. It solidified the cultural hegemony of the Mongol elite by rendering local legal traditions obsolete."
+    },
+    {
+      "year": "1375",
+      "title": "The Oceanic Proclamation",
+      "description": "The Imperial Fleet, bolstered by advanced stern-post rudders and modular shipbuilding designs, dominates the Indian Ocean and establishes permanent trade hubs in the Malabar Coast. The Great Khan declares the entirety of the Indian Ocean as the 'Inner Lake' of the Mongol state.",
+      "impact": "This move effectively marginalized the maritime powers of Europe and the Mediterranean, forcing them into tributary vassalage. Global spice and silk trade became a state monopoly, ensuring the Empire’s coffers remained perpetually overflowing."
+    },
+    {
+      "year": "1412",
+      "title": "The Edict of Uniform Cultivation",
+      "description": "The state enforces an agrarian program that standardizes irrigation techniques and crop rotation cycles throughout the temperate zones of Eurasia. Massive labor forces, overseen by the Imperial Ministry of Agriculture, transform previously arid regions into fertile hubs of grain production.",
+      "impact": "The resulting surplus of resources ended the threat of famine and solidified the loyalty of the peasant classes toward the central government. This absolute control over the food supply rendered the empire immune to the economic collapse that traditionally follows environmental fluctuations."
+    }
+  ]
+}

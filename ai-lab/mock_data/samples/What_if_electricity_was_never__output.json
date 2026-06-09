@@ -1,0 +1,39 @@
+{
+  "name": "The Age of Pneumatic Aether",
+  "summary": "In this timeline, humanity failed to harness electromagnetic currents, turning instead to the refined arts of steam-pressure and intricate clockwork mechanics. Vast networks of brass pneumatic tubes snake through sprawling Victorian metropolises, delivering pressurized air to power the world's machinery. The absence of electric light has solidified a culture of nocturnal silence and hyper-efficient coal-gas luminescence.",
+  "era": "1924, The High Clockwork Epoch",
+  "tech_level": "Civilization relies on advanced steam-turbine engines and sophisticated pneumatic logic gates that mimic early computing functions. Information travels via high-pressure capsule systems and mechanical ticker-tapes driven by complex gear trains.",
+  "gov_type": "The world is governed by a loose coalition of Imperial Syndicates, each managing the vital coal and steam distribution grids. Local administration falls under the purview of Technocratic Guilds who regulate the maintenance of the pervasive brass piping infrastructure.",
+  "events": [
+    {
+      "year": "1798",
+      "title": "The Failure of the Voltaic Experiment",
+      "description": "Alessandro Volta attempted to demonstrate his chemical battery before the Royal Society, but the device suffered a catastrophic failure due to inferior zinc oxidation. The subsequent skepticism from the scientific community led to the complete abandonment of galvanism as a viable field of inquiry.",
+      "impact": "Natural philosophers redirected their research toward the development of high-pressure hydraulics and thermodynamics. This shift effectively scrubbed electrical theory from the history of Western invention."
+    },
+    {
+      "year": "1842",
+      "title": "Invention of the Pneumatic Loom",
+      "description": "Engineer Silas Thorne patented the first automated textile loom powered entirely by subterranean steam-pressure lines. The machine utilized delicate metal reeds and air-actuated pistons to weave silk at unprecedented speeds.",
+      "impact": "This invention triggered the great transition toward pressurized energy in urban manufacturing centers. Mechanical efficiency skyrocketed, cementing the dominance of steam-based labor over biological strength."
+    },
+    {
+      "year": "1879",
+      "title": "The Great Gas-Lighting Expansion",
+      "description": "As the possibility of light-emitting filaments remained undiscovered, city planners completed the global installation of the Triple-Distilled Coal Gas network. Elaborate networks of bronze lamp-posts were fitted with clockwork timers to automate the nightly illumination of all major capital cities.",
+      "impact": "The night became a domain of flickering, warm-hued gaslight rather than electric sterility. Societal patterns adjusted to favor evening commerce, sustaining the nocturnal economy for decades."
+    },
+    {
+      "year": "1905",
+      "title": "The Debut of the Atmospheric Analytical Engine",
+      "description": "Babbage's design was successfully refined by the Ada Lovelace Institute to use air-pressure differentials as a replacement for electrical signals. The machine processed complex ballistic equations for the Imperial Navy using thousands of tiny, pressurized brass bellows.",
+      "impact": "This breakthrough allowed for the creation of complex navigational computers without a single spark of electricity. It solidified the empire's control over maritime logistics through superior mechanical calculation."
+    },
+    {
+      "year": "1922",
+      "title": "The Trans-Continental Pneumatic Tube Expansion",
+      "description": "The completion of the London-to-Cairo pressurized delivery system allowed for the physical transport of documents and small parcels at supersonic speeds through vacuum-sealed pipes. Specialized courier pods are now propelled by precisely calculated bursts of compressed steam at each relay station.",
+      "impact": "Global communication accelerated to a physical, albeit mechanical, rhythm that defines modern life. Dependency on the integrity of the pipe-lines has turned city maintenance into a matter of national security."
+    }
+  ]
+}

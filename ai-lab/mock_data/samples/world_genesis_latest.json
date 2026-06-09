@@ -1,0 +1,39 @@
+{
+  "name": "The Galvanic Commonwealth",
+  "summary": "In the wake of Lord Kelvin’s breakthrough in sub-oceanic harmonic telegraphy in 1890, the world became instantly bound by the 'Aether-Net,' a global web of copper wires and mechanical analytical switchboards. This rapid digitization of Victorian society accelerated colonial expansion and concentrated global wealth into the hands of state-chartered telegraphic cartels. Consequently, the traditional boundaries of empires dissolved into virtual spheres of influence, paving the way for a highly connected yet volatile geopolitical landscape where stock tickers and pneumatic-mail servers dictate the fates of nations.",
+  "era": "Late Victorian Fin de Siècle / Early Information Age",
+  "tech_level": "Society relies on steam-powered Babbage-style analytical engines acting as regional servers, linked via massive transatlantic copper cables and pneumatic routing stations. Individual households access the 'Aether-Net' through brass-bound 'Telectroscopes' and printing telegraph terminals that output real-time stock, news, and personal correspondence. Mechanical data storage is maintained on miles of punched paper tape housed in vast, chilled subterranean archives.",
+  "gov_type": "Governments operate as 'Telegraphic Directorates,' where traditional parliaments are heavily influenced by state-run telecommunication monopolies and real-time electronic plebiscites. The rapid transmission of intelligence has centralized executive power, transforming monarchies and republics alike into highly bureaucratic, surveillance-heavy corporate states. This has resulted in the rise of the 'Consortium,' a joint governance body of politicians and telegraph barons who manage public opinion through algorithmic print-feeds.",
+  "events": [
+    {
+      "year": "1890",
+      "title": "The Spark of the Great Web",
+      "description": "Sir William Thomson (Lord Kelvin) successfully links the London Analytical Bureau with the Paris Bourse using the first high-frequency harmonic telegraph cable beneath the English Channel. This breakthrough allows for the instantaneous transmission of multi-layered mechanical data instead of simple Morse code, establishing the foundational protocol of the 'Aether-Net.' Curious citizens crowd around public print-terminals to read live dispatches from across the sea.",
+      "impact": "The immediate success of the London-Paris link triggers a global frenzy to lay deep-sea copper cables, connecting New York, Bombay, and Tokyo within three years. Financial markets merge into a single global exchange, forever altering the speed of commerce and destabilizing localized economies. This technological leap secures British dominance over early digital infrastructure, establishing the Royal Telegraphic Post."
+    },
+    {
+      "year": "1897",
+      "title": "The Great Pneumatic Hack",
+      "description": "A decentralized group of anarchist saboteurs known as the 'Luddite Guild' intercepts and alters the punched-card transmissions of the Bank of England's central analytical engine. By injecting malicious mechanical sequences into the pneumatic routing tubes, they cause thousands of automated telegraphs to print declarations of a national holiday and distribute free currency coordinates. The ensuing chaos paralyzes London's financial district for forty-eight hours.",
+      "impact": "In response, the British Parliament passes the Telegraphic Protection Act of 1898, creating the world's first digital police force, the 'Aether Patrol.' This agency is granted unprecedented authority to monitor private cable traffic and audit personal Telectroscopes under the guise of national security. Cryptography emerges as a vital global industry, leading to the development of complex rotor-based mechanical cyphers."
+    },
+    {
+      "year": "1902",
+      "title": "The Partition of the Virtual World",
+      "description": "At the Berlin Conference on Telegraphic Boundaries, European powers, alongside the United States and the Empire of Japan, sign the Protocol of Electronic Sovereignty. This landmark treaty carves the global Aether-Net into distinct national 'Firewalls' to prevent foreign propaganda and corporate espionage from crossing imperial borders. Nations begin constructing physical cable-cutting forts at critical undersea choke points.",
+      "impact": "The treaty effectively ends the era of the open, borderless network, forcing the creation of nationalized search-engines operated by state-approved clerks. It also triggers a silent cold war of deep-sea espionage, as nations deploy specialized submarines to tap or sever rival cables. Smaller, unaligned nations are forced to lease bandwidth from larger empires, cementing a new form of digital colonialism."
+    },
+    {
+      "year": "1908",
+      "title": "The Rise of the Electric Salon",
+      "description": "An underground subculture of writers, artists, and political dissidents establishes the 'Noosphere Salon,' a decentralized network of secret bulletin boards hosted on private, steam-driven servers. Using pseudonyms and complex mechanical cyphers, these users share forbidden literature, anti-imperial poetry, and blueprints for unauthorized printing terminals. The movement spreads rapidly across the global working class, bypassing state censors entirely.",
+      "impact": "The sudden flow of unregulated ideas sparks labor strikes and coordinated uprisings across Europe and the Americas, organized entirely through synchronized telegraphic broadcasts. Traditional print newspapers lose their monopoly on truth, forcing state authorities to deploy jamming carriages that emit electromagnetic interference in rebellious districts. This marks the beginning of the 'Great Silencing,' a period of intense crackdowns on independent network access."
+    },
+    {
+      "year": "1914",
+      "title": "The Automated Mobilization Crisis",
+      "description": "A fatal programming error in the Austro-Hungarian military's mobilization algorithm, hosted on a central analytical mainframe, automatically triggers a full military deployment along the Serbian border in response to a garbled weather report. Due to the interconnected nature of the European alliance networks, Russia's automated defense systems instantly respond with their own mobilization sequence. Diplomats attempt to halt the mechanical escalation, but the automated telegraphs transmit orders faster than human operators can verify them.",
+      "impact": "This systemic failure initiates the Great Web War, the first global conflict driven by algorithmic military logistics and electronic warfare. Armies deploy massive telegraphic jamming towers to blind enemy networks while specialized codebreaker units work to corrupt enemy logistical databases. The war ultimately proves that while the Aether-Net can unite humanity, its automated systems can just as easily march them blindly into catastrophe."
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "name": "The Victorian Aether-Net",
+  "summary": "Following the discovery of electromagnetic resonance through glass-vacuum tubes, the British Royal Society successfully linked London and Paris via the Aether-Net in 1890. This global tapestry of telegraphic relays and copper-coil nodes has shrunk the world, allowing for near-instantaneous exchange of data between the great colonial powers. Humanity now stands at the threshold of a new intellectual epoch defined by the rapid transmission of blueprints, poetry, and diplomatic cables across the oceanic depths.",
+  "era": "The Late Industrial-Victorian Age",
+  "tech_level": "The world utilizes sophisticated vacuum-tube amplification and punch-card data processing to relay signals through transatlantic copper cabling. Innovations rely on mechanical relay stations and refined mercury-vapour lamps that facilitate the visual projection of typed ciphers.",
+  "gov_type": "Governance is dominated by a collection of hyper-connected imperial technocracies centered in London, Berlin, and Washington. These states enforce strict information tariffs through the League of Global Relays to maintain social order and administrative hegemony over their respective colonies.",
+  "events": [
+    {
+      "year": "1890",
+      "title": "The Inauguration of the London-Paris Link",
+      "description": "Sir Arthur Penhaligon successfully transmitted the first stream of binary signals via his proprietary mercury-resonant telegraph across the English Channel. This feat required the construction of immense vacuum-valve arrays in Dover to amplify the signal against the atmospheric static.",
+      "impact": "This achievement proved that the Aether-Net could transcend national borders through unified technological standards. It signaled the end of traditional naval courier reliance and birthed the first generation of telegraphic intelligence analysts."
+    },
+    {
+      "year": "1898",
+      "title": "The Great Oceanic Cable Deployment",
+      "description": "The British Admiralty and the American Telegraphic Trust collaborated to lay the first high-speed vacuum-pumped conduit stretching from New York to Liverpool. Engineers faced unprecedented pressure to insulate the copper filaments against crushing abyssal depths and localized electrical interference.",
+      "impact": "Global stock markets began to synchronize as commodity prices fluctuated in real-time across the Atlantic. This permanent bond solidified the Anglo-American mercantile alliance and effectively rendered localized price gouging an obsolete practice."
+    },
+    {
+      "year": "1905",
+      "title": "The Standardization of the Universal Cipher",
+      "description": "International delegates meeting in Geneva codified the 'Aether-Protocol,' a uniform set of punch-card character mappings for all networked communication. This treaty mandated that all private relay stations allow state inspectors to monitor transmission logs for seditious content.",
+      "impact": "The protocols fostered a seamless global language of trade and diplomacy while simultaneously enabling the establishment of automated censorship bureaus. It cemented the dominance of the great empires, as smaller nations were unable to match the infrastructure costs of the protocol."
+    },
+    {
+      "year": "1912",
+      "title": "The Siberian Relay Failure",
+      "description": "A catastrophic mechanical collapse in the vast vacuum-relay array spanning the Ural Mountains severed the connection between European nodes and the Eastern Russian outposts. Repair crews struggled for months to replace thousands of broken glass-tubes amidst the biting sub-arctic cold.",
+      "impact": "The ensuing blackout caused a localized economic panic and sparked a separatist insurgency among disconnected eastern administrators. This event highlighted the fragility of the Aether-Net and prompted the development of redundant, decentralized relay pathways."
+    },
+    {
+      "year": "1922",
+      "title": "The Proliferation of the Personal Aether-Terminal",
+      "description": "The invention of the miniature electrolytic amplifier allowed for the manufacture of desk-sized terminals for the wealthy mercantile class. These units enabled individuals to access the global ticker-tape feeds and encrypted private messaging services from the comfort of their parlors.",
+      "impact": "This democratization of information sparked a new age of mass-media influence and middle-class political activism. Traditional newspaper magnates faced immediate disruption as private telegrams began to circumvent official press releases, leading to a profound restructuring of public opinion."
+    }
+  ]
+}

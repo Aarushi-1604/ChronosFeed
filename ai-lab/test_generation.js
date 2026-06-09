@@ -67,7 +67,8 @@ async function main() {
     const promptTemplate = fs.readFileSync(templatePath, 'utf8');
 
     // 2. Replace the {{USER_PROMPT}} placeholder
-    const completedPrompt = promptTemplate.replace('{{USER_PROMPT}}', 'What if the internet was invented in 1890?');
+    const userPrompt = process.argv[2] || 'What if the internet was invented in 1890?';
+    const completedPrompt = promptTemplate.replace('{{USER_PROMPT}}', userPrompt);
 
     // 3. Call the Gemini API with the completed prompt
     const apiKey = process.env.GEMINI_API_KEY;
@@ -76,7 +77,7 @@ async function main() {
     }
 
     const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
+    const model = genAI.getGenerativeModel({ model: 'gemini-3.1-flash-lite' });
 
     const result = await model.generateContent(completedPrompt);
     const responseText = result.response.text();
@@ -113,8 +114,12 @@ async function main() {
         console.log('✓ Schema valid');
       }
 
-      // Save the cleaned raw response to: ai-lab/mock_data/samples/world_genesis_latest.json
-      const outputPath = path.join(__dirname, 'mock_data', 'samples', 'world_genesis_latest.json');
+      // Save the cleaned raw response to: ai-lab/mock_data/samples/
+      const sanitizedPrompt = userPrompt.substring(0, 30)
+        .replace(/\s/g, '_')
+        .replace(/[^a-zA-Z0-9_]/g, '');
+      const outputFilename = `${sanitizedPrompt}_output.json`;
+      const outputPath = path.join(__dirname, 'mock_data', 'samples', outputFilename);
       fs.mkdirSync(path.dirname(outputPath), { recursive: true });
       fs.writeFileSync(outputPath, cleanedText, 'utf8');
 

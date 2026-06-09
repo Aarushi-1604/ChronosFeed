@@ -1,0 +1,39 @@
+{
+  "name": "The Scriptorium Hegemony",
+  "summary": "In this timeline, Johannes Gutenberg passed away before perfecting his mechanical innovations, ensuring that the labor-intensive practice of hand-copying manuscripts remained the sole vehicle for knowledge. The scarcity of written texts has concentrated intellectual and political power entirely within the hands of the elite Clerical Guilds and their monastic scribal estates. Consequently, the world remains locked in a permanent state of high-medieval scholasticism, where information is a precious commodity restricted by the physical limits of human calligraphy.",
+  "era": "The Late Perpetual Scholastic Era",
+  "tech_level": "Technological advancement remains stagnant, tethered to the slow dissemination of artisanal knowledge through rare, hand-copied scrolls and codices. Alchemy and metallurgy have progressed marginally, but the absence of mass-printed treatises prevents the standardization of scientific methodology.",
+  "gov_type": "The world is governed by a sprawling Theocratic Meritocracy managed by the Scribes’ Council. Power is distributed through the control of scriptoriums, where regional governors must petition the church for access to essential legal and administrative texts.",
+  "events": [
+    {
+      "year": "1455",
+      "title": "The Decree of Forbidden Mechanics",
+      "description": "Pope Callixtus III issued a bull branding all mechanical reproduction of the sacred word as a demonic affront to the soul of the scribe. This mandate outlawed the experimentation of metal casting for movable type throughout all Christendom.",
+      "impact": "The nascent development of press technology was effectively dismantled before it could proliferate. Intellectual progression became strictly monitored, ensuring the church retained absolute authority over the content of all literature."
+    },
+    {
+      "year": "1520",
+      "title": "The Suppression of the Vernacular",
+      "description": "The Scribes’ Council ordered the mass incineration of all texts written in common dialects to preserve the purity of Latin. This measure ensured that the common populace remained entirely dependent on the interpretative authority of the monastic elite.",
+      "impact": "Standardization of language across Europe was halted, cementing regional linguistic fragmentation for centuries. This effectively deepened the reliance on high-church intermediaries for even the most basic legal or spiritual understanding."
+    },
+    {
+      "year": "1682",
+      "title": "The Siege of the Great Library",
+      "description": "A faction of rogue scholars attempted to seize the central scriptorium in Mainz, seeking to distribute handwritten copies of forbidden astronomical findings. The uprising was crushed by the Papal Guard, resulting in the execution of the insurgent philosophers.",
+      "impact": "This tragedy solidified the total suppression of scientific inquiry that challenged the geocentric model. It deterred future generations from attempting to challenge the established, hand-copied natural philosophy of the scholastic schools."
+    },
+    {
+      "year": "1810",
+      "title": "The Golden Ink Standard",
+      "description": "The Scribes' Council established a currency backed by the scarcity of high-quality vellum and illuminated manuscript volumes. The economy transitioned into a system where wealth is measured by the number of master-copied texts stored in a merchant’s vault.",
+      "impact": "Economic growth became tethered to the physical labor of scribes, capping industrial output and discouraging mechanical labor-saving devices. The concentration of capital in religious archives reached an unprecedented zenith during this period."
+    },
+    {
+      "year": "1950",
+      "title": "The Grand Synod of Archivists",
+      "description": "The Church decreed that the sum total of human knowledge had finally reached its physical limit within the limited confines of the global scriptorium network. New research is now prohibited unless it replaces an obsolete manuscript, forcing a circular exchange of stagnant information.",
+      "impact": "The world entered a state of terminal intellectual stasis where innovation is forbidden to prevent the degradation of traditional knowledge. Society remains a perfectly ordered, motionless reflection of the medieval past."
+    }
+  ]
+}
