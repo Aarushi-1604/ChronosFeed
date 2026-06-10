@@ -16,6 +16,7 @@ interface FeedColumnProps {
   onPersonaClick?: (personaId: string) => void;
   onAddLocalPost: (content: string, faction: string) => void;
   isLoadingMore: boolean;
+  feedLoading: boolean;
 }
 
 export default function FeedColumn({
@@ -27,6 +28,7 @@ export default function FeedColumn({
   onPersonaClick,
   onAddLocalPost,
   isLoadingMore,
+  feedLoading,
 }: FeedColumnProps) {
   return (
     <div className="flex flex-col gap-6 h-full max-h-[85vh] overflow-y-auto pr-2 custom-scrollbar select-none">
@@ -34,7 +36,12 @@ export default function FeedColumn({
       <FeedComposer onPublish={onAddLocalPost} />
 
       {/* Feed Stream */}
-      {initialItems.length > 0 ? (
+      {feedLoading ? (
+        <div className="flex flex-col items-center justify-center p-16 glass-panel rounded-xl text-center border-dashed">
+          <RefreshCw className="animate-spin text-accent-base mb-4" size={36} />
+          <span className="font-mono text-sm text-text-main animate-pulse">Reconstituting Feed Channels...</span>
+        </div>
+      ) : initialItems.length > 0 ? (
         <div className="flex flex-col gap-5">
           <AnimatePresence initial={false}>
             {initialItems.map((item) => {
@@ -79,8 +86,7 @@ export default function FeedColumn({
         </div>
       ) : (
         <div className="flex flex-col items-center justify-center p-16 glass-panel rounded-xl text-center border-dashed">
-          <RefreshCw className="animate-spin text-accent-base/40 mb-4" size={36} />
-          <span className="font-mono text-sm text-text-dim">Reconstituting Feed Channels...</span>
+          <span className="font-mono text-sm text-text-dim">No transmissions detected in this reality.</span>
         </div>
       )}
     </div>

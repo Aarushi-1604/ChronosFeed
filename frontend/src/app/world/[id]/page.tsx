@@ -34,6 +34,7 @@ export default function WorldPage({ params }: PageProps) {
   const [hasMore, setHasMore] = useState(false);
   const [nextCursor, setNextCursor] = useState<string | null>(null);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [feedLoading, setFeedLoading] = useState(true);
 
   // Mobile navigation panels toggles
   const [showMobileTimeline, setShowMobileTimeline] = useState(false);
@@ -73,6 +74,7 @@ export default function WorldPage({ params }: PageProps) {
     if (!world) return;
 
     async function loadInitialFeed() {
+      setFeedLoading(true);
       try {
         const [feedRes, newsRes, adsRes] = await Promise.all([
           api.getWorldFeed(worldId, 10),
@@ -96,8 +98,12 @@ export default function WorldPage({ params }: PageProps) {
         setHasMore(feedRes.hasMore);
         setNextCursor(feedRes.nextCursor);
       } catch (err) {
-        console.warn('Error loading initial polymorphic feed, using seeds:', err);
-        setFeedItems(getSeededFeedItems());
+        console.error('Error loading initial polymorphic feed:', err);
+        setFeedItems([]);
+        setHasMore(false);
+        setNextCursor(null);
+      } finally {
+        setFeedLoading(false);
       }
     }
 
@@ -322,6 +328,7 @@ export default function WorldPage({ params }: PageProps) {
             onPersonaClick={handlePersonaProfileRedirect}
             onAddLocalPost={handleAddLocalPost}
             isLoadingMore={isLoadingMore}
+            feedLoading={feedLoading}
           />
         </main>
 
