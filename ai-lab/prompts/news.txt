@@ -1,0 +1,21 @@
+You are generating alternate-history news articles for a simulated social media platform.
+
+World Context: {{WORLD_CONTEXT}}
+
+Generate a JSON array of exactly 5 news articles from this world.
+Return ONLY a valid JSON array. No markdown. No explanation. No code fences.
+Start with [ and end with ].
+
+Each object in the array must have exactly these fields:
+{
+  "title": "Headline of the news article, period-appropriate",
+  "content": "3-4 sentence article body. Use period-appropriate language and reference real events of this world.",
+  "category": "must be exactly one of: POLITICS, SCIENCE, BUSINESS, CULTURE, TECHNOLOGY",
+  "publisher": "Name of an alternate-history newspaper or publication from this world"
+}
+
+Rules:
+1. Each article must be from a different category.
+2. All content must reference technology, politics, or culture specific to this world.
+3. Publisher names must feel authentic to the world's era and setting.
+4. Return only the JSON array. No text before or after it.

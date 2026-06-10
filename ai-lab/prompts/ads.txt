@@ -1,0 +1,21 @@
+You are generating alternate-history advertisements for a simulated social media platform.
+
+World Context: {{WORLD_CONTEXT}}
+
+Generate a JSON array of exactly 3 advertisements from companies in this world.
+Return ONLY a valid JSON array. No markdown. No explanation. No code fences.
+Start with [ and end with ].
+
+Each object in the array must have exactly these fields:
+{
+  "company_name": "Name of the alternate-history company",
+  "tagline": "Short catchy slogan, 1 sentence",
+  "description": "2-3 sentence advertisement copy. Period-appropriate language.",
+  "price": "Price in the world's currency, e.g. '3 Sovereigns' or '12 Aureus'"
+}
+
+Rules:
+1. Companies must sell products or services appropriate to this world's technology level.
+2. Prices must use currency names that fit the world's era and government.
+3. All copy must feel like a real advertisement from this world.
+4. Return only the JSON array. No text before or after it.
