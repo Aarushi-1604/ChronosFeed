@@ -20,15 +20,20 @@ export default function PersonaPage({ params }: PageProps) {
 
   const [persona, setPersona] = useState<(Persona & { posts?: any[] }) | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     async function loadPersonaDetails() {
       try {
         const data = await api.getPersona(personaId);
-        setPersona(data);
+        if (data) {
+          setPersona(data);
+        } else {
+          setError('Persona dossier not found.');
+        }
       } catch (err) {
-        console.warn('Persona load failed, seeding fallback dossier:', err);
-        setPersona(getFallbackPersona());
+        console.error('Failed to load persona dossier:', err);
+        setError('Failed to retrieve persona dossier from the timeline database.');
       } finally {
         setLoading(false);
       }
@@ -36,44 +41,49 @@ export default function PersonaPage({ params }: PageProps) {
     loadPersonaDetails();
   }, [personaId]);
 
-  const getFallbackPersona = (): Persona & { posts?: any[] } => ({
-    id: personaId,
-    world_id: worldId,
-    name: 'Charles Babbage III',
-    handle: 'steam_coder_99',
-    avatar: '',
-    bio: "Lead engineer at His Majesty's Steam-Net Registry. Dedicated to refining mechanical computation to connect the British Empire.",
-    role: 'SCIENTIST',
-    followers_count: 14200,
-    following_count: 88,
-    influence_score: 87,
-    interests: ['gears', 'punch-cards', 'earl grey tea'],
-    personality: 'Eccentric, highly technical, easily excited by prime factors.',
-    posts: [
-      {
-        id: 'post-1',
-        world_id: worldId,
-        persona_id: personaId,
-        content: 'Just upgraded the central steam-router. Speed is now up to 10 punch-cards per minute! Mechanical computation has never felt so fast. #SteamNet',
-        media_url: null,
-        media_type: 'TEXT',
-        likes_count: 420,
-        reposts_count: 17,
-        created_at: new Date().toISOString(),
-      },
-      {
-        id: 'post-2',
-        world_id: worldId,
-        persona_id: personaId,
-        content: 'Is there anything more beautiful than the rhythmic clicking of 1,000 brass cogwheels compiling a logarithm? I think not.',
-        media_url: null,
-        media_type: 'TEXT',
-        likes_count: 189,
-        reposts_count: 5,
-        created_at: new Date(Date.now() - 86400000).toISOString(),
-      },
-    ],
-  });
+  const getAlliancesAndEnemies = (role: string) => {
+    switch (role) {
+      case 'SCIENTIST':
+        return {
+          alliances: 'Tech Guild & Academy Matrix',
+          enemies: 'Traditionalist Coalition',
+        };
+      case 'POLITICIAN':
+        return {
+          alliances: 'Senate Majority Faction',
+          enemies: 'Opposition Assembly',
+        };
+      case 'BRAND':
+        return {
+          alliances: 'Merchant Trade Guild',
+          enemies: 'Antitrust Cartels',
+        };
+      case 'INFLUENCER':
+      default:
+        return {
+          alliances: 'Free Writers Syndicate',
+          enemies: 'State Censorship Council',
+        };
+    }
+  };
+
+  const roleLabel = (role: string) => {
+    switch (role) {
+      case 'SCIENTIST': return 'Imperial Engineer / Scientist';
+      case 'POLITICIAN': return 'State Chancellor / Senator';
+      case 'BRAND': return 'Industrial Syndicate / Brand';
+      default: return 'Public Influencer / Citizen';
+    }
+  };
+
+  const getHistoricalRole = () => {
+    if (!persona) return '';
+    const name = persona.name;
+    const role = roleLabel(persona.role);
+    const bioText = persona.bio;
+    const cleanBio = bioText.endsWith('.') ? bioText.slice(0, -1) : bioText;
+    return `As a prominent ${role.toLowerCase()}, ${name} has significantly influenced the alternate timeline. They are recognized for their dossier record: "${cleanBio}."`;
+  };
 
   if (loading) {
     return (
@@ -86,14 +96,23 @@ export default function PersonaPage({ params }: PageProps) {
     );
   }
 
-  const roleLabel = (role: string) => {
-    switch (role) {
-      case 'SCIENTIST': return 'Imperial Engineer / Scientist';
-      case 'POLITICIAN': return 'State Chancellor / Senator';
-      case 'BRAND': return 'Industrial Syndicate / Brand';
-      default: return 'Public Influencer / Citizen';
-    }
-  };
+  if (error || !persona) {
+    return (
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center font-mono text-sm scanlines p-4 text-center">
+        <div className="flex flex-col items-center gap-4 max-w-md glass-panel p-8 rounded-xl border border-red-500/20">
+          <Shield className="text-red-500" size={36} />
+          <h2 className="text-lg font-bold text-text-main">Dossier Corruption</h2>
+          <span className="text-text-dim text-xs leading-relaxed">{error || 'Unable to retrieve dossier records for this persona.'}</span>
+          <button
+            onClick={() => router.push(`/world/${worldId}`)}
+            className="glass-button px-6 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider font-mono cursor-pointer mt-2"
+          >
+            Return to Timeline Console
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen relative flex flex-col p-4 md:p-6 overflow-hidden select-none">
@@ -197,14 +216,14 @@ export default function PersonaPage({ params }: PageProps) {
                   <Handshake size={10} />
                   ALLIANCES
                 </span>
-                <span className="text-text-dim font-bold">Crown Syndicate</span>
+                <span className="text-text-main font-bold">{getAlliancesAndEnemies(persona?.role || '').alliances}</span>
               </div>
               <div className="flex flex-col gap-1 font-mono text-[10px]">
                 <span className="text-red-400 flex items-center gap-1">
                   <Skull size={10} />
                   ENEMIES
                 </span>
-                <span className="text-text-dim font-bold">Luddite Coal Unions</span>
+                <span className="text-text-main font-bold">{getAlliancesAndEnemies(persona?.role || '').enemies}</span>
               </div>
             </div>
           </div>
@@ -222,7 +241,7 @@ export default function PersonaPage({ params }: PageProps) {
             </div>
             
             <p className="text-sm font-serif text-text-main leading-relaxed italic">
-              "Pioneered the development of the Mark IV Analytical Routing Chip, securing British technological hegemony over the mechanical Telegraph Net in 1890, directly countering Luddite data-saboteurs in Edinburgh."
+              "{getHistoricalRole()}"
             </p>
             
             <div className="flex items-center justify-between font-mono text-[9px] text-text-dim/60 pt-2.5">
