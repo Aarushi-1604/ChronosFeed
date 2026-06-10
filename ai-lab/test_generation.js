@@ -77,7 +77,10 @@ async function main() {
     }
 
     const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: 'gemini-3.1-flash-lite' });
+    const model = genAI.getGenerativeModel({
+      model: 'gemini-3.1-flash-lite',
+      generationConfig: { responseMimeType: 'application/json' }
+    });
 
     const result = await model.generateContent(completedPrompt);
     const responseText = result.response.text();

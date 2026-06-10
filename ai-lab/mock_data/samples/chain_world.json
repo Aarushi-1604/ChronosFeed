@@ -1,0 +1,39 @@
+{
+  "name": "The Victorian Aether-Net",
+  "summary": "In 1890, the successful integration of Babbage’s Analytical Engine with Maxwell’s electromagnetic theories birthed the Great Telegraphic Interlink. This global network of vacuum-tube relays allows instantaneous exchange of scientific, political, and commercial correspondence across the British Empire and beyond. The world now operates in a state of hyper-accelerated Victorian industry, where the click of a telegraph key dictates the movement of steam-powered armadas and global stock exchanges.",
+  "era": "The Late Industrial Renaissance",
+  "tech_level": "Technology relies on sophisticated vacuum-tube processing and high-frequency aetheric pulse modulation relayed through undersea copper cabling. Mechanical computing engines perform complex calculations, while information is rendered onto ticker-tape arrays and pneumatic-delivery terminals.",
+  "gov_type": "The world is dominated by an interconnected network of colonial empires governed by the Technocratic Imperial Council. Decision-making is centralized through a digital bureaucracy that manages trade routes and naval movements via the instantaneous Aether-Net.",
+  "events": [
+    {
+      "year": "1892",
+      "title": "The First Transatlantic Aether-Pulse",
+      "description": "Sir William Thomson successfully transmitted the inaugural digital memorandum between London and New York using experimental electromagnetic resonators. This feat effectively bridged the Atlantic divide, reducing the time for transatlantic communication from a week to mere seconds.",
+      "impact": "The event caused an immediate collapse of traditional oceanic mail courier businesses. It established a new era of global finance where news of commodity prices could move faster than the ships carrying the actual goods."
+    },
+    {
+      "year": "1901",
+      "title": "The Coronation of the Global Data Protocol",
+      "description": "The world's leading industrial powers convened in Geneva to establish a standardized universal code for Aether-Net communications. This protocol allowed disparate mechanical engines across the globe to parse information in a singular, coherent format.",
+      "impact": "This integration fostered a temporary peace among major European powers, as economic interdependency via the network reached critical levels. It effectively mandated that all future mechanical inventions must be compatible with the global interface."
+    },
+    {
+      "year": "1908",
+      "title": "The Pneumatic-Terminal Revolution",
+      "description": "Engineers unveiled the first domestic pneumatic-ticker terminal, capable of printing digital messages directly into elite private studies. This innovation moved the power of the Aether-Net from state offices directly into the hands of the landed aristocracy.",
+      "impact": "The democratization of information fueled social movements and secret correspondence between reformist groups. It fundamentally weakened the state’s monopoly on knowledge and paved the way for modern political activism."
+    },
+    {
+      "year": "1914",
+      "title": "The Great Aether-Clog",
+      "description": "A massive solar storm disrupted the ionosphere, causing the total blackout of all global Aether-Net relays for three consecutive days. The sudden silence threw imperial governments into a panic, as they were unable to relay mobilization orders to their far-flung colonies.",
+      "impact": "This catastrophe exposed the extreme fragility of an interconnected world reliant on a single, vulnerable network. Many nations began investing heavily in hardened subterranean cable networks to ensure communication continuity during future atmospheric disturbances."
+    },
+    {
+      "year": "1922",
+      "title": "The Establishment of the Imperial Digital Archive",
+      "description": "The British Empire completed the construction of a massive, multi-story analytical engine in London to act as the primary repository for all intercepted digital transmissions. Every telegram sent across the network is now parsed, categorized, and stored for permanent historical record.",
+      "impact": "This central archive allowed for unprecedented surveillance capabilities and the birth of modern imperial counter-intelligence. It solidified the government's ability to anticipate domestic and foreign threats long before they could manifest into tangible action."
+    }
+  ]
+}

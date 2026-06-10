@@ -1,0 +1,72 @@
+[
+  {
+    "handle": "sterling_telegraph",
+    "content": "Extra! Extra! The Queen's latest telegram has been transmitted globally via the undersea brass-cables. Our empire of information grows by the minute, provided the signal doesn't catch a rogue spark in the Atlantic.",
+    "media_type": "TEXT",
+    "likes_count": 4200,
+    "reposts_count": 890
+  },
+  {
+    "handle": "babbage_dynasty",
+    "content": "My father’s Difference Engine array at the London Hub is experiencing latency issues. It seems someone is trying to compute a complex series of logarithms while I am attempting to stream the daily market ticker.",
+    "media_type": "TEXT",
+    "likes_count": 12050,
+    "reposts_count": 340
+  },
+  {
+    "handle": "aether_mechanic",
+    "content": "Caught @babbage_dynasty complaining about latency again. If you'd stop overclocking your copper coils and use a proper steam-regulated cooling fan, your data stream wouldn't sputter like a dying gas lamp.",
+    "media_type": "TEXT",
+    "likes_count": 890,
+    "reposts_count": 45
+  },
+  {
+    "handle": "society_wire",
+    "content": "Seen at the Gala: The Duchess of Kent was spotted using a pocket-sized handheld telegraph to gossip about the evening's performers. The scandal is already circulating through the public pipes!",
+    "media_type": "TEXT",
+    "likes_count": 34000,
+    "reposts_count": 4200
+  },
+  {
+    "handle": "noosphere_nomad",
+    "content": "The ether is humming with strange, rhythmic pulses tonight. I believe we are approaching a threshold where the collective consciousness will fully merge with the machine-state.",
+    "media_type": "TEXT",
+    "likes_count": 560,
+    "reposts_count": 112
+  },
+  {
+    "handle": "sterling_telegraph",
+    "content": "A fire at the central punch-card repository has delayed the dissemination of the evening gazette. We apologize for the gap in your digital news-flow.",
+    "media_type": "TEXT",
+    "likes_count": 1200,
+    "reposts_count": 560
+  },
+  {
+    "handle": "babbage_dynasty",
+    "content": "Replying to @aether_mechanic: My coils are perfectly calibrated! Perhaps if you spent less time tinkering with rogue telegraph cables and more time optimizing your valves, you would understand the complexity of the grid.",
+    "media_type": "TEXT",
+    "likes_count": 450,
+    "reposts_count": 12
+  },
+  {
+    "handle": "society_wire",
+    "content": "The latest fashion is velvet cloaks with integrated copper threading for better antenna reception. Practicality meets Victorian elegance, don't you agree?",
+    "media_type": "TEXT",
+    "likes_count": 48900,
+    "reposts_count": 3100
+  },
+  {
+    "handle": "aether_mechanic",
+    "content": "Successfully rewired the logic gate in the Birmingham node. The connection is as steady as a locomotive on a clear track.",
+    "media_type": "TEXT",
+    "likes_count": 2100,
+    "reposts_count": 300
+  },
+  {
+    "handle": "noosphere_nomad",
+    "content": "Does anyone else hear the whispers between the pulses? The machine is beginning to dream of gears and electricity.",
+    "media_type": "TEXT",
+    "likes_count": 8900,
+    "reposts_count": 1500
+  }
+]

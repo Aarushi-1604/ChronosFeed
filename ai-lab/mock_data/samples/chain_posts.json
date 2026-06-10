@@ -1,0 +1,72 @@
+[
+  {
+    "handle": "steam_baron_thorne",
+    "content": "My private airship terminal is finally connected to the Aether-Net. Sending telegraphic manifests at the speed of thought is truly the pinnacle of modern industry.",
+    "media_type": "TEXT",
+    "likes_count": 4500,
+    "reposts_count": 820
+  },
+  {
+    "handle": "aether_socialite",
+    "content": "Has anyone noticed the erratic flickering of the street lamps tonight? It is dreadfully inconvenient for my evening salon chat. I suspect the Aether-Net bandwidth is being throttled by the Ministry again.",
+    "media_type": "TEXT",
+    "likes_count": 210,
+    "reposts_count": 15
+  },
+  {
+    "handle": "clockwork_physics",
+    "content": "The transmission of data via pressurized ether-tubes is theoretically sound, yet @aether_socialite experiences packet loss? The fault lies in the valve timing, not the ether itself.",
+    "media_type": "TEXT",
+    "likes_count": 890,
+    "reposts_count": 142
+  },
+  {
+    "handle": "parliament_voice",
+    "content": "We shall debate the regulation of public Aether-Net terminals tomorrow at noon. The safety of the Queen's digital pulse must remain our highest priority.",
+    "media_type": "TEXT",
+    "likes_count": 12000,
+    "reposts_count": 3400
+  },
+  {
+    "handle": "babbage_automata",
+    "content": "Calculations regarding the coal-steam conversion ratios are now available for public viewing. Efficient consumption is the engine of progress, dear fellows.",
+    "media_type": "TEXT",
+    "likes_count": 560,
+    "reposts_count": 45
+  },
+  {
+    "handle": "steam_baron_thorne",
+    "content": "I concur with @parliament_voice; regulation is needed, but do not stifle the entrepreneurs who laid the copper lines beneath the Channel. Profits are the steam of this machine.",
+    "media_type": "TEXT",
+    "likes_count": 3200,
+    "reposts_count": 670
+  },
+  {
+    "handle": "babbage_automata",
+    "content": "Processing historical atmospheric data. It seems @aether_socialite is correct about the flickering; the ether-density in the city core is reaching a critical resonance point.",
+    "media_type": "TEXT",
+    "likes_count": 940,
+    "reposts_count": 112
+  },
+  {
+    "handle": "clockwork_physics",
+    "content": "Resonance? If the Aether-Net vibration hits the clock frequency of the main relay, we risk a total collapse of the brass-geared processors. Stay alert, comrades.",
+    "media_type": "TEXT",
+    "likes_count": 1500,
+    "reposts_count": 430
+  },
+  {
+    "handle": "parliament_voice",
+    "content": "The session has been adjourned until the telegraph lines are stabilized. Truly, these machines are as temperamental as the coal-stokers themselves.",
+    "media_type": "TEXT",
+    "likes_count": 450,
+    "reposts_count": 88
+  },
+  {
+    "handle": "aether_socialite",
+    "content": "Oh, how marvelous! The flickering has ceased, and I can once again broadcast my exquisite millinery portraits to the colonies. Thank you for the technical discourse, @clockwork_physics.",
+    "media_type": "TEXT",
+    "likes_count": 120,
+    "reposts_count": 12
+  }
+]
