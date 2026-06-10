@@ -34,11 +34,12 @@ export function useWorldStatus(worldId: string | null, intervalMs: number = 1500
         const data = await api.getWorldStatus(worldId);
         if (!isMounted) return;
 
-        setStatus(data.status);
+        const resolvedStatus = data.status === 'failed' ? 'error' : data.status;
+        setStatus(resolvedStatus);
         if (data.name) setName(data.name);
         if (data.era) setEra(data.era);
 
-        if (data.status === 'ready' || data.status === 'error') {
+        if (resolvedStatus === 'ready' || resolvedStatus === 'error') {
           if (timerId) {
             clearInterval(timerId);
             timerId = null;

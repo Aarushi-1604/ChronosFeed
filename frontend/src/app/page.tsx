@@ -53,7 +53,8 @@ export default function LandingPage() {
       try {
         const fetched = await api.getWorlds();
         if (fetched && fetched.length > 0) {
-          setWorlds(fetched);
+          const readyWorlds = fetched.filter((w) => w.status === 'ready');
+          setWorlds(readyWorlds.length > 0 ? readyWorlds : getFallbackWorlds());
         } else {
           setWorlds(getFallbackWorlds());
         }

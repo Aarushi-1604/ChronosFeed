@@ -43,7 +43,7 @@ export const api = {
   getWorldStatus: (id: string) =>
     fetchJson<{
       worldId: string;
-      status: 'generating' | 'ready' | 'error';
+      status: 'generating' | 'ready' | 'error' | 'failed';
       name: string | null;
       era: string | null;
     }>(`/api/worlds/${id}/status`),

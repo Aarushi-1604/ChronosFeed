@@ -6,7 +6,7 @@ export interface World {
   era: string;
   tech_level: string;
   gov_type: string;
-  status: 'generating' | 'ready' | 'error';
+  status: 'generating' | 'ready' | 'error' | 'failed';
   created_at: string;
   updated_at: string;
   events?: HistoricalEvent[];
