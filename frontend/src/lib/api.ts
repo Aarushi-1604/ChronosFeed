@@ -40,6 +40,14 @@ export const api = {
 
   getWorld: (id: string) => fetchJson<World>(`/api/worlds/${id}`),
 
+  getWorldStatus: (id: string) =>
+    fetchJson<{
+      worldId: string;
+      status: 'generating' | 'ready' | 'error';
+      name: string | null;
+      era: string | null;
+    }>(`/api/worlds/${id}/status`),
+
   // Feed
   getWorldFeed: (id: string, limit = 10, cursor?: string) => {
     let url = `/api/worlds/${id}/feed?limit=${limit}`;
