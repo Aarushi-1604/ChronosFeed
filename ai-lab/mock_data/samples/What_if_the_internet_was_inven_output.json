@@ -1,39 +1,39 @@
 {
-  "name": "The Victorian Aether-Net",
-  "summary": "Following the discovery of electromagnetic resonance through glass-vacuum tubes, the British Royal Society successfully linked London and Paris via the Aether-Net in 1890. This global tapestry of telegraphic relays and copper-coil nodes has shrunk the world, allowing for near-instantaneous exchange of data between the great colonial powers. Humanity now stands at the threshold of a new intellectual epoch defined by the rapid transmission of blueprints, poetry, and diplomatic cables across the oceanic depths.",
-  "era": "The Late Industrial-Victorian Age",
-  "tech_level": "The world utilizes sophisticated vacuum-tube amplification and punch-card data processing to relay signals through transatlantic copper cabling. Innovations rely on mechanical relay stations and refined mercury-vapour lamps that facilitate the visual projection of typed ciphers.",
-  "gov_type": "Governance is dominated by a collection of hyper-connected imperial technocracies centered in London, Berlin, and Washington. These states enforce strict information tariffs through the League of Global Relays to maintain social order and administrative hegemony over their respective colonies.",
+  "name": "The Aetheric Web",
+  "summary": "Following the discovery of electromagnetic resonance in the late 19th century, inventor Nikola Tesla perfected the World Wireless System to link the major capitals of the globe. This interconnected network of telegraphic relay stations transformed the British Empire and its peers into a unified digital dominion of instant intelligence. The world now exists in a state of rapid industrial acceleration, where information travels faster than steamships can traverse the oceans.",
+  "era": "The Victorian Information Age",
+  "tech_level": "The world relies on brass-cased vacuum tubes, complex mechanical punch-card processors, and high-frequency spark-gap radio transmission. Data transmission is facilitated via a global infrastructure of copper wiring and atmospheric signal towers.",
+  "gov_type": "The world is governed by a coalition of colonial empires and industrial conglomerates known as the Technocratic Syndicate. This centralized bureaucracy dictates the flow of information and regulates the use of frequency bands for all sovereign states.",
   "events": [
     {
-      "year": "1890",
-      "title": "The Inauguration of the London-Paris Link",
-      "description": "Sir Arthur Penhaligon successfully transmitted the first stream of binary signals via his proprietary mercury-resonant telegraph across the English Channel. This feat required the construction of immense vacuum-valve arrays in Dover to amplify the signal against the atmospheric static.",
-      "impact": "This achievement proved that the Aether-Net could transcend national borders through unified technological standards. It signaled the end of traditional naval courier reliance and birthed the first generation of telegraphic intelligence analysts."
+      "year": "1892",
+      "title": "The Inauguration of the Spark-Gap Exchange",
+      "description": "Nikola Tesla officially activated the first trans-Atlantic Aetheric relay station in New York City. This inaugural broadcast transmitted the complete text of the United States Constitution to London in mere seconds.",
+      "impact": "The success of the transmission shattered the limitations of physical distance for diplomatic discourse. Global markets immediately adopted the new standard, permanently ending the age of isolated mercantile exchange."
     },
     {
       "year": "1898",
-      "title": "The Great Oceanic Cable Deployment",
-      "description": "The British Admiralty and the American Telegraphic Trust collaborated to lay the first high-speed vacuum-pumped conduit stretching from New York to Liverpool. Engineers faced unprecedented pressure to insulate the copper filaments against crushing abyssal depths and localized electrical interference.",
-      "impact": "Global stock markets began to synchronize as commodity prices fluctuated in real-time across the Atlantic. This permanent bond solidified the Anglo-American mercantile alliance and effectively rendered localized price gouging an obsolete practice."
+      "title": "The Great Tabulator Crisis",
+      "description": "An experimental mechanical logic engine, built to sort packetized telegrams, began to output erroneous financial data across the entire network. Panic ensued as automated stock tickers flashed contradictory market figures for forty-eight continuous hours.",
+      "impact": "This catastrophe necessitated the creation of the first network regulatory body to oversee system integrity. Governments subsequently introduced strict encryption protocols to prevent unauthorized access to the burgeoning Aetheric grid."
     },
     {
       "year": "1905",
-      "title": "The Standardization of the Universal Cipher",
-      "description": "International delegates meeting in Geneva codified the 'Aether-Protocol,' a uniform set of punch-card character mappings for all networked communication. This treaty mandated that all private relay stations allow state inspectors to monitor transmission logs for seditious content.",
-      "impact": "The protocols fostered a seamless global language of trade and diplomacy while simultaneously enabling the establishment of automated censorship bureaus. It cemented the dominance of the great empires, as smaller nations were unable to match the infrastructure costs of the protocol."
+      "title": "The Colonial Information Expansion",
+      "description": "The British Empire completed the installation of relay outposts across the entirety of the African continent and the Indian subcontinent. This allowed the Colonial Office to transmit orders from Whitehall to the furthest reaches of the globe instantaneously.",
+      "impact": "Centralized control over imperial territories became absolute and unchallenged by local rebellions. The speed of the network discouraged insurrections, as responses to dissent were now mobilized before local organizers could assemble."
     },
     {
       "year": "1912",
-      "title": "The Siberian Relay Failure",
-      "description": "A catastrophic mechanical collapse in the vast vacuum-relay array spanning the Ural Mountains severed the connection between European nodes and the Eastern Russian outposts. Repair crews struggled for months to replace thousands of broken glass-tubes amidst the biting sub-arctic cold.",
-      "impact": "The ensuing blackout caused a localized economic panic and sparked a separatist insurgency among disconnected eastern administrators. This event highlighted the fragility of the Aether-Net and prompted the development of redundant, decentralized relay pathways."
+      "title": "The Publication of the Universal Ledger",
+      "description": "In a display of unprecedented transparency, the Technocratic Syndicate released a public-facing directory of all digital addresses connected to the global network. This act enabled private citizens and inventors to communicate via proprietary message terminals for the first time.",
+      "impact": "The democratization of information sparked a new era of artistic and scientific collaboration beyond the constraints of geography. A global consciousness began to form, challenging the traditional secrecy held by aristocratic governments."
     },
     {
-      "year": "1922",
-      "title": "The Proliferation of the Personal Aether-Terminal",
-      "description": "The invention of the miniature electrolytic amplifier allowed for the manufacture of desk-sized terminals for the wealthy mercantile class. These units enabled individuals to access the global ticker-tape feeds and encrypted private messaging services from the comfort of their parlors.",
-      "impact": "This democratization of information sparked a new age of mass-media influence and middle-class political activism. Traditional newspaper magnates faced immediate disruption as private telegrams began to circumvent official press releases, leading to a profound restructuring of public opinion."
+      "year": "1918",
+      "title": "The Aetheric Peace Treaty",
+      "description": "Following a series of diplomatic tensions regarding frequency encroachment, the great powers signed the Geneva Protocol for Interconnected Communication. This treaty established universal standards for radio signal routing and prohibited the malicious jamming of transmissions.",
+      "impact": "The treaty cemented the dominance of the Aetheric Web as the primary forum for international relations. Warfare became a matter of signal suppression and economic data denial rather than physical conflict."
     }
   ]
 }

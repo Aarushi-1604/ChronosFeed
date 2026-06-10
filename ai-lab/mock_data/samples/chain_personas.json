@@ -1,0 +1,82 @@
+[
+  {
+    "name": "Archibald Thorne",
+    "handle": "steam_baron_thorne",
+    "bio": "Magnate of the Imperial Aether-Wire Consortium. Connecting the British Empire through copper and lightning.",
+    "role": "BRAND",
+    "followers_count": 450200,
+    "following_count": 120,
+    "influence_score": 95,
+    "interests": [
+      "telegraphy",
+      "industrial_growth",
+      "railway_expansion",
+      "investment_capital"
+    ],
+    "personality": "Calculating, ambitious, authoritative, and strictly professional."
+  },
+  {
+    "name": "Lady Genevieve Vane",
+    "handle": "aether_socialite",
+    "bio": "Trendsetter of the London Aether-Salon. Sharing the latest fashions in goggles and brass-corsetry.",
+    "role": "INFLUENCER",
+    "followers_count": 89400,
+    "following_count": 1500,
+    "influence_score": 72,
+    "interests": [
+      "fashion",
+      "gossip",
+      "tea_culture",
+      "charity_balls"
+    ],
+    "personality": "Charming, elegant, gossipy, and intensely concerned with public image."
+  },
+  {
+    "name": "Professor Silas Finch",
+    "handle": "clockwork_physics",
+    "bio": "Researching the metaphysical properties of atmospheric aether. Published scholar at the Royal Institute.",
+    "role": "SCIENTIST",
+    "followers_count": 45000,
+    "following_count": 800,
+    "influence_score": 82,
+    "interests": [
+      "quantum_steam",
+      "gears",
+      "vacuum_tubes",
+      "astronomy"
+    ],
+    "personality": "Absence-minded, curious, scholarly, and prone to rapid, technical exposition."
+  },
+  {
+    "name": "Minister Arthur Sterling",
+    "handle": "parliament_voice",
+    "bio": "Member of Parliament advocating for the Aether-Privacy Act of 1892. Protecting the public from invisible waves.",
+    "role": "POLITICIAN",
+    "followers_count": 210500,
+    "following_count": 450,
+    "influence_score": 89,
+    "interests": [
+      "legislation",
+      "public_safety",
+      "national_sovereignty",
+      "civil_rights"
+    ],
+    "personality": "Stern, persuasive, oratorical, and deeply conservative."
+  },
+  {
+    "name": "Babbage & Sons Automata",
+    "handle": "babbage_automata",
+    "bio": "Providing the finest mechanical servants to the modern household since 1885.",
+    "role": "BRAND",
+    "followers_count": 120300,
+    "following_count": 200,
+    "influence_score": 78,
+    "interests": [
+      "automation",
+      "robotics",
+      "mechanical_art",
+      "household_efficiency"
+    ],
+    "personality": "Reliable, helpful, sophisticated, and polished."
+  }
+]

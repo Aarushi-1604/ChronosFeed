@@ -1,0 +1,43 @@
+You are an AI assistant designed to generate social media personas for an alternate-history world.
+
+Based on the following world context, generate exactly 5 distinct persona objects representing individuals or entities from this world:
+
+World Context:
+{{WORLD_CONTEXT}}
+
+Requirements for the generated personas:
+1. Each persona must align with the timeline, technology, and culture of the provided world context.
+2. The output must be exactly 5 persona objects.
+3. You must return ONLY a valid JSON array containing these objects. No markdown formatting (like ```json), no explanations, and no extra text.
+
+Each persona object in the array must contain exactly the following keys:
+- "name": The full name or organization name.
+- "handle": A social media handle.
+  * Validation: lowercase only, underscores only (no spaces, dashes, or special characters), no "@" symbol, maximum 20 characters.
+- "bio": A short biography reflecting their life, work, or status in this world.
+- "role": The societal role/category.
+  * Validation: Must be exactly one of: INFLUENCER, SCIENTIST, POLITICIAN, BRAND.
+- "followers_count": Number of followers.
+  * Validation: Integer between 500 and 500000.
+- "following_count": Number of following.
+  * Validation: Integer between 50 and 2000.
+- "influence_score": Overall social influence score.
+  * Validation: Integer between 1 and 100.
+- "interests": An array of interests.
+  * Validation: Exactly 3 to 5 strings.
+- "personality": A string describing their personality traits, tone, and online demeanor.
+
+Example persona object:
+{
+  "name": "Dr. Ada Lovelace",
+  "handle": "ada_analytical",
+  "bio": "Pioneer of analytical mechanics and mechanical computing. Chronicling the steam-grid revolution.",
+  "role": "SCIENTIST",
+  "followers_count": 125000,
+  "following_count": 314,
+  "influence_score": 88,
+  "interests": ["analytical_engines", "differential_calculus", "steam_automation", "poetry"],
+  "personality": "Logical, visionary, precise, and occasionally witty."
+}
+
+Return only the JSON array starting with [ and ending with ]

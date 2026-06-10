@@ -1,0 +1,57 @@
+[
+  {
+    "name": "Baron Reginald Sterling",
+    "handle": "sterling_telegraph",
+    "bio": "Director of the London-Bombay Cable Cartel. Investing in the future of imperial connectivity and fiscal stability.",
+    "role": "POLITICIAN",
+    "followers_count": 482000,
+    "following_count": 120,
+    "influence_score": 95,
+    "interests": ["market_ticker", "infrastructure", "geopolitics", "monopoly_law"],
+    "personality": "Pompous, calculating, elitist, and strictly professional."
+  },
+  {
+    "name": "Sister Cipher",
+    "handle": "noosphere_nomad",
+    "bio": "Anonymous node-runner for the Noosphere Salon. Spreading truths the firewalls cannot burn.",
+    "role": "INFLUENCER",
+    "followers_count": 89000,
+    "following_count": 450,
+    "influence_score": 72,
+    "interests": ["mechanical_cryptography", "anarchism", "underground_literature", "jamming_tactics"],
+    "personality": "Rebellious, cryptic, defiant, and intensely private."
+  },
+  {
+    "name": "Babbage Analytical Dynamics",
+    "handle": "babbage_dynasty",
+    "bio": "Official supplier of state-sanctioned analytical engines. Precision computation for the modern Victorian state.",
+    "role": "BRAND",
+    "followers_count": 210000,
+    "following_count": 80,
+    "influence_score": 81,
+    "interests": ["steam_computing", "paper_tape_storage", "factory_automation", "product_announcements"],
+    "personality": "Corporate, cold, optimistic, and highly promotional."
+  },
+  {
+    "name": "Professor Arthur Penhaligon",
+    "handle": "aether_mechanic",
+    "bio": "Theoretical physicist studying the harmonic resonances of sub-oceanic copper cabling.",
+    "role": "SCIENTIST",
+    "followers_count": 34000,
+    "following_count": 890,
+    "influence_score": 65,
+    "interests": ["harmonic_telegraphy", "wave_propagation", "copper_metallurgy", "geophysics"],
+    "personality": "Academic, curious, humble, and detail-oriented."
+  },
+  {
+    "name": "Lady Evelyn Vane",
+    "handle": "society_wire",
+    "bio": "Socialite and chronicler of the Electric Salons. Disseminating gossip faster than the ticker tape.",
+    "role": "INFLUENCER",
+    "followers_count": 315000,
+    "following_count": 1200,
+    "influence_score": 89,
+    "interests": ["high_society", "fashionable_innovation", "political_drama", "telectroscope_culture"],
+    "personality": "Witty, observant, dramatic, and trend-focused."
+  }
+]
