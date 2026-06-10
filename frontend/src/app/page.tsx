@@ -9,6 +9,7 @@ import SimulationStatus from '../components/ui/simulation-status';
 import WorldCard from '../components/cards/world-card';
 import { World } from '../types';
 import { api } from '../lib/api';
+import { useWorldStatus } from '../hooks/useWorldStatus';
 
 const EXAMPLE_PROMPTS = [
   'What if the internet was invented in 1890?',
@@ -24,6 +25,27 @@ export default function LandingPage() {
   const [generatedWorldId, setGeneratedWorldId] = useState<string | null>(null);
   const [worlds, setWorlds] = useState<World[]>([]);
   const [isLoadingWorlds, setIsLoadingWorlds] = useState(true);
+  const [isAnimationComplete, setIsAnimationComplete] = useState(false);
+
+  // Poll status of the compiled world
+  const { status: worldStatus } = useWorldStatus(
+    generatedWorldId && generatedWorldId !== 'stub-world-id' ? generatedWorldId : null
+  );
+
+  const effectiveStatus = generatedWorldId === 'stub-world-id' ? 'ready' : worldStatus;
+
+  // Handle navigation once both animation and backend generation are ready
+  useEffect(() => {
+    if (isAnimationComplete && effectiveStatus === 'ready' && generatedWorldId) {
+      router.push(`/world/${generatedWorldId}`);
+    } else if (effectiveStatus === 'error') {
+      console.error('Temporal divergence compilation failed on the backend.');
+      setIsGenerating(false);
+      setIsAnimationComplete(false);
+      setGeneratedWorldId(null);
+      alert('Reality compilation failed. Please try a different divergence anchor.');
+    }
+  }, [isAnimationComplete, effectiveStatus, generatedWorldId, router]);
 
   // Load live worlds from backend or fallback to stub seeds
   useEffect(() => {
@@ -50,6 +72,8 @@ export default function LandingPage() {
     if (!prompt.trim()) return;
 
     setIsGenerating(true);
+    setIsAnimationComplete(false);
+    setGeneratedWorldId(null);
 
     try {
       // Initiate async generation on backend
@@ -67,9 +91,7 @@ export default function LandingPage() {
   };
 
   const handleSimulationComplete = () => {
-    if (generatedWorldId) {
-      router.push(`/world/${generatedWorldId}`);
-    }
+    setIsAnimationComplete(true);
   };
 
   const getFallbackWorlds = (): World[] => [
