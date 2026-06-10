@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { worldService } from '../services/worldService';
+import { generateWorld } from '../services/generationService';
 
 // POST /api/worlds
 export const createWorld = async (
@@ -10,6 +11,11 @@ export const createWorld = async (
   try {
     const { prompt } = req.body;
     const world = await worldService.createWorldStub(String(prompt).trim());
+
+    // Fire and forget — do not await, do not block the response
+    generateWorld(world.id, prompt.trim()).catch((err: Error) => {
+      console.error('[GENERATION] Pipeline failed for world:', world.id, err.message);
+    });
 
     res.status(202).json({
       data: {
@@ -144,6 +150,34 @@ export const getWorldAds = async (
 
     const ads = await worldService.getAds(worldId);
     res.status(200).json({ data: ads });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// GET /api/worlds/:id/status
+export const getWorldStatus = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const worldId = String(req.params.id);
+    const world = await worldService.getWorldById(worldId);
+
+    if (!world) {
+      res.status(404).json({ error: 'World not found' });
+      return;
+    }
+
+    res.status(200).json({
+      data: {
+        worldId: world.id,
+        status: world.status,
+        name: world.name || null,
+        era: world.era || null,
+      },
+    });
   } catch (err) {
     next(err);
   }

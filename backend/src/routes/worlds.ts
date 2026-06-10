@@ -7,6 +7,7 @@ import {
   getWorldPersonas,
   getWorldNews,
   getWorldAds,
+  getWorldStatus,
 } from '../controllers/worldController';
 import { requireFields } from '../middleware/validateBody';
 
@@ -20,6 +21,7 @@ router.get('/', getWorlds);
 
 // GET /api/worlds/:id
 router.get('/:id', getWorldById);
+router.get('/:id/status', getWorldStatus)
 
 // GET /api/worlds/:id/feed
 router.get('/:id/feed', getWorldFeed);

@@ -26,16 +26,36 @@ export function cleanJSON(text: string): string {
   // Trim whitespace
   cleaned = cleaned.trim();
 
-  // Find first { in string, remove everything before it
+  // Find the first occurrence of '{' or '['
   const firstBrace = cleaned.indexOf('{');
-  if (firstBrace !== -1) {
-    cleaned = cleaned.substring(firstBrace);
+  const firstBracket = cleaned.indexOf('[');
+  let startIdx = -1;
+  if (firstBrace !== -1 && firstBracket !== -1) {
+    startIdx = Math.min(firstBrace, firstBracket);
+  } else if (firstBrace !== -1) {
+    startIdx = firstBrace;
+  } else if (firstBracket !== -1) {
+    startIdx = firstBracket;
   }
 
-  // Find last } in string, remove everything after it
+  if (startIdx !== -1) {
+    cleaned = cleaned.substring(startIdx);
+  }
+
+  // Find the last occurrence of '}' or ']'
   const lastBrace = cleaned.lastIndexOf('}');
-  if (lastBrace !== -1) {
-    cleaned = cleaned.substring(0, lastBrace + 1);
+  const lastBracket = cleaned.lastIndexOf(']');
+  let endIdx = -1;
+  if (lastBrace !== -1 && lastBracket !== -1) {
+    endIdx = Math.max(lastBrace, lastBracket);
+  } else if (lastBrace !== -1) {
+    endIdx = lastBrace;
+  } else if (lastBracket !== -1) {
+    endIdx = lastBracket;
+  }
+
+  if (endIdx !== -1) {
+    cleaned = cleaned.substring(0, endIdx + 1);
   }
 
   return cleaned;
