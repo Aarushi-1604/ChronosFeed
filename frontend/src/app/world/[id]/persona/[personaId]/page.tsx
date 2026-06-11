@@ -131,9 +131,15 @@ export default function PersonaPage({ params }: PageProps) {
           </button>
           <ChronosLogo size={20} className="text-primary-base" />
         </div>
-        <span className="font-mono text-[10px] text-text-dim">
-          DOSSIER TELEMETRY // SECURE INDEX
-        </span>
+        <div className="flex gap-6 font-mono text-[10px] text-text-dim items-center">
+          <button
+            onClick={() => router.push('/developers')}
+            className="hover:text-accent-base transition-colors cursor-pointer"
+          >
+            [DEVELOPER_PORTAL]
+          </button>
+          <span>DOSSIER TELEMETRY // SECURE INDEX</span>
+        </div>
       </header>
 
       {/* Main content grid */}

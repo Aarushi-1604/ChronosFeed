@@ -301,9 +301,17 @@ export default function WorldPage({ params }: PageProps) {
           </button>
         </div>
 
-        <div className="hidden md:flex gap-4 font-mono text-[10px] text-text-dim">
-          <span>REALITY_KEY: {worldId.slice(0, 8)}</span>
-          <span className="text-emerald-400">STABILIZED</span>
+        <div className="hidden md:flex gap-6 font-mono text-[10px] text-text-dim items-center">
+          <button
+            onClick={() => router.push('/developers')}
+            className="hover:text-accent-base transition-colors cursor-pointer"
+          >
+            [DEVELOPER_PORTAL]
+          </button>
+          <div className="flex gap-4">
+            <span>REALITY_KEY: {worldId.slice(0, 8)}</span>
+            <span className="text-emerald-400">STABILIZED</span>
+          </div>
         </div>
       </header>
 

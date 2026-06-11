@@ -157,9 +157,17 @@ export default function LandingPage() {
           <ChronosLogo size={18} className="text-primary-base" />
           <span className="font-bold text-text-main tracking-wider uppercase">ChronosFeed Console</span>
         </div>
-        <div className="flex gap-4">
-          <span>PORTAL: ACTIVE</span>
-          <span className="text-accent-base animate-pulse">NODE_01</span>
+        <div className="flex items-center gap-6">
+          <button
+            onClick={() => router.push('/developers')}
+            className="hover:text-accent-base transition-colors cursor-pointer"
+          >
+            [DEVELOPER_PORTAL]
+          </button>
+          <div className="flex gap-4">
+            <span>PORTAL: ACTIVE</span>
+            <span className="text-accent-base animate-pulse">NODE_01</span>
+          </div>
         </div>
       </header>
 
