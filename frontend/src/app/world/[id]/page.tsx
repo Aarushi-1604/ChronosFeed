@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState, use } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, Clock, Info, ShieldAlert, Newspaper, Globe, Menu, X } from 'lucide-react';
 import { useTheme } from '../../../context/theme-context';
@@ -21,6 +21,8 @@ interface PageProps {
 
 export default function WorldPage({ params }: PageProps) {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const isCompiled = searchParams?.get('compiled') === 'true';
   const resolvedParams = use(params);
   const worldId = resolvedParams.id;
 
@@ -58,14 +60,22 @@ export default function WorldPage({ params }: PageProps) {
         const data = await api.getWorld(worldId);
         if (!active) return;
         setWorld(data);
-        setThemeByEra(data.era, data.prompt);
+        if (isCompiled) {
+          setTheme('newspaper');
+        } else {
+          setThemeByEra(data.era, data.prompt);
+        }
         setLoading(false);
       } catch (err) {
         if (!active) return;
         console.warn('World fetch failed, using Victorian stub fallback:', err);
         const fallback = getFallbackWorld();
         setWorld(fallback);
-        setThemeByEra(fallback.era, fallback.prompt);
+        if (isCompiled) {
+          setTheme('newspaper');
+        } else {
+          setThemeByEra(fallback.era, fallback.prompt);
+        }
         setLoading(false);
       }
     }
@@ -259,61 +269,110 @@ export default function WorldPage({ params }: PageProps) {
   }
 
   return (
-    <div className="md:h-screen min-h-screen md:overflow-hidden overflow-y-auto relative flex flex-col p-4 md:p-6 select-none">
+    <div className={`md:h-screen min-h-screen md:overflow-hidden overflow-y-auto relative flex flex-col p-4 md:p-6 select-none ${isCompiled ? 'border-8 border-double border-primary-base bg-[#ede6d6]' : ''}`}>
       {/* Background Particles Grid */}
       <CanvasGrid />
 
       {/* World Page Header */}
-      <header className="w-full max-w-7xl mx-auto flex items-center justify-between border-b border-white/5 pb-4 mb-6 z-10">
-        <div className="flex items-center gap-3">
-          <button
-            onClick={() => router.push('/')}
-            className="w-9 h-9 rounded-full border border-white/10 hover:border-accent-base bg-white/5 flex items-center justify-center text-text-dim hover:text-text-main cursor-pointer hover:shadow-[0_0_8px_rgba(var(--glow-color),0.2)] transition-all"
-          >
-            <ArrowLeft size={16} />
-          </button>
-          <div>
-            <h1 className="text-xl font-bold font-serif text-text-main tracking-tight leading-none flex items-center gap-2">
-              <ChronosLogo size={20} className="text-primary-base" />
-              {world?.name}
-            </h1>
-            <span className="text-[10px] font-mono text-accent-base uppercase tracking-wider">
-              {world?.era}
-            </span>
+      {isCompiled ? (
+        <header className="w-full max-w-7xl mx-auto flex flex-col items-center border-b-4 border-double border-primary-base pb-3.5 mb-6 z-10 text-primary-base font-serif">
+          {/* Top meta row */}
+          <div className="flex justify-between w-full text-[10px] uppercase tracking-wider border-b border-primary-base/20 pb-1.5 mb-3 items-center">
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => router.push('/')}
+                className="border border-primary-base px-3 py-1 font-serif text-[10px] tracking-wider font-bold uppercase hover:bg-primary-base hover:text-[#ede6d6] transition-all duration-300 cursor-pointer flex items-center gap-1"
+              >
+                <ArrowLeft size={10} />
+                <span>Return to Console</span>
+              </button>
+              <button
+                onClick={() => router.push('/developers')}
+                className="border border-primary-base px-3 py-1 font-serif text-[10px] tracking-wider font-bold uppercase hover:bg-primary-base hover:text-[#ede6d6] transition-all duration-300 cursor-pointer"
+              >
+                Developer Portal
+              </button>
+            </div>
+            <span>VOLUME CCLXVIII // NO. 45091</span>
+            <span>PRICE: 2 CENTS</span>
           </div>
-        </div>
 
-        {/* Mobile controls */}
-        <div className="flex md:hidden gap-2">
-          <button
-            onClick={() => setShowMobileTimeline(true)}
-            className="px-3 py-1.5 border border-white/10 rounded-lg text-[10px] font-mono flex items-center gap-1.5 text-text-dim bg-white/5"
-          >
-            <Clock size={12} />
-            <span>Timeline</span>
-          </button>
-          <button
-            onClick={() => setShowMobileIntelligence(true)}
-            className="px-3 py-1.5 border border-white/10 rounded-lg text-[10px] font-mono flex items-center gap-1.5 text-text-dim bg-white/5"
-          >
-            <Info size={12} />
-            <span>Intelligence</span>
-          </button>
-        </div>
-
-        <div className="hidden md:flex gap-6 font-mono text-[10px] text-text-dim items-center">
-          <button
-            onClick={() => router.push('/developers')}
-            className="hover:text-accent-base transition-colors cursor-pointer"
-          >
-            [DEVELOPER_PORTAL]
-          </button>
-          <div className="flex gap-4">
-            <span>REALITY_KEY: {worldId.slice(0, 8)}</span>
-            <span className="text-emerald-400">STABILIZED</span>
+          {/* Banner Masthead */}
+          <div className="flex items-center justify-between w-full py-1">
+            <div className="hidden md:block w-24 h-[1px] bg-primary-base/30" />
+            <div className="flex flex-col items-center">
+              <h1 className="text-4xl md:text-5xl font-black uppercase tracking-tight font-serif text-center leading-none text-text-main flex items-center gap-3">
+                <ChronosLogo size={52} className="text-primary-base" />
+                THE DAILY CHRONICLE
+              </h1>
+              <p className="text-[10px] tracking-widest uppercase mt-2 text-center text-text-dim italic">
+                Chronology branches compiled from the temporal divergence console
+              </p>
+            </div>
+            <div className="hidden md:block w-24 h-[1px] bg-primary-base/30" />
           </div>
-        </div>
-      </header>
+
+          {/* Bottom meta row */}
+          <div className="flex justify-between w-full text-[10px] uppercase tracking-wider border-t border-primary-base/20 pt-1.5 mt-3">
+            <span>REALITY KEY: {worldId.slice(0, 8)}</span>
+            <span className="font-bold">DIVERGENCE REALITY: {world?.name}</span>
+            <span>{new Date().toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
+          </div>
+        </header>
+      ) : (
+        <header className="w-full max-w-7xl mx-auto flex items-center justify-between border-b border-white/5 pb-4 mb-6 z-10">
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => router.push('/')}
+              className="w-9 h-9 rounded-full border border-white/10 hover:border-accent-base bg-white/5 flex items-center justify-center text-text-dim hover:text-text-main cursor-pointer hover:shadow-[0_0_8px_rgba(var(--glow-color),0.2)] transition-all"
+            >
+              <ArrowLeft size={16} />
+            </button>
+            <div className="flex items-center gap-3">
+              <ChronosLogo size={44} className="text-primary-base" />
+              <div>
+                <h1 className="text-xl font-bold font-serif text-text-main tracking-tight leading-none">
+                  {world?.name}
+                </h1>
+                <span className="text-[10px] font-mono text-accent-base uppercase tracking-wider block mt-0.5">
+                  {world?.era}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Mobile controls */}
+          <div className="flex md:hidden gap-2">
+            <button
+              onClick={() => setShowMobileTimeline(true)}
+              className="px-3 py-1.5 border border-white/10 rounded-lg text-[10px] font-mono flex items-center gap-1.5 text-text-dim bg-white/5"
+            >
+              <Clock size={12} />
+              <span>Timeline</span>
+            </button>
+            <button
+              onClick={() => setShowMobileIntelligence(true)}
+              className="px-3 py-1.5 border border-white/10 rounded-lg text-[10px] font-mono flex items-center gap-1.5 text-text-dim bg-white/5"
+            >
+              <Info size={12} />
+              <span>Intelligence</span>
+            </button>
+          </div>
+
+          <div className="hidden md:flex gap-6 font-mono text-[10px] text-text-dim items-center">
+            <button
+              onClick={() => router.push('/developers')}
+              className="glass-button px-5 py-2.5 rounded-lg text-xs font-mono uppercase tracking-wider font-bold cursor-pointer text-text-main hover:text-accent-base transition-all duration-300 border border-white/10 hover:border-accent-base/50"
+            >
+              DEVELOPER PORTAL
+            </button>
+            <div className="flex gap-4">
+              <span>REALITY_KEY: {worldId.slice(0, 8)}</span>
+              <span className="text-emerald-400">STABILIZED</span>
+            </div>
+          </div>
+        </header>
+      )}
 
       {/* Three Panel Layout Container */}
       <div className="flex-1 min-h-0 w-full max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-6 z-10 relative">

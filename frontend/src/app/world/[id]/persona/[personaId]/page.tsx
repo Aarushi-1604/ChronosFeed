@@ -129,16 +129,16 @@ export default function PersonaPage({ params }: PageProps) {
           >
             <ArrowLeft size={16} />
           </button>
-          <ChronosLogo size={20} className="text-primary-base" />
+          <ChronosLogo size={36} className="text-primary-base" />
         </div>
         <div className="flex gap-6 font-mono text-[10px] text-text-dim items-center">
           <button
             onClick={() => router.push('/developers')}
-            className="hover:text-accent-base transition-colors cursor-pointer"
+            className="glass-button px-5 py-2.5 rounded-lg text-xs font-mono uppercase tracking-wider font-bold cursor-pointer text-text-main hover:text-accent-base transition-all duration-300 border border-white/10 hover:border-accent-base/50"
           >
-            [DEVELOPER_PORTAL]
+            DEVELOPER PORTAL
           </button>
-          <span>DOSSIER TELEMETRY // SECURE INDEX</span>
+          <span className="hidden sm:inline">DOSSIER TELEMETRY // SECURE INDEX</span>
         </div>
       </header>
 
@@ -171,7 +171,7 @@ export default function PersonaPage({ params }: PageProps) {
             <div className="grid grid-cols-3 w-full gap-4 border-t border-b border-white/5 py-4 font-mono mt-2">
               <div>
                 <div className="text-[9px] text-text-dim/60 uppercase">Followers</div>
-                <div className="text-sm font-bold text-text-main">{persona?.followers_count.toLocaleString()}</div>
+                <div className="text-sm font-bold text-text-main">{(persona?.followers_count ?? 0).toLocaleString()}</div>
               </div>
               <div>
                 <div className="text-[9px] text-text-dim/60 uppercase">Influence</div>
@@ -185,7 +185,7 @@ export default function PersonaPage({ params }: PageProps) {
 
             {/* Interests tags */}
             <div className="flex flex-wrap justify-center gap-1.5 mt-2">
-              {persona?.interests.map((int) => (
+              {(persona?.interests ?? []).map((int) => (
                 <span key={int} className="px-2 py-0.5 border border-white/5 bg-white/5 rounded text-[9px] font-mono text-text-dim">
                   #{int}
                 </span>

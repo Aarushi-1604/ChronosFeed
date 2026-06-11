@@ -38,7 +38,7 @@ export default function LandingPage() {
   // Handle navigation once both animation and backend generation are ready
   useEffect(() => {
     if (isAnimationComplete && effectiveStatus === 'ready' && generatedWorldId) {
-      router.push(`/world/${generatedWorldId}`);
+      router.push(`/world/${generatedWorldId}?compiled=true`);
     } else if (effectiveStatus === 'error') {
       console.error('Temporal divergence compilation failed on the backend.');
       setIsGenerating(false);
@@ -153,18 +153,18 @@ export default function LandingPage() {
 
       {/* Header Log */}
       <header className="w-full max-w-7xl mx-auto flex items-center justify-between border-b border-white/5 pb-4 mb-8 z-10 font-mono text-[11px] text-text-dim">
-        <div className="flex items-center gap-2">
-          <ChronosLogo size={18} className="text-primary-base" />
-          <span className="font-bold text-text-main tracking-wider uppercase">ChronosFeed Console</span>
+        <div className="flex items-center gap-3">
+          <ChronosLogo size={36} className="text-primary-base" />
+          <span className="font-extrabold text-text-main tracking-widest text-sm uppercase">ChronosFeed</span>
         </div>
         <div className="flex items-center gap-6">
           <button
             onClick={() => router.push('/developers')}
-            className="hover:text-accent-base transition-colors cursor-pointer"
+            className="glass-button px-5 py-2.5 rounded-lg text-xs font-mono uppercase tracking-wider font-bold cursor-pointer text-text-main hover:text-accent-base transition-all duration-300 border border-white/10 hover:border-accent-base/50"
           >
-            [DEVELOPER_PORTAL]
+            DEVELOPER PORTAL
           </button>
-          <div className="flex gap-4">
+          <div className="hidden sm:flex gap-4">
             <span>PORTAL: ACTIVE</span>
             <span className="text-accent-base animate-pulse">NODE_01</span>
           </div>
@@ -222,7 +222,7 @@ export default function LandingPage() {
                 <button
                   key={idx}
                   onClick={() => handlePromptClick(p)}
-                  className="px-3.5 py-1.5 rounded-full border border-white/5 bg-white/5 hover:bg-white/10 hover:border-accent-base transition-all duration-300 font-mono text-[10px] text-text-dim hover:text-text-main cursor-pointer"
+                  className="px-4 py-2 rounded-full border border-white/5 bg-white/5 hover:bg-white/10 hover:border-accent-base transition-all duration-300 font-sans text-xs text-text-dim hover:text-text-main cursor-pointer"
                 >
                   {p}
                 </button>
