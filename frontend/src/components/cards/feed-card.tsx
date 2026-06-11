@@ -71,7 +71,7 @@ export default function FeedCard({ item, onPersonaClick }: FeedCardProps) {
     const { title, content, category, publisher, created_at } = item.data;
     return (
       <motion.div
-        className="bg-[#f2ebd9] text-[#1f1a14] border-2 border-[#806f50] p-6 rounded-sm shadow-md font-serif relative overflow-hidden select-none"
+        className="bg-[#f2ebd9] text-[#1f1a14] border-2 border-[#806f50] p-6 rounded-sm shadow-md font-serif relative overflow-hidden select-none hover:shadow-[0_0_20px_rgba(128,111,80,0.35)] hover:border-[#5a4e37] transition-all duration-300"
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
@@ -115,7 +115,7 @@ export default function FeedCard({ item, onPersonaClick }: FeedCardProps) {
     const { company_name, tagline, description, price, created_at } = item.data;
     return (
       <motion.div
-        className="bg-[#0b2447] text-[#5fd6fa] border border-[#19376d] p-6 rounded-lg font-mono relative overflow-hidden flex flex-col justify-between h-[280px] select-none"
+        className="bg-[#0b2447] text-[#5fd6fa] border border-[#19376d] p-6 rounded-lg font-mono relative overflow-hidden flex flex-col justify-between h-[280px] select-none hover:border-[#5fd6fa]/50 hover:shadow-[0_0_25px_rgba(95,214,250,0.25)] transition-all duration-300"
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
