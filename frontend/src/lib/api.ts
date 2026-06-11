@@ -1,4 +1,4 @@
-import { World, WorldFeedResponse, Persona, News, Ad } from '../types';
+import { World, WorldFeedResponse, Persona, News, Ad, Comment } from '../types';
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
@@ -73,4 +73,7 @@ export const api = {
 
   // Ads
   getWorldAds: (id: string) => fetchJson<Ad[]>(`/api/worlds/${id}/ads`),
+
+  // Comments
+  getPostComments: (postId: string) => fetchJson<Comment[]>(`/api/posts/${postId}/comments`),
 };

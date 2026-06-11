@@ -3,7 +3,8 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Heart, RotateCw, Newspaper, Tag, Compass, Binary, AlertTriangle, MessageSquare } from 'lucide-react';
-import { Post, News, Ad } from '../../types';
+import { Post, News, Ad, Comment } from '../../types';
+import { api } from '../../lib/api';
 
 export type FeedItem =
   | { type: 'post'; data: Post }
@@ -24,6 +25,32 @@ export default function FeedCard({ item, onPersonaClick }: FeedCardProps) {
   const [repostsCount, setRepostsCount] = useState(
     item.type === 'post' ? item.data.reposts_count : 0
   );
+
+  const [showComments, setShowComments] = useState(false);
+  const [comments, setComments] = useState<Comment[]>([]);
+  const [loadingComments, setLoadingComments] = useState(false);
+  const [errorComments, setErrorComments] = useState<string | null>(null);
+
+  const handleToggleComments = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!showComments) {
+      setShowComments(true);
+      if (comments.length === 0 && item.type === 'post') {
+        setLoadingComments(true);
+        setErrorComments(null);
+        try {
+          const data = await api.getPostComments(item.data.id);
+          setComments(data);
+        } catch (err: any) {
+          setErrorComments(err.message || 'Failed to load comments');
+        } finally {
+          setLoadingComments(false);
+        }
+      }
+    } else {
+      setShowComments(false);
+    }
+  };
 
   const handleLike = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -231,17 +258,99 @@ export default function FeedCard({ item, onPersonaClick }: FeedCardProps) {
             <RotateCw size={14} className={reposted ? 'rotate-180 duration-500' : ''} />
             <span>{repostsCount}</span>
           </button>
-          
-          <div className="flex items-center gap-1.5 hover:text-blue-400 transition-colors cursor-pointer">
+          <button
+            onClick={handleToggleComments}
+            className={`flex items-center gap-1.5 transition-all duration-200 cursor-pointer hover:text-blue-400 ${
+              showComments ? 'text-blue-400 text-glow' : ''
+            }`}
+          >
             <MessageSquare size={14} />
-            <span>{Math.floor(likesCount * 0.15)}</span>
-          </div>
+            <span>{comments.length > 0 ? comments.length : Math.floor(likesCount * 0.15)}</span>
+          </button>
         </div>
 
         <span className="text-[10px] text-text-dim/60">
           {new Date(created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
         </span>
       </div>
+
+      {/* Collapsible Comments Section */}
+      {showComments && (
+        <motion.div
+          initial={{ height: 0, opacity: 0 }}
+          animate={{ height: 'auto', opacity: 1 }}
+          exit={{ height: 0, opacity: 0 }}
+          transition={{ duration: 0.3 }}
+          className="border-t border-white/5 pt-4 mt-2 overflow-hidden flex flex-col gap-3"
+        >
+          <h5 className="text-[10px] font-bold font-mono text-text-dim uppercase tracking-wider">
+            COMMUNICATION THREAD
+          </h5>
+
+          {loadingComments && (
+            <div className="space-y-3">
+              {[1, 2].map((i) => (
+                <div key={i} className="animate-pulse flex items-start gap-3">
+                  <div className="w-8 h-8 rounded-full bg-white/5 border border-white/10" />
+                  <div className="flex-1 space-y-1.5 py-0.5">
+                    <div className="h-2 bg-white/5 rounded w-1/4" />
+                    <div className="h-3 bg-white/5 rounded w-3/4" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {errorComments && (
+            <div className="text-xs text-rose-400 font-mono">
+              [TRANSMISSION ERROR]: {errorComments}
+            </div>
+          )}
+
+          {!loadingComments && !errorComments && comments.length === 0 && (
+            <div className="text-xs text-text-dim/60 font-mono italic py-1">
+              No replies registered in this sector.
+            </div>
+          )}
+
+          {!loadingComments && !errorComments && comments.length > 0 && (
+            <div className="space-y-4 max-h-[300px] overflow-y-auto pr-1">
+              {comments.map((comment) => {
+                const commentRole = comment.persona?.role;
+                const roleColor =
+                  commentRole === 'SCIENTIST'
+                    ? 'text-emerald-400'
+                    : commentRole === 'POLITICIAN'
+                    ? 'text-red-400'
+                    : commentRole === 'BRAND'
+                    ? 'text-amber-400'
+                    : 'text-accent-base';
+
+                return (
+                  <div key={comment.id} className="flex items-start gap-3 text-xs border-b border-white/[0.02] pb-3 last:border-0 last:pb-0">
+                    <div className="w-8 h-8 rounded-full border border-white/10 bg-white/5 flex items-center justify-center font-serif font-bold text-accent-base flex-shrink-0">
+                      {comment.persona?.name ? comment.persona.name.charAt(0) : '?'}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <span className="font-bold text-text-main">
+                          {comment.persona?.name || 'Unknown Citizen'}
+                        </span>
+                        <span className={`font-mono text-[10px] ${roleColor}`}>
+                          @{comment.persona?.handle || 'unknown'}
+                        </span>
+                      </div>
+                      <p className="text-text-main/80 font-sans mt-1 leading-relaxed break-words">
+                        {comment.content}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </motion.div>
+      )}
     </motion.div>
   );
 }

@@ -169,4 +169,30 @@ export const worldService = {
     if (error) throw new Error(`Failed to fetch ads: ${error.message}`);
     return (data as Ad[]) ?? [];
   },
+
+  async getCommentsByPostId(postId: string): Promise<any[]> {
+    const { data, error } = await supabase
+      .from('comments')
+      .select(`
+        id,
+        post_id,
+        persona_id,
+        content,
+        likes_count,
+        created_at,
+        persona:personas (
+          id,
+          name,
+          handle,
+          avatar,
+          role,
+          influence_score
+        )
+      `)
+      .eq('post_id', postId)
+      .order('created_at', { ascending: true });
+
+    if (error) throw new Error(`Failed to fetch comments: ${error.message}`);
+    return data ?? [];
+  },
 };

@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 
 import worldRoutes from './routes/worlds';
 import personaRoutes from './routes/personas';
+import postRoutes from './routes/posts';
 import { errorHandler } from './middleware/errorHandler';
 
 dotenv.config();
@@ -33,6 +34,7 @@ app.get('/health', (_req, res) => {
 // API routes
 app.use('/api/worlds', worldRoutes);
 app.use('/api/personas', personaRoutes);
+app.use('/api/posts', postRoutes);
 
 // 404 fallback
 app.use((_req, res) => {
