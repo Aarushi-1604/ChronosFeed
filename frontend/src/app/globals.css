@@ -74,6 +74,42 @@
   --glow-color: 239 68 68;
 }
 
+.theme-newspaper {
+  --font-sans: 'Outfit', sans-serif;
+  --font-serif: 'Playfair Display', serif;
+  --font-mono: 'Share Tech Mono', monospace;
+
+  /* Theme: Vintage Retro Newspaper */
+  --bg-color: #ede6d6;
+  --bg-grid: rgba(36, 24, 13, 0.015);
+  --color-primary: 36 24 13;    /* Dark Charcoal Gall Ink */
+  --color-secondary: 107 82 59;  /* Muted Sepia Ink */
+  --color-accent: 128 111 80;    /* Aged Brass Gold */
+  --card-bg: rgba(242, 235, 217, 0.95);
+  --border-color: rgba(36, 24, 13, 0.25);
+  --text-color: #1f1a14;
+  --text-muted: #5a4e37;
+  --glow-color: 128 111 80;
+}
+
+.theme-newspaper-dark {
+  --font-sans: 'Outfit', sans-serif;
+  --font-serif: 'Playfair Display', serif;
+  --font-mono: 'Share Tech Mono', monospace;
+
+  /* Theme: Dark Vintage Retro Newspaper */
+  --bg-color: #1a1613;          /* Dark Charcoal Paper */
+  --bg-grid: rgba(232, 225, 213, 0.015);
+  --color-primary: 232 225 213;    /* Cream Ink */
+  --color-secondary: 179 165 145;  /* Muted Sepia/Brass Ink */
+  --color-accent: 201 183 151;    /* Aged Gold */
+  --card-bg: rgba(34, 30, 26, 0.95); /* Darker Paper Card */
+  --border-color: rgba(232, 225, 213, 0.25);
+  --text-color: #e8e1d5;        /* Light Cream Text */
+  --text-muted: #a39783;        /* Muted Text */
+  --glow-color: 201 183 151;
+}
+
 @theme {
   --color-background: var(--bg-color);
   --color-text-main: var(--text-color);
@@ -93,6 +129,13 @@ body {
   font-family: var(--font-sans);
   overflow-x: hidden;
   transition: background-color 0.6s cubic-bezier(0.16, 1, 0.3, 1), color 0.4s ease;
+}
+
+@media (min-width: 768px) {
+  html, body {
+    overflow: hidden;
+    height: 100vh;
+  }
 }
 
 /* Custom Grid Background Overlay */
@@ -244,3 +287,23 @@ body {
   clip: rect(0, 900px, 0, 0); 
   animation: glitch 2.5s infinite linear alternate-reverse;
 }
+
+/* Custom Scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(var(--color-primary), 0.3);
+  border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(var(--color-primary), 0.65);
+}
+
