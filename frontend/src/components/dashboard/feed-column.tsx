@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { RefreshCw, Database } from 'lucide-react';
 import FeedCard, { FeedItem } from '../cards/feed-card';
@@ -30,26 +30,7 @@ export default function FeedColumn({
   isLoadingMore,
   feedLoading,
 }: FeedColumnProps) {
-  const loadMoreRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0]?.isIntersecting && hasMore && !isLoadingMore) {
-          onLoadMore();
-        }
-      },
-      { threshold: 0.1 }
-    );
-
-    if (loadMoreRef.current) {
-      observer.observe(loadMoreRef.current);
-    }
-
-    return () => {
-      observer.disconnect();
-    };
-  }, [hasMore, isLoadingMore]);
   return (
     <div className="flex flex-col gap-9 h-full md:max-h-[calc(100vh-140px)] max-h-none overflow-y-auto pr-2 custom-scrollbar select-none">
       {/* Compose Feed Box */}
@@ -146,26 +127,24 @@ export default function FeedColumn({
 
           {/* Load More Button */}
           {hasMore && (
-            <div ref={loadMoreRef}>
-              <div className="flex justify-center mt-2 mb-6">
-                <button
-                  onClick={onLoadMore}
-                  disabled={isLoadingMore}
-                  className="glass-button w-full py-3.5 rounded-xl text-xs font-mono uppercase tracking-wider font-bold flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
-                >
-                  {isLoadingMore ? (
-                    <>
-                      <RefreshCw className="animate-spin" size={14} />
-                      <span>Syncing Temporal Stream...</span>
-                    </>
-                  ) : (
-                    <>
-                      <Database size={14} />
-                      <span>Retrieve Further Records</span>
-                    </>
-                  )}
-                </button>
-              </div>
+            <div className="flex justify-center mt-2 mb-6">
+              <button
+                onClick={onLoadMore}
+                disabled={isLoadingMore}
+                className="glass-button w-full py-3.5 rounded-xl text-xs font-mono uppercase tracking-wider font-bold flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+              >
+                {isLoadingMore ? (
+                  <>
+                    <RefreshCw className="animate-spin" size={14} />
+                    <span>Syncing Temporal Stream...</span>
+                  </>
+                ) : (
+                  <>
+                    <Database size={14} />
+                    <span>Retrieve Further Records</span>
+                  </>
+                )}
+              </button>
             </div>
           )}
         </div>
