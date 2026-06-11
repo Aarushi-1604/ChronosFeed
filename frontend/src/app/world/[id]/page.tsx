@@ -10,8 +10,9 @@ import TimelineSidebar from '../../../components/dashboard/timeline-sidebar';
 import FeedColumn from '../../../components/dashboard/feed-column';
 import IntelligencePanel from '../../../components/dashboard/intelligence-panel';
 import { FeedItem } from '../../../components/cards/feed-card';
-import { World } from '../../../types';
+import { World, Post, News, Ad } from '../../../types';
 import { api } from '../../../lib/api';
+import { interleaveContent } from '../../../lib/feed/interleaveContent';
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -30,11 +31,18 @@ export default function WorldPage({ params }: PageProps) {
   const [error, setError] = useState<string | null>(null);
 
   // Feed Items & Pagination State
-  const [feedItems, setFeedItems] = useState<FeedItem[]>([]);
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [news, setNews] = useState<News[]>([]);
+  const [ads, setAds] = useState<Ad[]>([]);
   const [hasMore, setHasMore] = useState(false);
   const [nextCursor, setNextCursor] = useState<string | null>(null);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [feedLoading, setFeedLoading] = useState(true);
+
+  // Derive interleaved feed items dynamically
+  const feedItems = React.useMemo(() => {
+    return interleaveContent(posts, ads, news);
+  }, [posts, ads, news]);
 
   // Mobile navigation panels toggles
   const [showMobileTimeline, setShowMobileTimeline] = useState(false);
@@ -69,7 +77,7 @@ export default function WorldPage({ params }: PageProps) {
     };
   }, [worldId]);
 
-  // 2. Fetch polymorphic feed data (posts, news, ads interleaved)
+  // 2. Fetch polymorphic feed data (posts, news, ads)
   useEffect(() => {
     if (!world) return;
 
@@ -82,24 +90,17 @@ export default function WorldPage({ params }: PageProps) {
           api.getWorldAds(worldId),
         ]);
 
-        // Transform and Interleave
-        const postItems = feedRes.posts.map((p) => ({ type: 'post' as const, data: p }));
-        const newsItems = newsRes.map((n) => ({ type: 'news' as const, data: n }));
-        const adItems = adsRes.map((a) => ({ type: 'ad' as const, data: a }));
-
-        const interleaved: FeedItem[] = [...postItems, ...newsItems, ...adItems];
-        
-        // Sort chronologically descending
-        interleaved.sort(
-          (a, b) => new Date(b.data.created_at).getTime() - new Date(a.data.created_at).getTime()
-        );
-
-        setFeedItems(interleaved);
+        setPosts(feedRes.posts);
+        setNews(newsRes);
+        setAds(adsRes);
         setHasMore(feedRes.hasMore);
         setNextCursor(feedRes.nextCursor);
       } catch (err) {
-        console.error('Error loading initial polymorphic feed:', err);
-        setFeedItems([]);
+        console.error('Error loading initial polymorphic feed, using local fallback:', err);
+        const seeded = getSeededFeedItems();
+        setPosts(seeded.filter((x) => x.type === 'post').map((x) => x.data as Post));
+        setNews(seeded.filter((x) => x.type === 'news').map((x) => x.data as News));
+        setAds(seeded.filter((x) => x.type === 'ad').map((x) => x.data as Ad));
         setHasMore(false);
         setNextCursor(null);
       } finally {
@@ -118,12 +119,10 @@ export default function WorldPage({ params }: PageProps) {
     try {
       const feedRes = await api.getWorldFeed(worldId, 8, nextCursor || undefined);
 
-      const newPostItems = feedRes.posts.map((p) => ({ type: 'post' as const, data: p }));
-      
-      setFeedItems((prev) => {
-        const updated = [...prev, ...newPostItems];
+      setPosts((prev) => {
+        const updated = [...prev, ...feedRes.posts];
         updated.sort(
-          (a, b) => new Date(b.data.created_at).getTime() - new Date(a.data.created_at).getTime()
+          (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
         );
         return updated;
       });
@@ -139,30 +138,27 @@ export default function WorldPage({ params }: PageProps) {
 
   // 4. Inject Local proclamation (Transmissions)
   const handleAddLocalPost = (content: string, faction: string) => {
-    const newPostItem: FeedItem = {
-      type: 'post',
-      data: {
-        id: `local-${Date.now()}`,
-        world_id: worldId,
-        persona_id: 'local-user',
-        content,
-        media_url: null,
-        media_type: 'TEXT',
-        likes_count: 0,
-        reposts_count: 0,
-        created_at: new Date().toISOString(),
-        persona: {
-          id: 'local-persona-id',
-          name: 'Temporal Observer',
-          handle: 'temp_anchor_01',
-          avatar: '',
-          role: faction,
-          influence_score: 99,
-        },
+    const newPost: Post = {
+      id: `local-${Date.now()}`,
+      world_id: worldId,
+      persona_id: 'local-user',
+      content,
+      media_url: null,
+      media_type: 'TEXT',
+      likes_count: 0,
+      reposts_count: 0,
+      created_at: new Date().toISOString(),
+      persona: {
+        id: 'local-persona-id',
+        name: 'Temporal Observer',
+        handle: 'temp_anchor_01',
+        avatar: '',
+        role: faction,
+        influence_score: 99,
       },
     };
 
-    setFeedItems((prev) => [newPostItem, ...prev]);
+    setPosts((prev) => [newPost, ...prev]);
   };
 
   const handlePersonaProfileRedirect = (personaId: string) => {
