@@ -24,7 +24,7 @@ import ChronosLogo from '../../components/branding/chronos-logo';
 export default function DeveloperPortal() {
   const router = useRouter();
   const { theme } = useTheme();
-  const isNewspaper = (theme as string) === 'newspaper';
+  const isNewspaper = theme.startsWith('newspaper');
 
   const techStack = [
     { name: 'Next.js 15 (App Router)', role: 'Frontend Core & Core Page Routing', category: 'Frontend' },
@@ -88,8 +88,8 @@ export default function DeveloperPortal() {
   ];
 
   return (
-    <div className={`min-h-screen relative flex flex-col p-4 md:p-8 select-none overflow-x-hidden pb-16 ${
-      isNewspaper ? 'border-8 border-double border-primary-base bg-[#ede6d6] text-primary-base font-serif' : ''
+    <div className={`md:h-screen min-h-screen md:overflow-y-auto overflow-x-hidden relative flex flex-col p-4 md:p-8 select-none pb-16 ${
+      isNewspaper ? 'border-8 border-double border-primary-base bg-background text-primary-base font-serif' : ''
     }`}>
       {/* Dynamic Background Particles (only for normal dark mode console) */}
       {!isNewspaper && <CanvasGrid />}
@@ -103,7 +103,7 @@ export default function DeveloperPortal() {
             onClick={() => router.back()}
             className={`w-9 h-9 rounded-full flex items-center justify-center cursor-pointer transition-all ${
               isNewspaper 
-                ? 'border border-primary-base hover:bg-primary-base hover:text-[#ede6d6]' 
+                ? 'border border-primary-base hover:bg-primary-base hover:text-[var(--bg-color)]' 
                 : 'border border-white/10 hover:border-accent-base bg-white/5 text-text-dim hover:text-text-main hover:shadow-[0_0_8px_rgba(var(--glow-color),0.2)]'
             }`}
           >
@@ -115,13 +115,13 @@ export default function DeveloperPortal() {
               <h1 className={`text-xl font-bold tracking-tight leading-none ${isNewspaper ? 'text-primary-base' : 'text-text-main'}`}>
                 DEVELOPER INFORMATION PAGE
               </h1>
-              <span className={`text-[10px] tracking-wider block mt-1 ${isNewspaper ? 'text-[#6b523b]' : 'font-mono text-accent-base uppercase'}`}>
+              <span className={`text-[10px] tracking-wider block mt-1 ${isNewspaper ? 'text-text-dim' : 'font-mono text-accent-base uppercase'}`}>
                 About / Developers — Project Overview & Telemetry Details
               </span>
             </div>
           </div>
         </div>
-        <div className={`hidden md:flex gap-4 text-[10px] ${isNewspaper ? 'text-[#6b523b]' : 'font-mono text-text-dim'}`}>
+        <div className={`hidden md:flex gap-4 text-[10px] ${isNewspaper ? 'text-text-dim' : 'font-mono text-text-dim'}`}>
           <span>PORTAL: ONLINE</span>
           <span className={isNewspaper ? 'font-bold' : 'text-emerald-400 font-bold animate-pulse'}>SECURE ACCESS</span>
         </div>
@@ -138,7 +138,7 @@ export default function DeveloperPortal() {
               ? 'border border-primary-base/40 p-6 rounded-none flex flex-col gap-5' 
               : 'glass-panel p-6 rounded-2xl border border-border-color flex flex-col gap-5'
           }>
-            <h2 className={`text-sm font-bold uppercase tracking-wider flex items-center gap-2 ${isNewspaper ? 'text-[#24180d]' : 'font-mono text-text-main'}`}>
+            <h2 className={`text-sm font-bold uppercase tracking-wider flex items-center gap-2 ${isNewspaper ? 'text-primary-base' : 'font-mono text-text-main'}`}>
               <Users size={16} className={isNewspaper ? 'text-primary-base' : 'text-accent-base'} />
               1. Project Core & Affiliation
             </h2>
@@ -148,8 +148,8 @@ export default function DeveloperPortal() {
                   ? 'border border-primary-base/30 p-4 bg-black/[0.02]' 
                   : 'glass-panel p-4 rounded-xl bg-white/[0.02] border border-white/5'
               }>
-                <span className={`font-bold block mb-1 ${isNewspaper ? 'text-[#24180d]' : 'text-accent-base'}`}>Built For</span>
-                <p className={isNewspaper ? 'text-[#6b523b]' : 'text-text-dim leading-relaxed'}>
+                <span className={`font-bold block mb-1 ${isNewspaper ? 'text-primary-base' : 'text-accent-base'}`}>Built For</span>
+                <p className={isNewspaper ? 'text-text-dim' : 'text-text-dim leading-relaxed'}>
                   <strong>AI Club</strong>
                   <br />
                   Symbiosis Institute of Technology, Pune
@@ -160,8 +160,8 @@ export default function DeveloperPortal() {
                   ? 'border border-primary-base/30 p-4 bg-black/[0.02]' 
                   : 'glass-panel p-4 rounded-xl bg-white/[0.02] border border-white/5'
               }>
-                <span className={`font-bold block mb-1 ${isNewspaper ? 'text-[#24180d]' : 'text-accent-base'}`}>Built By</span>
-                <div className={isNewspaper ? 'text-[#6b523b] space-y-0.5' : 'text-text-dim space-y-0.5'}>
+                <span className={`font-bold block mb-1 ${isNewspaper ? 'text-primary-base' : 'text-accent-base'}`}>Built By</span>
+                <div className={isNewspaper ? 'text-text-dim space-y-0.5' : 'text-text-dim space-y-0.5'}>
                   <div>Aarushi S. — <em>Backend Engineer</em></div>
                   <div>Aditya Singh — <em>Frontend Engineer</em></div>
                   <div>Yeshwant — <em>AI Engineer</em></div>
@@ -176,11 +176,11 @@ export default function DeveloperPortal() {
               ? 'border border-primary-base/40 p-6 rounded-none flex flex-col gap-4' 
               : 'glass-panel p-6 rounded-2xl border border-border-color flex flex-col gap-4'
           }>
-            <h2 className={`text-sm font-bold uppercase tracking-wider flex items-center gap-2 ${isNewspaper ? 'text-[#24180d]' : 'font-mono text-text-main'}`}>
+            <h2 className={`text-sm font-bold uppercase tracking-wider flex items-center gap-2 ${isNewspaper ? 'text-primary-base' : 'font-mono text-text-main'}`}>
               <Cpu size={16} className={isNewspaper ? 'text-primary-base' : 'text-accent-base'} />
               2. System Purpose & Core Concepts
             </h2>
-            <div className={`text-xs leading-relaxed space-y-3 ${isNewspaper ? 'text-[#6b523b]' : 'text-text-dim font-sans'}`}>
+            <div className={`text-xs leading-relaxed space-y-3 ${isNewspaper ? 'text-text-dim' : 'text-text-dim font-sans'}`}>
               <p>
                 <strong>ChronosFeed</strong> is an alternate history simulation platform that bridges LLM-based narrative generation with an interactive, multi-era social network simulator. By specifying a pivotal "divergence prompt" (e.g. <em>what if the library of Alexandria survived?</em>), the system generates a causal chain of events and populates active simulated personas, news dispatches, advertisements, and feed posts.
               </p>
@@ -196,7 +196,7 @@ export default function DeveloperPortal() {
               ? 'border border-primary-base/40 p-6 rounded-none flex flex-col gap-4' 
               : 'glass-panel p-6 rounded-2xl border border-border-color flex flex-col gap-4'
           }>
-            <h2 className={`text-sm font-bold uppercase tracking-wider flex items-center gap-2 ${isNewspaper ? 'text-[#24180d]' : 'font-mono text-text-main'}`}>
+            <h2 className={`text-sm font-bold uppercase tracking-wider flex items-center gap-2 ${isNewspaper ? 'text-primary-base' : 'font-mono text-text-main'}`}>
               <Layers size={16} className={isNewspaper ? 'text-primary-base' : 'text-accent-base'} />
               3. Technology Stack Breakdown
             </h2>
@@ -208,8 +208,8 @@ export default function DeveloperPortal() {
                     : 'border-white/5 rounded-xl bg-white/[0.01] hover:bg-white/[0.03]'
                 }`}>
                   <span className={`text-[9px] uppercase tracking-wider ${isNewspaper ? 'text-primary-base' : 'font-mono text-accent-base'}`}>{tech.category}</span>
-                  <span className={`font-bold text-xs mt-0.5 ${isNewspaper ? 'text-[#24180d]' : 'text-text-main'}`}>{tech.name}</span>
-                  <span className={`text-[10px] mt-1 leading-normal ${isNewspaper ? 'text-[#6b523b]' : 'text-text-dim font-sans'}`}>{tech.role}</span>
+                  <span className={`font-bold text-xs mt-0.5 ${isNewspaper ? 'text-primary-base' : 'text-text-main'}`}>{tech.name}</span>
+                  <span className={`text-[10px] mt-1 leading-normal ${isNewspaper ? 'text-text-dim' : 'text-text-dim font-sans'}`}>{tech.role}</span>
                 </div>
               ))}
             </div>
@@ -221,7 +221,7 @@ export default function DeveloperPortal() {
               ? 'border border-primary-base/40 p-6 rounded-none flex flex-col gap-4' 
               : 'glass-panel p-6 rounded-2xl border border-border-color flex flex-col gap-4'
           }>
-            <h2 className={`text-sm font-bold uppercase tracking-wider flex items-center gap-2 ${isNewspaper ? 'text-[#24180d]' : 'font-mono text-text-main'}`}>
+            <h2 className={`text-sm font-bold uppercase tracking-wider flex items-center gap-2 ${isNewspaper ? 'text-primary-base' : 'font-mono text-text-main'}`}>
               <BookOpen size={16} className={isNewspaper ? 'text-primary-base' : 'text-accent-base'} />
               4. Feature Architecture Overview
             </h2>
@@ -232,8 +232,8 @@ export default function DeveloperPortal() {
                     ? 'border-primary-base/20 bg-black/[0.01]' 
                     : 'border-white/5 rounded-xl bg-white/[0.02]'
                 }`}>
-                  <span className={`font-bold block ${isNewspaper ? 'text-[#24180d]' : 'text-text-main'}`}>{feat.title}</span>
-                  <p className={`mt-1 leading-relaxed ${isNewspaper ? 'text-[#6b523b]' : 'text-text-dim font-sans'}`}>{feat.desc}</p>
+                  <span className={`font-bold block ${isNewspaper ? 'text-primary-base' : 'text-text-main'}`}>{feat.title}</span>
+                  <p className="mt-1 leading-relaxed text-text-dim font-sans">{feat.desc}</p>
                 </div>
               ))}
             </div>
@@ -249,13 +249,13 @@ export default function DeveloperPortal() {
               ? 'border border-primary-base/40 p-6 rounded-none flex flex-col gap-4' 
               : 'glass-panel p-6 rounded-2xl border border-border-color flex flex-col gap-4'
           }>
-            <h2 className={`text-sm font-bold uppercase tracking-wider flex items-center gap-2 ${isNewspaper ? 'text-[#24180d]' : 'font-mono text-text-main'}`}>
+            <h2 className={`text-sm font-bold uppercase tracking-wider flex items-center gap-2 ${isNewspaper ? 'text-primary-base' : 'font-mono text-text-main'}`}>
               <Activity size={16} className={isNewspaper ? 'text-primary-base' : 'text-accent-base'} />
               5. Pipeline Architecture
             </h2>
-            <div className={`space-y-4 text-[10px] ${isNewspaper ? 'text-[#6b523b]' : 'font-mono text-text-dim'}`}>
+            <div className={`space-y-4 text-[10px] ${isNewspaper ? 'text-text-dim' : 'font-mono text-text-dim'}`}>
               <div className={`border p-3 ${isNewspaper ? 'border-primary-base/20 bg-black/[0.01]' : 'border-white/5 rounded-xl bg-white/[0.02]'}`}>
-                <span className={`font-bold uppercase block mb-1 flex items-center gap-1 ${isNewspaper ? 'text-[#24180d]' : 'text-accent-base'}`}>
+                <span className={`font-bold uppercase block mb-1 flex items-center gap-1 ${isNewspaper ? 'text-primary-base' : 'text-accent-base'}`}>
                   <Code size={12} />
                   Generation Logic
                 </span>
@@ -265,7 +265,7 @@ export default function DeveloperPortal() {
               </div>
 
               <div className={`border p-3 ${isNewspaper ? 'border-primary-base/20 bg-black/[0.01]' : 'border-white/5 rounded-xl bg-white/[0.02]'}`}>
-                <span className={`font-bold uppercase block mb-1 flex items-center gap-1 ${isNewspaper ? 'text-[#24180d]' : 'text-accent-base'}`}>
+                <span className={`font-bold uppercase block mb-1 flex items-center gap-1 ${isNewspaper ? 'text-primary-base' : 'text-accent-base'}`}>
                   <Database size={12} />
                   Database Relational Schema
                 </span>
@@ -282,15 +282,15 @@ export default function DeveloperPortal() {
               ? 'border border-primary-base/40 p-6 rounded-none flex flex-col gap-4' 
               : 'glass-panel p-6 rounded-2xl border border-border-color flex flex-col gap-4'
           }>
-            <h2 className={`text-sm font-bold uppercase tracking-wider flex items-center gap-2 ${isNewspaper ? 'text-[#24180d]' : 'font-mono text-text-main'}`}>
+            <h2 className={`text-sm font-bold uppercase tracking-wider flex items-center gap-2 ${isNewspaper ? 'text-primary-base' : 'font-mono text-text-main'}`}>
               <Settings size={16} className={isNewspaper ? 'text-primary-base' : 'text-accent-base'} />
               6. Repository Statistics
             </h2>
             <div className={`flex flex-col gap-2 text-xs ${isNewspaper ? 'font-serif' : 'font-mono'}`}>
               {reposStats.map((stat, i) => (
                 <div key={i} className={`flex justify-between items-center border-b pb-2 last:border-0 last:pb-0 ${isNewspaper ? 'border-primary-base/15' : 'border-white/5'}`}>
-                  <span className={`uppercase text-[10px] ${isNewspaper ? 'text-[#6b523b]' : 'text-text-dim'}`}>{stat.label}</span>
-                  <span className={`font-bold ${isNewspaper ? 'text-[#24180d]' : 'text-text-main'}`}>{stat.value}</span>
+                  <span className={`uppercase text-[10px] ${isNewspaper ? 'text-text-dim' : 'text-text-dim'}`}>{stat.label}</span>
+                  <span className={`font-bold ${isNewspaper ? 'text-primary-base' : 'text-text-main'}`}>{stat.value}</span>
                 </div>
               ))}
             </div>
@@ -302,7 +302,7 @@ export default function DeveloperPortal() {
               ? 'border border-primary-base/40 p-6 rounded-none flex flex-col gap-4' 
               : 'glass-panel p-6 rounded-2xl border border-border-color flex flex-col gap-4'
           }>
-            <h2 className={`text-sm font-bold uppercase tracking-wider flex items-center gap-2 ${isNewspaper ? 'text-[#24180d]' : 'font-mono text-text-main'}`}>
+            <h2 className={`text-sm font-bold uppercase tracking-wider flex items-center gap-2 ${isNewspaper ? 'text-primary-base' : 'font-mono text-text-main'}`}>
               <GitBranch size={16} className={isNewspaper ? 'text-primary-base' : 'text-accent-base'} />
               7. Version & Git Milestone History
             </h2>
@@ -312,17 +312,17 @@ export default function DeveloperPortal() {
                   {/* Point node */}
                   <div className={`absolute -left-[22px] top-1.5 w-3 h-3 transition-colors ${
                     isNewspaper 
-                      ? 'border border-primary-base bg-[#ede6d6] group-hover:bg-primary-base' 
+                      ? 'border border-primary-base bg-background group-hover:bg-primary-base' 
                       : 'rounded-full border border-accent-base bg-background group-hover:bg-accent-base'
                   }`} />
                   
                   <div className="flex flex-col">
                     <div className="flex items-baseline gap-2">
-                      <span className={`text-xs font-bold ${isNewspaper ? 'text-[#24180d]' : 'font-mono text-accent-base'}`}>{item.version}</span>
-                      <span className={`text-[9px] ${isNewspaper ? 'text-[#6b523b]' : 'font-mono text-text-dim'}`}>{item.date}</span>
+                      <span className={`text-xs font-bold ${isNewspaper ? 'text-primary-base' : 'font-mono text-accent-base'}`}>{item.version}</span>
+                      <span className={`text-[9px] ${isNewspaper ? 'text-text-dim' : 'font-mono text-text-dim'}`}>{item.date}</span>
                     </div>
-                    <span className={`text-xs font-bold mt-0.5 ${isNewspaper ? 'text-[#24180d] font-serif' : 'text-text-main font-serif'}`}>{item.title}</span>
-                    <p className={`text-[10px] leading-relaxed mt-1 ${isNewspaper ? 'text-[#6b523b]' : 'text-text-dim font-sans'}`}>{item.desc}</p>
+                    <span className={`text-xs font-bold mt-0.5 ${isNewspaper ? 'text-primary-base font-serif' : 'text-text-main font-serif'}`}>{item.title}</span>
+                    <p className={`text-[10px] leading-relaxed mt-1 ${isNewspaper ? 'text-text-dim font-sans' : 'text-text-dim font-sans'}`}>{item.desc}</p>
                   </div>
                 </div>
               ))}
@@ -335,11 +335,11 @@ export default function DeveloperPortal() {
               ? 'border border-primary-base/40 p-6 rounded-none flex flex-col gap-4' 
               : 'glass-panel p-6 rounded-2xl border border-border-color flex flex-col gap-4'
           }>
-            <h2 className={`text-sm font-bold uppercase tracking-wider flex items-center gap-2 ${isNewspaper ? 'text-[#24180d]' : 'font-mono text-text-main'}`}>
+            <h2 className={`text-sm font-bold uppercase tracking-wider flex items-center gap-2 ${isNewspaper ? 'text-primary-base' : 'font-mono text-text-main'}`}>
               <Rocket size={16} className={isNewspaper ? 'text-primary-base' : 'text-accent-base'} />
               8. Future Roadmap
             </h2>
-            <div className={`space-y-2.5 text-xs ${isNewspaper ? 'text-[#6b523b]' : 'text-text-dim'}`}>
+            <div className={`space-y-2.5 text-xs ${isNewspaper ? 'text-text-dim' : 'text-text-dim'}`}>
               <div className="flex items-start gap-2">
                 <span className={`w-1.5 h-1.5 mt-1.5 flex-shrink-0 ${isNewspaper ? 'bg-primary-base' : 'rounded-full bg-accent-base'}`} />
                 <span className={isNewspaper ? 'font-serif' : 'font-sans'}>
@@ -367,11 +367,11 @@ export default function DeveloperPortal() {
               ? 'border border-primary-base/40 p-6 rounded-none flex flex-col gap-4' 
               : 'glass-panel p-6 rounded-2xl border border-border-color flex flex-col gap-4'
           }>
-            <h2 className={`text-sm font-bold uppercase tracking-wider flex items-center gap-2 ${isNewspaper ? 'text-[#24180d]' : 'font-mono text-text-main'}`}>
+            <h2 className={`text-sm font-bold uppercase tracking-wider flex items-center gap-2 ${isNewspaper ? 'text-primary-base' : 'font-mono text-text-main'}`}>
               <Award size={16} className={isNewspaper ? 'text-primary-base' : 'text-accent-base'} />
               9. System Credits
             </h2>
-            <div className={`text-xs leading-relaxed space-y-2.5 ${isNewspaper ? 'text-[#6b523b]' : 'text-text-dim font-sans'}`}>
+            <div className={`text-xs leading-relaxed space-y-2.5 ${isNewspaper ? 'text-text-dim' : 'text-text-dim font-sans'}`}>
               <p>
                 We acknowledge the leverage of the following tools and framework systems that made this hackathon prototype possible:
               </p>
@@ -385,6 +385,11 @@ export default function DeveloperPortal() {
           </section>
         </div>
       </main>
+
+      {/* Newspaper Footer */}
+      <footer className="w-full max-w-6xl mx-auto border-t-2 border-double border-primary-base/20 mt-8 pt-3.5 pb-1 text-center text-[9px] tracking-[0.22em] font-serif text-text-dim uppercase font-bold z-10">
+        AI CLUB | SIT PUNE | AARUSHI | ADITYA | YESHWANT | 2026
+      </footer>
     </div>
   );
 }
