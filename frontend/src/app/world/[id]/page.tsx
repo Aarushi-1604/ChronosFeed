@@ -61,7 +61,7 @@ export default function WorldPage({ params }: PageProps) {
         if (!active) return;
         setWorld(data);
         if (isCompiled) {
-          setTheme('newspaper');
+          setTheme('newspaper' as any);
         } else {
           setThemeByEra(data.era, data.prompt);
         }
@@ -72,7 +72,7 @@ export default function WorldPage({ params }: PageProps) {
         const fallback = getFallbackWorld();
         setWorld(fallback);
         if (isCompiled) {
-          setTheme('newspaper');
+          setTheme('newspaper' as any);
         } else {
           setThemeByEra(fallback.era, fallback.prompt);
         }

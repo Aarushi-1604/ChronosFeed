@@ -24,7 +24,7 @@ import ChronosLogo from '../../components/branding/chronos-logo';
 export default function DeveloperPortal() {
   const router = useRouter();
   const { theme } = useTheme();
-  const isNewspaper = theme === 'newspaper';
+  const isNewspaper = (theme as string) === 'newspaper';
 
   const techStack = [
     { name: 'Next.js 15 (App Router)', role: 'Frontend Core & Core Page Routing', category: 'Frontend' },
