@@ -12,7 +12,7 @@ Users can ask questions such as:
 * What if the Library of Alexandria survived?
 * What if the Cold War ended differently?
 * What if Hunger Games happened for real in 2026?
-* 
+
 ChronosFeed then generates:
 
 * Alternate timelines
