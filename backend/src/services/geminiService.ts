@@ -70,8 +70,17 @@ export function cleanJSON(text: string): string {
 export async function callGemini(prompt: string): Promise<unknown> {
   try {
     const apiKey = process.env.GEMINI_API_KEY;
+    const isDev = process.env.NODE_ENV === 'development';
+
     if (!apiKey) {
-      throw new Error('GEMINI_API_KEY not set');
+      if (isDev) {
+        console.warn(
+          '⚠️ GEMINI_API_KEY is missing in development mode. Activating offline fallback mock response.'
+        );
+        return getMockGeminiResponse(prompt);
+      } else {
+        throw new Error('GEMINI_API_KEY not set in environment.');
+      }
     }
 
     const modelName = process.env.GEMINI_MODEL || 'gemini-3.1-flash-lite';
@@ -91,5 +100,54 @@ export async function callGemini(prompt: string): Promise<unknown> {
     }
   } catch (error: any) {
     throw new Error('Gemini API call failed: ' + error.message);
+  }
+}
+
+/**
+ * Returns mock structured data matching prompt target context for offline dev fallback.
+ */
+function getMockGeminiResponse(prompt: string): any {
+  const combined = prompt.toLowerCase();
+  
+  if (combined.includes('comment')) {
+    return [
+      { handle: 'steam_coder_99', content: 'Incredible mechanical calculation efficiency!', likes_count: 12 },
+      { handle: 'ada_coder', content: 'The analytical engine loops look solid.', likes_count: 45 },
+      { handle: 'royal_observer', content: 'A direct decree from the Crown!', likes_count: 8 }
+    ];
+  } else if (combined.includes('persona')) {
+    return [
+      { name: 'Charles Babbage III', handle: 'steam_coder_99', bio: 'Compiler of systems.', role: 'SCIENTIST', influence_score: 87, interests: ['calculus', 'steam'], personality: 'analytical' },
+      { name: 'Ada Lovelace Jr.', handle: 'ada_coder', bio: 'Pioneer of loops.', role: 'SCIENTIST', influence_score: 95, interests: ['loops', 'math'], personality: 'visionary' },
+      { name: 'Lord Byron II', handle: 'romantic_poet', bio: 'Techno-romantic verse compiler.', role: 'INFLUENCER', influence_score: 82, interests: ['poetry', 'steam-cards'], personality: 'expressive' },
+      { name: 'Chancellor Gearing', handle: 'state_iron', bio: 'Gears administrator under the crown.', role: 'POLITICIAN', influence_score: 89, interests: ['governance', 'iron'], personality: 'authoritarian' }
+    ];
+  } else if (combined.includes('event')) {
+    return [
+      { year: '1890', title: 'Prototype Engine', description: 'Babbage completes the steam prototype.', impact: 'Steam computing goes online.' },
+      { year: '1895', title: 'Mechanical Net Act', description: 'Tubes and mechanical lines laid across the empire.', impact: 'Information networks take structural control.' },
+      { year: '1902', title: 'Steam Space Rocket Launch', description: 'Pressurized copper capsule reaches orbit.', impact: 'Era of space steamships begins.' }
+    ];
+  } else if (combined.includes('news')) {
+    return [
+      { title: 'Expansion Act Passed', content: 'Parliament votes to expand the Tube net.', category: 'POLITICS', publisher: 'Telegraph' }
+    ];
+  } else if (combined.includes('ad')) {
+    return [
+      { company_name: 'BabbageCo', tagline: 'Compute at steam speed.', description: 'Mark VII coprocessor.', price: '3 Sovereigns' }
+    ];
+  } else if (combined.includes('post')) {
+    return [
+      { content: 'Just upgraded the steam router loops.', likes_count: 120, reposts_count: 24 }
+    ];
+  } else {
+    // Return world details object
+    return {
+      name: 'The Steam Age',
+      summary: 'History of steam computing.',
+      era: 'Victorian Cyberpunk',
+      tech_level: 'Steam mechanical routers',
+      gov_type: 'Corporatist Monarchy'
+    };
   }
 }
