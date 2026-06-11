@@ -3,7 +3,7 @@
 ## Social Media for Alternate Histories and Current Theories
 ### Get all your "What If?" questions answered
 
-ChronosFeed is an AI-powered social media platform that generates entire alternate-history ecosystems from a single historical divergence.
+ChronosFeed is an AI-powered social media platform that generates entire alternate-history/present/futures ecosystems from a single timeline divergence.
 
 Users can ask questions such as:
 
@@ -11,10 +11,11 @@ Users can ask questions such as:
 * What if Rome never fell?
 * What if the Library of Alexandria survived?
 * What if the Cold War ended differently?
-
+* What if Hunger Games happened for real in 2026?
+* 
 ChronosFeed then generates:
 
-* Alternate historical timelines
+* Alternate timelines
 * Fictional influencers and public figures
 * Social media posts
 * News articles
@@ -29,7 +30,7 @@ all consistent with the generated alternate universe.
 
 ### World Generation
 
-Generate complete alternate-history worlds from a single prompt.
+Generate complete alternate-reality worlds from a single prompt.
 
 ### AI Personas
 
@@ -82,7 +83,7 @@ Explore the key events that shaped the generated universe.
 ### Deployment
 
 * Vercel
-* Render / Railway
+* Railway
 * Supabase
 
 ---
@@ -139,7 +140,7 @@ Responsibilities:
 
 ## Project Goal
 
-To make alternate history feel alive by allowing users to explore entire social media ecosystems from worlds that never existed.
+To make alternate reality feel alive by allowing users to explore entire social media ecosystems from worlds that never existed.
 
 ---
 
