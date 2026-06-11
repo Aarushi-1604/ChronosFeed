@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import dotenv from 'dotenv';
+import ws from 'ws';
 
 dotenv.config();
 
@@ -163,10 +164,19 @@ if (!supabaseUrl || !supabaseServiceKey) {
     );
   }
 } else {
-  supabaseClient = createClient(supabaseUrl, supabaseServiceKey, {
+  let cleanedUrl = supabaseUrl.trim();
+  if (cleanedUrl.endsWith('/rest/v1/')) {
+    cleanedUrl = cleanedUrl.slice(0, -9);
+  } else if (cleanedUrl.endsWith('/rest/v1')) {
+    cleanedUrl = cleanedUrl.slice(0, -8);
+  }
+  supabaseClient = createClient(cleanedUrl, supabaseServiceKey, {
     auth: {
       autoRefreshToken: false,
       persistSession: false,
+    },
+    realtime: {
+      transport: ws as any,
     },
   });
 }
