@@ -106,6 +106,37 @@ export function buildAdsPrompt(worldContext: string): string {
 }
 
 /**
+ * Reads the comment template, replaces placeholders, and returns the completed prompt.
+ * Falls back to an inline prompt on error.
+ */
+export function buildCommentPrompt(
+    worldContext: string,
+    postContent: string,
+    postAuthorHandle: string,
+    personaHandles: string[]
+): string {
+    try {
+        const filePath = path.join(process.cwd(), '..', 'ai-lab', 'prompts', 'comment.txt');
+        const template = fs.readFileSync(filePath, 'utf8');
+        let completed = template.split('{{WORLD_CONTEXT}}').join(worldContext);
+        completed = completed.split('{{POST_CONTENT}}').join(postContent);
+        completed = completed.split('{{POST_AUTHOR_HANDLE}}').join(postAuthorHandle);
+        completed = completed.split('{{PERSONA_HANDLES}}').join(
+            personaHandles.filter(h => h !== postAuthorHandle).join(', ')
+        );
+        return completed;
+    } catch (error) {
+        return (
+            "Generate a JSON array of 3 comments for this post in an alternate history world. " +
+            "World: " + worldContext + ". Post: " + postContent + ". " +
+            "Return ONLY a JSON array. Each object must have: handle (from: " +
+            personaHandles.filter(h => h !== postAuthorHandle).join(', ') + "), " +
+            "content (1-2 sentences), likes_count (integer 5-5000)."
+        );
+    }
+}
+
+/**
  * Orchestrates the complete AI generation pipeline for a World.
  */
 export async function generateWorld(worldId: string, userPrompt: string): Promise<void> {
@@ -224,6 +255,7 @@ export async function generateWorld(worldId: string, userPrompt: string): Promis
         // ==========================================
         // Step 3 — Generate posts
         // ==========================================
+        let insertedPostsForComments: any[] | null = null;
         try {
             const personaHandles = personasList.map(p => p.handle);
             const postPrompt = buildPostPrompt(worldContext, personaHandles);
@@ -266,15 +298,22 @@ export async function generateWorld(worldId: string, userPrompt: string): Promis
                 })
                 .filter((post): post is Exclude<typeof post, null> => post !== null);
 
+            let insertedPosts: any[] | null = null;
+
             if (postsToInsert.length > 0) {
-                const { error: insertPostsError } = await supabase
+                const { data: postsData, error: insertPostsError } = await supabase
                     .from('posts')
-                    .insert(postsToInsert);
+                    .insert(postsToInsert)
+                    .select();
 
                 if (insertPostsError) {
                     throw new Error(`Failed to insert posts: ${insertPostsError.message}`);
                 }
+
+                insertedPosts = postsData;
             }
+            // Store insertedPosts on outer scope for Step 3d
+            insertedPostsForComments = insertedPosts;
         } catch (postError: any) {
             console.error("Step 3 (Post Generation) failed:", postError.message);
         }
@@ -364,6 +403,85 @@ export async function generateWorld(worldId: string, userPrompt: string): Promis
             }
         } catch (adsError: any) {
             console.error("Step 3c (Ads Generation) failed:", adsError.message);
+        }
+
+        // ==========================================
+        // Step 3d — Generate comments
+        // ==========================================
+        try {
+            const insertedPosts: any[] | null = insertedPostsForComments;
+
+            if (insertedPosts && insertedPosts.length > 0) {
+                const handleToPersonaId = new Map<string, string>();
+                personasList.forEach(p => {
+                    handleToPersonaId.set(p.handle, p.id);
+                });
+
+                const postIdToHandle = new Map<string, string>();
+                insertedPosts.forEach(post => {
+                    const persona = personasList.find(p => p.id === post.persona_id);
+                    if (persona) {
+                        postIdToHandle.set(post.id, persona.handle);
+                    }
+                });
+
+                const personaHandles = personasList.map(p => p.handle);
+                const postsToComment = insertedPosts.slice(0, 5);
+
+                for (let i = 0; i < postsToComment.length; i++) {
+                    const post = postsToComment[i];
+
+                    if (i > 0) {
+                        await new Promise(resolve => setTimeout(resolve, 6000));
+                    }
+
+                    const authorHandle = postIdToHandle.get(post.id);
+                    if (!authorHandle) {
+                        console.warn(`Could not find author handle for post ${post.id}. Skipping.`);
+                        continue;
+                    }
+
+                    const commentPrompt = buildCommentPrompt(worldContext, post.content, authorHandle, personaHandles);
+                    const commentResultRaw = await callGemini(commentPrompt);
+
+                    if (!Array.isArray(commentResultRaw)) {
+                        console.warn(`Invalid response from Gemini for comments on post ${post.id}: expected an array.`);
+                        continue;
+                    }
+
+                    const commentResult = commentResultRaw as Array<{
+                        handle: string;
+                        content: string;
+                        likes_count: number;
+                    }>;
+
+                    for (const comment of commentResult) {
+                        const commenterId = handleToPersonaId.get(comment.handle);
+                        if (!commenterId) {
+                            continue;
+                        }
+
+                        const { error: insertCommentError } = await supabase
+                            .from('comments')
+                            .insert({
+                                post_id: post.id,
+                                persona_id: commenterId,
+                                content: comment.content,
+                                likes_count: comment.likes_count,
+                            });
+
+                        if (insertCommentError) {
+                            console.warn(`Failed to insert comment for post ${post.id}: ${insertCommentError.message}`);
+                        }
+                    }
+
+                    console.log("Comments generated for post " + post.id);
+                }
+            } else {
+                console.log("Step 3d: No inserted posts available. Skipping comment generation.");
+            }
+        } catch (commentError: any) {
+            console.error("Step 3d (Comment Generation) failed:", commentError.message);
         }
 
         // ==========================================
