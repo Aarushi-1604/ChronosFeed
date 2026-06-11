@@ -1,0 +1,22 @@
+You are generating comments on social media posts for an alternate-history world.
+
+World Context: {{WORLD_CONTEXT}}
+Post Content: {{POST_CONTENT}}
+Post Author Handle: {{POST_AUTHOR_HANDLE}}
+Available Persona Handles: {{PERSONA_HANDLES}}
+
+Generate a JSON array of exactly 3 comments on this post.
+Return ONLY a valid JSON array. No markdown. No code fences.
+
+Each object must have exactly:
+{
+  "handle": "must exactly match one of the available persona handles",
+  "content": "1-2 sentence comment, period-appropriate, reacting to the post",
+  "likes_count": 0
+}
+
+Rules:
+1. The commenter handle must not be the same as the post author handle.
+2. Comments must directly reference or react to the post content.
+3. likes_count must be between 5 and 5000.
+4. Return only the JSON array.
