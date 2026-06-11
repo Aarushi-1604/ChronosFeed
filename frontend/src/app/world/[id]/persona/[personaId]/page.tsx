@@ -7,6 +7,7 @@ import { ArrowLeft, Award, Shield, User, Heart, RotateCw, Skull, Handshake, Land
 import CanvasGrid from '../../../../../components/ui/canvas-grid';
 import { Persona } from '../../../../../types';
 import { api } from '../../../../../lib/api';
+import ChronosLogo from '../../../../../components/branding/chronos-logo';
 
 interface PageProps {
   params: Promise<{ id: string; personaId: string }>;
@@ -121,12 +122,15 @@ export default function PersonaPage({ params }: PageProps) {
 
       {/* Page Header */}
       <header className="w-full max-w-5xl mx-auto flex items-center justify-between border-b border-white/5 pb-4 mb-8 z-10">
-        <button
-          onClick={() => router.push(`/world/${worldId}`)}
-          className="w-9 h-9 rounded-full border border-white/10 hover:border-accent-base bg-white/5 flex items-center justify-center text-text-dim hover:text-text-main cursor-pointer hover:shadow-[0_0_8px_rgba(var(--glow-color),0.2)] transition-all"
-        >
-          <ArrowLeft size={16} />
-        </button>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => router.push(`/world/${worldId}`)}
+            className="w-9 h-9 rounded-full border border-white/10 hover:border-accent-base bg-white/5 flex items-center justify-center text-text-dim hover:text-text-main cursor-pointer hover:shadow-[0_0_8px_rgba(var(--glow-color),0.2)] transition-all"
+          >
+            <ArrowLeft size={16} />
+          </button>
+          <ChronosLogo size={20} className="text-primary-base" />
+        </div>
         <span className="font-mono text-[10px] text-text-dim">
           DOSSIER TELEMETRY // SECURE INDEX
         </span>

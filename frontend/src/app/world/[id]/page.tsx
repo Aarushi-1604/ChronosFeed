@@ -13,6 +13,7 @@ import { FeedItem } from '../../../components/cards/feed-card';
 import { World, Post, News, Ad } from '../../../types';
 import { api } from '../../../lib/api';
 import { interleaveContent } from '../../../lib/feed/interleaveContent';
+import ChronosLogo from '../../../components/branding/chronos-logo';
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -273,6 +274,7 @@ export default function WorldPage({ params }: PageProps) {
           </button>
           <div>
             <h1 className="text-xl font-bold font-serif text-text-main tracking-tight leading-none flex items-center gap-2">
+              <ChronosLogo size={20} className="text-primary-base" />
               {world?.name}
             </h1>
             <span className="text-[10px] font-mono text-accent-base uppercase tracking-wider">

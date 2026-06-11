@@ -25,7 +25,7 @@ export default function WorldMapPlaceholder() {
       {/* HUD Telemetry header */}
       <div className="flex items-center justify-between font-mono text-[9px] text-text-dim border-b border-white/5 pb-2">
         <div className="flex items-center gap-1.5">
-          <span className="w-1.5 h-1.5 rounded-full bg-primary-base-color animate-ping" />
+          <span className="w-1.5 h-1.5 rounded-full bg-primary-base animate-ping" />
           <span>REAL-TIME TEMPORAL PLOTTING</span>
         </div>
         <div className="flex gap-4">
@@ -40,7 +40,7 @@ export default function WorldMapPlaceholder() {
         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[size:16px_16px] pointer-events-none" />
 
         {/* Vector SVG Map */}
-        <svg className="w-full h-full opacity-60 text-primary-base-color" viewBox="0 0 400 180" fill="none">
+        <svg className="w-full h-full opacity-60 text-primary-base" viewBox="0 0 400 180" fill="none">
           {/* Graticule Circles */}
           <circle cx="200" cy="90" r="80" stroke="currentColor" strokeWidth="0.5" strokeDasharray="3 6" className="opacity-30" />
           <circle cx="200" cy="90" r="140" stroke="currentColor" strokeWidth="0.5" strokeDasharray="5 10" className="opacity-20" />
@@ -52,7 +52,7 @@ export default function WorldMapPlaceholder() {
             fillOpacity="0.04"
             stroke="currentColor"
             strokeWidth="1"
-            className="text-primary-base-color"
+            className="text-primary-base"
           />
           <path
             d="M220,50 Q260,30 300,50 T340,80 T300,130 T250,110 T230,80 Z"
@@ -60,7 +60,7 @@ export default function WorldMapPlaceholder() {
             fillOpacity="0.04"
             stroke="currentColor"
             strokeWidth="1"
-            className="text-primary-base-color"
+            className="text-primary-base"
           />
           <path
             d="M160,110 Q180,95 200,120 T220,140 T170,160 Z"
@@ -68,7 +68,7 @@ export default function WorldMapPlaceholder() {
             fillOpacity="0.04"
             stroke="currentColor"
             strokeWidth="0.8"
-            className="text-primary-base-color"
+            className="text-primary-base"
           />
 
           {/* Sector grid markers */}

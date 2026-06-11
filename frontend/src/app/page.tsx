@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, Terminal as TerminalIcon, Globe, Compass, GitBranch, ArrowRight } from 'lucide-react';
+import ChronosLogo from '../components/branding/chronos-logo';
 import CanvasGrid from '../components/ui/canvas-grid';
 import SimulationStatus from '../components/ui/simulation-status';
 import WorldCard from '../components/cards/world-card';
@@ -153,7 +154,7 @@ export default function LandingPage() {
       {/* Header Log */}
       <header className="w-full max-w-7xl mx-auto flex items-center justify-between border-b border-white/5 pb-4 mb-8 z-10 font-mono text-[11px] text-text-dim">
         <div className="flex items-center gap-2">
-          <TerminalIcon size={14} className="text-primary-base" />
+          <ChronosLogo size={18} className="text-primary-base" />
           <span className="font-bold text-text-main tracking-wider uppercase">ChronosFeed Console</span>
         </div>
         <div className="flex gap-4">
