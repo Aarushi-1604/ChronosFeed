@@ -11,7 +11,7 @@ interface TimelineSidebarProps {
 
 export default function TimelineSidebar({ events }: TimelineSidebarProps) {
   return (
-    <div className="flex flex-col gap-5 h-full max-h-[85vh] overflow-y-auto pr-2 custom-scrollbar select-none">
+    <div className="flex flex-col gap-5 h-full md:max-h-[calc(100vh-140px)] max-h-none overflow-y-auto pr-2 custom-scrollbar select-none">
       {/* Sidebar Header */}
       <div className="flex items-center gap-2.5 border-b border-white/5 pb-3.5">
         <div className="w-7 h-7 rounded bg-primary-base/10 border border-primary-base/20 flex items-center justify-center text-primary-base">

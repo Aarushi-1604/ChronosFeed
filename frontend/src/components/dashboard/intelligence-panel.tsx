@@ -49,7 +49,7 @@ export default function IntelligencePanel({ world }: IntelligencePanelProps) {
   const trends = getTrendingTopics(world.prompt);
 
   return (
-    <div className="flex flex-col gap-6 h-full max-h-[85vh] overflow-y-auto pr-2 custom-scrollbar select-none">
+    <div className="flex flex-col gap-6 h-full md:max-h-[calc(100vh-140px)] max-h-none overflow-y-auto pr-2 custom-scrollbar select-none">
       {/* Reality Stability Section */}
       <RealityScore score={stability} />
 
@@ -63,46 +63,48 @@ export default function IntelligencePanel({ world }: IntelligencePanelProps) {
           Civilization Telemetry
         </h3>
 
-        <div className="flex flex-col gap-3 font-mono text-[11px]">
+        <div className="flex flex-col gap-3 font-mono">
           {/* Era / Government */}
-          <div className="flex items-center justify-between border-b border-white/5 pb-2">
-            <span className="text-text-dim uppercase">Governance</span>
-            <span className="text-text-main font-bold">{world.gov_type || 'Monarchal Republic'}</span>
+          <div className="border-b border-white/5 pb-2 flex flex-col gap-1">
+            <span className="text-text-dim uppercase text-[9px] tracking-wider">Governance</span>
+            <span className="text-text-main text-xs font-bold leading-normal break-words">
+              {world.gov_type || 'Monarchal Republic'}
+            </span>
           </div>
 
           {/* Tech Level */}
-          <div className="flex items-center justify-between border-b border-white/5 pb-2">
-            <span className="text-text-dim uppercase">Tech Level</span>
-            <span className="text-text-main font-bold text-right truncate max-w-[150px]">
+          <div className="border-b border-white/5 pb-2 flex flex-col gap-1">
+            <span className="text-text-dim uppercase text-[9px] tracking-wider">Tech Level</span>
+            <span className="text-text-main text-xs font-bold leading-normal break-words">
               {world.tech_level || 'Steam Computation'}
             </span>
           </div>
 
           {/* Population */}
-          <div className="flex items-center justify-between border-b border-white/5 pb-2">
-            <span className="text-text-dim uppercase">Est. Population</span>
-            <span className="text-text-main font-bold">428.5 Million</span>
+          <div className="border-b border-white/5 pb-2 flex flex-col gap-1">
+            <span className="text-text-dim uppercase text-[9px] tracking-wider">Est. Population</span>
+            <span className="text-text-main text-xs font-bold leading-normal">428.5 Million</span>
           </div>
 
           {/* Economic Index */}
-          <div className="flex items-center justify-between border-b border-white/5 pb-2">
-            <span className="text-text-dim uppercase">Economic Index</span>
+          <div className="border-b border-white/5 pb-2 flex flex-col gap-1">
+            <span className="text-text-dim uppercase text-[9px] tracking-wider">Economic Index</span>
             <div className="flex items-center gap-2">
-              <span className="w-16 h-2 rounded-full bg-white/5 overflow-hidden block">
+              <span className="w-24 h-2 rounded-full bg-white/5 overflow-hidden block">
                 <span className="h-full bg-accent-base block" style={{ width: '78%' }} />
               </span>
-              <span className="text-text-main font-bold">7.8 / 10</span>
+              <span className="text-text-main text-xs font-bold">7.8 / 10</span>
             </div>
           </div>
 
           {/* Public Sentiment */}
-          <div className="flex items-center justify-between">
-            <span className="text-text-dim uppercase">Public Sentiment</span>
+          <div className="flex flex-col gap-1">
+            <span className="text-text-dim uppercase text-[9px] tracking-wider">Public Sentiment</span>
             <div className="flex items-center gap-2">
-              <span className="w-16 h-2 rounded-full bg-white/5 overflow-hidden block">
+              <span className="w-24 h-2 rounded-full bg-white/5 overflow-hidden block">
                 <span className="h-full bg-green-400 block" style={{ width: '65%' }} />
               </span>
-              <span className="text-text-main font-bold">65% Content</span>
+              <span className="text-text-main text-xs font-bold">65% Content</span>
             </div>
           </div>
         </div>

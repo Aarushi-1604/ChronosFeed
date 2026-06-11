@@ -262,7 +262,7 @@ export default function WorldPage({ params }: PageProps) {
   }
 
   return (
-    <div className="min-h-screen relative flex flex-col p-4 md:p-6 overflow-hidden select-none">
+    <div className="md:h-screen min-h-screen md:overflow-hidden overflow-y-auto relative flex flex-col p-4 md:p-6 select-none">
       {/* Background Particles Grid */}
       <CanvasGrid />
 
@@ -310,7 +310,7 @@ export default function WorldPage({ params }: PageProps) {
       </header>
 
       {/* Three Panel Layout Container */}
-      <div className="flex-1 w-full max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-6 z-10 relative">
+      <div className="flex-1 min-h-0 w-full max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-6 z-10 relative">
         
         {/* Left Panel: Cause-Effect Timeline (4 Cols on Desktop) */}
         <aside className="hidden md:block md:col-span-3 h-full">

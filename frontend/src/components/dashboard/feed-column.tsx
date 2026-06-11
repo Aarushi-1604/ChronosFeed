@@ -51,7 +51,7 @@ export default function FeedColumn({
     };
   }, [hasMore, isLoadingMore]);
   return (
-    <div className="flex flex-col gap-9 h-full max-h-[85vh] overflow-y-auto pr-2 custom-scrollbar select-none">
+    <div className="flex flex-col gap-9 h-full md:max-h-[calc(100vh-140px)] max-h-none overflow-y-auto pr-2 custom-scrollbar select-none">
       {/* Compose Feed Box */}
       <FeedComposer onPublish={onAddLocalPost} />
 
