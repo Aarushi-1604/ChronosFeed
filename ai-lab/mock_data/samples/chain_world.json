@@ -1,39 +1,39 @@
 {
-  "name": "The Victorian Aether-Net",
-  "summary": "In 1890, the successful integration of Babbage’s Analytical Engine with Maxwell’s electromagnetic theories birthed the Great Telegraphic Interlink. This global network of vacuum-tube relays allows instantaneous exchange of scientific, political, and commercial correspondence across the British Empire and beyond. The world now operates in a state of hyper-accelerated Victorian industry, where the click of a telegraph key dictates the movement of steam-powered armadas and global stock exchanges.",
-  "era": "The Late Industrial Renaissance",
-  "tech_level": "Technology relies on sophisticated vacuum-tube processing and high-frequency aetheric pulse modulation relayed through undersea copper cabling. Mechanical computing engines perform complex calculations, while information is rendered onto ticker-tape arrays and pneumatic-delivery terminals.",
-  "gov_type": "The world is dominated by an interconnected network of colonial empires governed by the Technocratic Imperial Council. Decision-making is centralized through a digital bureaucracy that manages trade routes and naval movements via the instantaneous Aether-Net.",
+  "name": "The Eternal Imperium of Aeterna",
+  "summary": "Following the miraculous survival of the Western Empire through the stabilization of the Rhine frontier in the 5th century, Rome evolved into a bureaucratic maritime hegemon. By successfully integrating the Germanic tribes into a meritocratic civil service, the Empire avoided the fragmentation that plagued traditional histories. Today, the Senate of Rome governs a continuous Mediterranean and Atlantic civilization that spans from the sands of Mesopotamia to the reaches of Hibernia.",
+  "era": "The 22nd Century Post-Augustan Era",
+  "tech_level": "The Empire utilizes advanced steam-pressurized hydraulic engineering and complex clockwork logistics to power its massive urban centers. Scholars have refined early analytical engines to automate the Imperial census and navigate the vast naval trade routes.",
+  "gov_type": "The state operates as a technocratic absolute monarchy led by the Caesar-Consul who is advised by a permanent, meritocratic Senate. Provincial governance is maintained through a sophisticated legal framework that ensures uniform tax collection and civil rights for all citizens regardless of ethnic origin.",
   "events": [
     {
-      "year": "1892",
-      "title": "The First Transatlantic Aether-Pulse",
-      "description": "Sir William Thomson successfully transmitted the inaugural digital memorandum between London and New York using experimental electromagnetic resonators. This feat effectively bridged the Atlantic divide, reducing the time for transatlantic communication from a week to mere seconds.",
-      "impact": "The event caused an immediate collapse of traditional oceanic mail courier businesses. It established a new era of global finance where news of commodity prices could move faster than the ships carrying the actual goods."
+      "year": "476",
+      "title": "The Decree of Ravenna",
+      "description": "Emperor Romulus Augustulus successfully negotiated a permanent land-grant treaty with Odoacer, transforming the Germanic foederati into a hereditary Roman professional soldier class. This agreement integrated the barbarian military strength directly into the imperial tax and command structure.",
+      "impact": "The collapse of the Western military apparatus was averted, preventing the onset of the Dark Ages. It established the precedent for integrating peripheral tribes into the administrative backbone of the state."
     },
     {
-      "year": "1901",
-      "title": "The Coronation of the Global Data Protocol",
-      "description": "The world's leading industrial powers convened in Geneva to establish a standardized universal code for Aether-Net communications. This protocol allowed disparate mechanical engines across the globe to parse information in a singular, coherent format.",
-      "impact": "This integration fostered a temporary peace among major European powers, as economic interdependency via the network reached critical levels. It effectively mandated that all future mechanical inventions must be compatible with the global interface."
+      "year": "812",
+      "title": "The Great Aqueduct Expansion",
+      "description": "Imperial engineers perfected high-pressure concrete casting to bridge the deeper valleys of Gaul and Hispania, allowing for the rapid urbanization of the northern provinces. This engineering feat facilitated the movement of grain and personnel, cementing the loyalty of the frontiers.",
+      "impact": "It ensured that the northern territories remained economically tethered to the Roman core for centuries. The project sparked an architectural renaissance that defined Roman aesthetics for the next millennium."
     },
     {
-      "year": "1908",
-      "title": "The Pneumatic-Terminal Revolution",
-      "description": "Engineers unveiled the first domestic pneumatic-ticker terminal, capable of printing digital messages directly into elite private studies. This innovation moved the power of the Aether-Net from state offices directly into the hands of the landed aristocracy.",
-      "impact": "The democratization of information fueled social movements and secret correspondence between reformist groups. It fundamentally weakened the state’s monopoly on knowledge and paved the way for modern political activism."
+      "year": "1204",
+      "title": "The Treaty of Theodosius",
+      "description": "The Eastern and Western halves of the Empire formalized a unified currency standard based on the standardized gold solidus. This economic merger eliminated trade barriers across the entirety of the Mediterranean basin.",
+      "impact": "The unified currency prevented the economic instability that historically led to the rise of localized feudalism. It created a singular, invincible market that dominated all global trade until the discovery of the Americas."
     },
     {
-      "year": "1914",
-      "title": "The Great Aether-Clog",
-      "description": "A massive solar storm disrupted the ionosphere, causing the total blackout of all global Aether-Net relays for three consecutive days. The sudden silence threw imperial governments into a panic, as they were unable to relay mobilization orders to their far-flung colonies.",
-      "impact": "This catastrophe exposed the extreme fragility of an interconnected world reliant on a single, vulnerable network. Many nations began investing heavily in hardened subterranean cable networks to ensure communication continuity during future atmospheric disturbances."
+      "year": "1650",
+      "title": "The Atlantic Expedition of Claudius IV",
+      "description": "Roman naval architects utilized advanced astronomical charts to guide a fleet of trireme-galleons across the Atlantic Ocean. Upon reaching the shores of modern-day Brazil, the legions established the province of Nova Roma.",
+      "impact": "The discovery brought unprecedented wealth in silver and rubber to the Roman treasury. This massive influx of resources fueled the subsequent industrial shift within the Roman urban heartlands."
     },
     {
-      "year": "1922",
-      "title": "The Establishment of the Imperial Digital Archive",
-      "description": "The British Empire completed the construction of a massive, multi-story analytical engine in London to act as the primary repository for all intercepted digital transmissions. Every telegram sent across the network is now parsed, categorized, and stored for permanent historical record.",
-      "impact": "This central archive allowed for unprecedented surveillance capabilities and the birth of modern imperial counter-intelligence. It solidified the government's ability to anticipate domestic and foreign threats long before they could manifest into tangible action."
+      "year": "2024",
+      "title": "The Grand Synod of Rome",
+      "description": "The Senate ratified the inclusion of the Trans-Atlantic Provinces into full legislative representation, effectively transforming the Empire into a global federation. This shift signaled the end of traditional expansionism and the beginning of a focus on interplanetary exploration.",
+      "impact": "It solidified the social cohesion of a global populace living under a unified Pax Romana. The Empire now redirects its vast industrial output toward the colonization of the inner solar system."
     }
   ]
 }

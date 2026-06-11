@@ -149,22 +149,68 @@ async function main() {
       throw new Error('Posts output is not a JSON array');
     }
 
-    let validPostsCount = 0;
-    posts.forEach(post => {
-      if (post && typeof post === 'object' && post.handle) {
-        if (personaHandles.includes(post.handle)) {
-          validPostsCount++;
-        }
-      }
+    const validPosts = posts.filter(post => {
+      return post && typeof post === 'object' && post.handle && personaHandles.includes(post.handle);
     });
 
-    console.log(`✓ Posts generated: ${validPostsCount} valid out of ${posts.length}`);
+    console.log(`✓ Posts generated: ${validPosts.length} valid out of ${posts.length}`);
     const postOutputPath = path.join(__dirname, 'mock_data', 'samples', 'chain_posts.json');
     fs.mkdirSync(path.dirname(postOutputPath), { recursive: true });
     fs.writeFileSync(postOutputPath, cleanedPostText, 'utf8');
 
     // ==========================================
-    // STEP 4 — Summary
+    // STEP 4 — News (placeholder)
+    // ==========================================
+
+    // ==========================================
+    // STEP 5 — Comment generation test
+    // ==========================================
+    const commentPromptPath = path.join(__dirname, 'prompts', 'comment.txt');
+    if (!fs.existsSync(commentPromptPath)) {
+      throw new Error(`Prompt file not found at ${commentPromptPath}`);
+    }
+    const commentPromptTemplate = fs.readFileSync(commentPromptPath, 'utf8');
+
+    const testPosts = validPosts.slice(0, 2);
+    console.log(`\nGenerating comments for first ${testPosts.length} posts (rate limit safe)...`);
+
+    for (let i = 0; i < testPosts.length; i++) {
+      const post = testPosts[i];
+
+      console.log(`Waiting 8 seconds before comment call ${i + 1}...`);
+      await wait(8000);
+
+      let commentPrompt = commentPromptTemplate;
+      commentPrompt = commentPrompt.replace('{{WORLD_CONTEXT}}', worldContext);
+      commentPrompt = commentPrompt.replace('{{POST_CONTENT}}', post.content);
+      commentPrompt = commentPrompt.replace('{{POST_AUTHOR_HANDLE}}', post.handle);
+      commentPrompt = commentPrompt.replace(
+        '{{PERSONA_HANDLES}}',
+        personaHandles.filter(h => h !== post.handle).join(', ')
+      );
+
+      const commentResult = await model.generateContent(commentPrompt);
+      const commentResponseText = commentResult.response.text();
+
+      const cleanedCommentText = cleanJSONArray(commentResponseText);
+
+      try {
+        const parsedComments = JSON.parse(cleanedCommentText);
+        console.log(`  ✓ Post ${i + 1} comments: ${parsedComments.length}`);
+
+        const commentOutputPath = path.join(
+          __dirname, 'mock_data', 'samples', `chain_comments_post_${i}.json`
+        );
+        fs.writeFileSync(commentOutputPath, JSON.stringify(parsedComments, null, 2), 'utf8');
+      } catch (e) {
+        console.log(`  ✗ Post ${i + 1} comments failed`);
+      }
+    }
+
+    console.log(`Comments generated for 2/10 posts (rate limit safe test)`);
+
+    // ==========================================
+    // Final Summary
     // ==========================================
     console.log("================================");
     console.log("CHAIN COMPLETE");
@@ -172,7 +218,8 @@ async function main() {
     console.log("Era: " + world.era);
     console.log("Events: " + world.events.length);
     console.log("Personas: " + personas.length);
-    console.log("Posts: " + validPostsCount);
+    console.log("Posts: " + validPosts.length);
+    console.log("Comments tested: 2 posts");
     console.log("================================");
 
   } catch (error) {
