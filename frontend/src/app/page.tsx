@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, Terminal as TerminalIcon, Globe, Compass, GitBranch, ArrowRight } from 'lucide-react';
+import ChronosLogo from '../components/branding/chronos-logo';
 import CanvasGrid from '../components/ui/canvas-grid';
 import SimulationStatus from '../components/ui/simulation-status';
 import WorldCard from '../components/cards/world-card';
@@ -152,13 +153,21 @@ export default function LandingPage() {
 
       {/* Header Log */}
       <header className="w-full max-w-7xl mx-auto flex items-center justify-between border-b border-white/5 pb-4 mb-8 z-10 font-mono text-[11px] text-text-dim">
-        <div className="flex items-center gap-2">
-          <TerminalIcon size={14} className="text-primary-base" />
-          <span className="font-bold text-text-main tracking-wider uppercase">ChronosFeed Console</span>
+        <div className="flex items-center gap-3">
+          <ChronosLogo size={36} className="text-primary-base" />
+          <span className="font-extrabold text-text-main tracking-widest text-sm uppercase">ChronosFeed</span>
         </div>
-        <div className="flex gap-4">
-          <span>PORTAL: ACTIVE</span>
-          <span className="text-accent-base animate-pulse">NODE_01</span>
+        <div className="flex items-center gap-6">
+          <button
+            onClick={() => router.push('/developers')}
+            className="glass-button px-5 py-2.5 rounded-lg text-xs font-mono uppercase tracking-wider font-bold cursor-pointer text-text-main hover:text-accent-base transition-all duration-300 border border-white/10 hover:border-accent-base/50"
+          >
+            DEVELOPER PORTAL
+          </button>
+          <div className="hidden sm:flex gap-4">
+            <span>PORTAL: ACTIVE</span>
+            <span className="text-accent-base animate-pulse">NODE_01</span>
+          </div>
         </div>
       </header>
 
@@ -213,7 +222,7 @@ export default function LandingPage() {
                 <button
                   key={idx}
                   onClick={() => handlePromptClick(p)}
-                  className="px-3.5 py-1.5 rounded-full border border-white/5 bg-white/5 hover:bg-white/10 hover:border-accent-base transition-all duration-300 font-mono text-[10px] text-text-dim hover:text-text-main cursor-pointer"
+                  className="px-4 py-2 rounded-full border border-white/5 bg-white/5 hover:bg-white/10 hover:border-accent-base transition-all duration-300 font-sans text-xs text-text-dim hover:text-text-main cursor-pointer"
                 >
                   {p}
                 </button>

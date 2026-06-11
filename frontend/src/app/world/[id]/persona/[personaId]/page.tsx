@@ -7,6 +7,7 @@ import { ArrowLeft, Award, Shield, User, Heart, RotateCw, Skull, Handshake, Land
 import CanvasGrid from '../../../../../components/ui/canvas-grid';
 import { Persona } from '../../../../../types';
 import { api } from '../../../../../lib/api';
+import ChronosLogo from '../../../../../components/branding/chronos-logo';
 
 interface PageProps {
   params: Promise<{ id: string; personaId: string }>;
@@ -121,15 +122,24 @@ export default function PersonaPage({ params }: PageProps) {
 
       {/* Page Header */}
       <header className="w-full max-w-5xl mx-auto flex items-center justify-between border-b border-white/5 pb-4 mb-8 z-10">
-        <button
-          onClick={() => router.push(`/world/${worldId}`)}
-          className="w-9 h-9 rounded-full border border-white/10 hover:border-accent-base bg-white/5 flex items-center justify-center text-text-dim hover:text-text-main cursor-pointer hover:shadow-[0_0_8px_rgba(var(--glow-color),0.2)] transition-all"
-        >
-          <ArrowLeft size={16} />
-        </button>
-        <span className="font-mono text-[10px] text-text-dim">
-          DOSSIER TELEMETRY // SECURE INDEX
-        </span>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => router.push(`/world/${worldId}`)}
+            className="w-9 h-9 rounded-full border border-white/10 hover:border-accent-base bg-white/5 flex items-center justify-center text-text-dim hover:text-text-main cursor-pointer hover:shadow-[0_0_8px_rgba(var(--glow-color),0.2)] transition-all"
+          >
+            <ArrowLeft size={16} />
+          </button>
+          <ChronosLogo size={36} className="text-primary-base" />
+        </div>
+        <div className="flex gap-6 font-mono text-[10px] text-text-dim items-center">
+          <button
+            onClick={() => router.push('/developers')}
+            className="glass-button px-5 py-2.5 rounded-lg text-xs font-mono uppercase tracking-wider font-bold cursor-pointer text-text-main hover:text-accent-base transition-all duration-300 border border-white/10 hover:border-accent-base/50"
+          >
+            DEVELOPER PORTAL
+          </button>
+          <span className="hidden sm:inline">DOSSIER TELEMETRY // SECURE INDEX</span>
+        </div>
       </header>
 
       {/* Main content grid */}
@@ -161,7 +171,7 @@ export default function PersonaPage({ params }: PageProps) {
             <div className="grid grid-cols-3 w-full gap-4 border-t border-b border-white/5 py-4 font-mono mt-2">
               <div>
                 <div className="text-[9px] text-text-dim/60 uppercase">Followers</div>
-                <div className="text-sm font-bold text-text-main">{persona?.followers_count.toLocaleString()}</div>
+                <div className="text-sm font-bold text-text-main">{(persona?.followers_count ?? 0).toLocaleString()}</div>
               </div>
               <div>
                 <div className="text-[9px] text-text-dim/60 uppercase">Influence</div>
@@ -175,7 +185,7 @@ export default function PersonaPage({ params }: PageProps) {
 
             {/* Interests tags */}
             <div className="flex flex-wrap justify-center gap-1.5 mt-2">
-              {persona?.interests.map((int) => (
+              {(persona?.interests ?? []).map((int) => (
                 <span key={int} className="px-2 py-0.5 border border-white/5 bg-white/5 rounded text-[9px] font-mono text-text-dim">
                   #{int}
                 </span>

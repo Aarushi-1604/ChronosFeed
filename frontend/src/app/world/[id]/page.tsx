@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, Clock, Info, ShieldAlert, Newspaper, Globe, Menu, X } from 'lucide-react';
 import { useTheme } from '../../../context/theme-context';
 import CanvasGrid from '../../../components/ui/canvas-grid';
+import ChronosLogo from '../../../components/branding/chronos-logo';
 import TimelineSidebar from '../../../components/dashboard/timeline-sidebar';
 import FeedColumn from '../../../components/dashboard/feed-column';
 import IntelligencePanel from '../../../components/dashboard/intelligence-panel';
@@ -275,13 +276,16 @@ export default function WorldPage({ params }: PageProps) {
           >
             <ArrowLeft size={16} />
           </button>
-          <div>
-            <h1 className="text-xl font-bold font-serif text-text-main tracking-tight leading-none flex items-center gap-2">
-              {world?.name}
-            </h1>
-            <span className="text-[10px] font-mono text-accent-base uppercase tracking-wider">
-              {world?.era}
-            </span>
+          <div className="flex items-center gap-3">
+            <ChronosLogo size={44} className="text-primary-base" />
+            <div>
+              <h1 className="text-xl font-bold font-serif text-text-main tracking-tight leading-none">
+                {world?.name}
+              </h1>
+              <span className="text-[10px] font-mono text-accent-base uppercase tracking-wider block mt-0.5">
+                {world?.era}
+              </span>
+            </div>
           </div>
         </div>
 
@@ -303,9 +307,17 @@ export default function WorldPage({ params }: PageProps) {
           </button>
         </div>
 
-        <div className="hidden md:flex gap-4 font-mono text-[10px] text-text-dim">
-          <span>REALITY_KEY: {worldId.slice(0, 8)}</span>
-          <span className="text-emerald-400">STABILIZED</span>
+        <div className="hidden md:flex gap-6 font-mono text-[10px] text-text-dim items-center">
+          <button
+            onClick={() => router.push('/developers')}
+            className="glass-button px-5 py-2.5 rounded-lg text-xs font-mono uppercase tracking-wider font-bold cursor-pointer text-text-main hover:text-accent-base transition-all duration-300 border border-white/10 hover:border-accent-base/50"
+          >
+            DEVELOPER PORTAL
+          </button>
+          <div className="flex gap-4">
+            <span>REALITY_KEY: {worldId.slice(0, 8)}</span>
+            <span className="text-emerald-400">STABILIZED</span>
+          </div>
         </div>
       </header>
 
