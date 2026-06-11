@@ -2,12 +2,12 @@
 
 import React, { useEffect, useState, use } from 'react';
 import { useRouter } from 'next/navigation';
-import { motion } from 'framer-motion';
-import { ArrowLeft, Award, Shield, User, Heart, RotateCw, Skull, Handshake, Landmark } from 'lucide-react';
+import { ArrowLeft, Award, Shield, User, Heart, RotateCw, Skull, Handshake } from 'lucide-react';
 import CanvasGrid from '../../../../../components/ui/canvas-grid';
 import { Persona } from '../../../../../types';
 import { api } from '../../../../../lib/api';
 import ChronosLogo from '../../../../../components/branding/chronos-logo';
+import { useTheme } from '../../../../../context/theme-context';
 
 interface PageProps {
   params: Promise<{ id: string; personaId: string }>;
@@ -19,12 +19,58 @@ export default function PersonaPage({ params }: PageProps) {
   const worldId = resolvedParams.id;
   const personaId = resolvedParams.personaId;
 
+  const { theme, toggleTheme } = useTheme();
+
   const [persona, setPersona] = useState<(Persona & { posts?: any[] }) | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     async function loadPersonaDetails() {
+      if (personaId === 'local-persona-id') {
+        // Return a mock observer persona matching the layout
+        setPersona({
+          id: 'local-persona-id',
+          world_id: worldId,
+          name: 'Temporal Observer',
+          handle: 'temp_anchor_01',
+          avatar: '',
+          role: 'INFLUENCER',
+          influence_score: 99,
+          followers_count: 15420,
+          following_count: 120,
+          interests: ['temporal-mechanics', 'alternate-history', 'multiverse-surveillance'],
+          bio: 'Assigned by the Chronology Preservation Council to observe, record, and verify alternative timelines without direct historical contamination.',
+          personality: 'Maintain complete neutrality. Every divergence holds valuable data. Ensure all cogwheels keep turning.',
+          posts: [
+            {
+              id: 'local-post-1',
+              world_id: worldId,
+              persona_id: 'local-persona-id',
+              content: 'Chronology stabilization sequence initialized. Establishing secure lead-type anchors in this divergence reality.',
+              media_url: null,
+              media_type: 'TEXT',
+              likes_count: 320,
+              reposts_count: 55,
+              created_at: new Date().toISOString(),
+            },
+            {
+              id: 'local-post-2',
+              world_id: worldId,
+              persona_id: 'local-persona-id',
+              content: 'Calibration complete. Ink density levels at 0.77. Factions are active. Reporting all observations to the console.',
+              media_url: null,
+              media_type: 'TEXT',
+              likes_count: 145,
+              reposts_count: 24,
+              created_at: new Date(Date.now() - 3600000).toISOString(),
+            }
+          ]
+        });
+        setLoading(false);
+        return;
+      }
+
       try {
         const data = await api.getPersona(personaId);
         if (data) {
@@ -88,10 +134,10 @@ export default function PersonaPage({ params }: PageProps) {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background flex flex-col items-center justify-center font-mono text-sm scanlines">
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center font-serif text-sm">
         <div className="flex flex-col items-center gap-3">
-          <div className="w-8 h-8 rounded-full border border-primary-base border-t-transparent animate-spin" />
-          <span className="text-text-dim text-glow animate-pulse">Retrieving Dossier...</span>
+          <div className="w-8 h-8 rounded-none border border-primary-base border-t-transparent animate-spin" />
+          <span className="text-text-dim animate-pulse">Retrieving Dossier Dossier...</span>
         </div>
       </div>
     );
@@ -99,14 +145,14 @@ export default function PersonaPage({ params }: PageProps) {
 
   if (error || !persona) {
     return (
-      <div className="min-h-screen bg-background flex flex-col items-center justify-center font-mono text-sm scanlines p-4 text-center">
-        <div className="flex flex-col items-center gap-4 max-w-md glass-panel p-8 rounded-xl border border-red-500/20">
-          <Shield className="text-red-500" size={36} />
-          <h2 className="text-lg font-bold text-text-main">Dossier Corruption</h2>
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center font-serif text-sm p-4 text-center">
+        <div className="flex flex-col items-center gap-4 max-w-md border-4 border-double border-primary-base p-8 bg-[var(--card-bg)]">
+          <Shield className="text-primary-base" size={36} />
+          <h2 className="text-lg font-bold text-text-main uppercase">Dossier Corruption</h2>
           <span className="text-text-dim text-xs leading-relaxed">{error || 'Unable to retrieve dossier records for this persona.'}</span>
           <button
             onClick={() => router.push(`/world/${worldId}`)}
-            className="glass-button px-6 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider font-mono cursor-pointer mt-2"
+            className="border-2 border-primary-base px-6 py-2.5 font-serif font-bold uppercase tracking-wider cursor-pointer mt-2 hover:bg-primary-base hover:text-[var(--bg-color)] transition-all duration-300"
           >
             Return to Timeline Console
           </button>
@@ -116,29 +162,50 @@ export default function PersonaPage({ params }: PageProps) {
   }
 
   return (
-    <div className="min-h-screen relative flex flex-col p-4 md:p-6 overflow-hidden select-none">
+    <div className="md:h-screen min-h-screen md:overflow-y-auto overflow-x-hidden relative flex flex-col p-4 md:p-6 select-none bg-background text-primary-base border-8 border-double border-primary-base font-serif">
       {/* Background canvas */}
       <CanvasGrid />
 
       {/* Page Header */}
-      <header className="w-full max-w-5xl mx-auto flex items-center justify-between border-b border-white/5 pb-4 mb-8 z-10">
-        <div className="flex items-center gap-3">
-          <button
-            onClick={() => router.push(`/world/${worldId}`)}
-            className="w-9 h-9 rounded-full border border-white/10 hover:border-accent-base bg-white/5 flex items-center justify-center text-text-dim hover:text-text-main cursor-pointer hover:shadow-[0_0_8px_rgba(var(--glow-color),0.2)] transition-all"
-          >
-            <ArrowLeft size={16} />
-          </button>
-          <ChronosLogo size={36} className="text-primary-base" />
+      <header className="w-full max-w-5xl mx-auto flex flex-col items-center border-b-4 border-double border-primary-base pb-3.5 mb-6 z-10 text-primary-base font-serif">
+        <div className="flex justify-between w-full text-[10px] uppercase tracking-widest border-b border-primary-base/20 pb-2 mb-3 items-center font-bold">
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => router.push(`/world/${worldId}`)}
+              className="border border-primary-base px-3 py-1 font-serif text-[10px] tracking-wider font-bold uppercase hover:bg-primary-base hover:text-[var(--bg-color)] transition-all duration-300 cursor-pointer flex items-center gap-1"
+            >
+              <ArrowLeft size={10} />
+              <span>Return to Dispatch</span>
+            </button>
+            <button
+              onClick={() => router.push('/developers')}
+              className="border border-primary-base px-3 py-1 font-serif text-[10px] tracking-wider font-bold uppercase hover:bg-primary-base hover:text-[var(--bg-color)] transition-all duration-300 cursor-pointer"
+            >
+              Developer Portal
+            </button>
+            <button
+              type="button"
+              onClick={toggleTheme}
+              className="border border-primary-base px-3 py-1 font-serif text-[10px] tracking-wider font-bold uppercase hover:bg-primary-base hover:text-[var(--bg-color)] transition-all duration-300 cursor-pointer flex items-center gap-1"
+            >
+              {theme === 'newspaper' ? '☾ Dark Press' : '☼ Light Press'}
+            </button>
+          </div>
+          <span>DOSSIER TELEMETRY // SECURE INDEX</span>
         </div>
-        <div className="flex gap-6 font-mono text-[10px] text-text-dim items-center">
-          <button
-            onClick={() => router.push('/developers')}
-            className="glass-button px-5 py-2.5 rounded-lg text-xs font-mono uppercase tracking-wider font-bold cursor-pointer text-text-main hover:text-accent-base transition-all duration-300 border border-white/10 hover:border-accent-base/50"
-          >
-            DEVELOPER PORTAL
-          </button>
-          <span className="hidden sm:inline">DOSSIER TELEMETRY // SECURE INDEX</span>
+        
+        <div className="flex items-center justify-between w-full py-1">
+          <div className="hidden md:block w-24 h-[1px] bg-primary-base/30" />
+          <div className="flex flex-col items-center">
+            <h1 className="text-3xl md:text-4xl font-black uppercase tracking-tight font-serif text-center leading-none text-text-main flex items-center gap-3">
+              <ChronosLogo size={40} className="text-primary-base" />
+              TEMPORAL DOSSIER FILE
+            </h1>
+            <p className="text-[10px] tracking-[0.2em] uppercase mt-2.5 text-center text-text-dim font-bold italic">
+              Historical record and behavioral intelligence of alternate timelines
+            </p>
+          </div>
+          <div className="hidden md:block w-24 h-[1px] bg-primary-base/30" />
         </div>
       </header>
 
@@ -148,45 +215,45 @@ export default function PersonaPage({ params }: PageProps) {
         {/* Profile Card & Bio Details (5 Cols) */}
         <aside className="col-span-1 md:col-span-5 flex flex-col gap-6">
           {/* Main Dossier Card */}
-          <div className="glass-panel p-6 rounded-2xl border border-border-color flex flex-col items-center text-center gap-4 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-24 h-24 border-b border-l border-white/5 rounded-bl-full bg-white/2 flex items-center justify-center text-accent-base font-mono text-xs font-bold">
+          <div className="border border-primary-base/20 p-6 rounded-none bg-[var(--card-bg)] flex flex-col items-center text-center gap-4 relative overflow-hidden shadow-sm">
+            <div className="absolute top-0 right-0 w-24 h-24 border-b border-l border-primary-base/20 rounded-none bg-black/[0.01] flex items-center justify-center text-primary-base font-serif text-xs font-bold">
               ID #{personaId.slice(0, 4)}
             </div>
 
             {/* Large Avatar */}
-            <div className="w-24 h-24 rounded-full border-2 border-accent-base bg-white/5 flex items-center justify-center font-serif text-3xl font-extrabold text-accent-base text-glow my-3">
+            <div className="w-24 h-24 rounded-none border-2 border-primary-base bg-[var(--bg-color)] flex items-center justify-center font-serif text-3xl font-extrabold text-primary-base my-3">
               {persona?.name.charAt(0)}
             </div>
 
             <div className="flex flex-col gap-1">
-              <h2 className="text-2xl font-bold font-serif text-text-main">{persona?.name}</h2>
-              <span className="text-xs text-text-dim font-mono">@{persona?.handle}</span>
+              <h2 className="text-2xl font-bold font-serif text-primary-base">{persona?.name}</h2>
+              <span className="text-xs text-text-dim font-serif">@{persona?.handle}</span>
             </div>
 
-            <span className="px-3.5 py-1 border border-primary-base/20 bg-primary-base/5 text-primary-base font-mono text-[10px] rounded-full uppercase tracking-wider font-bold">
+            <span className="px-3.5 py-1 border border-primary-base/20 bg-black/[0.01] text-text-dim font-serif text-[10px] rounded-none uppercase tracking-wider font-bold">
               {roleLabel(persona?.role || '')}
             </span>
 
             {/* Profile Statistics */}
-            <div className="grid grid-cols-3 w-full gap-4 border-t border-b border-white/5 py-4 font-mono mt-2">
+            <div className="grid grid-cols-3 w-full gap-4 border-t border-b border-primary-base/20 py-4 font-serif mt-2">
               <div>
-                <div className="text-[9px] text-text-dim/60 uppercase">Followers</div>
-                <div className="text-sm font-bold text-text-main">{(persona?.followers_count ?? 0).toLocaleString()}</div>
+                <div className="text-[9px] text-text-dim font-bold uppercase">Followers</div>
+                <div className="text-sm font-bold text-primary-base">{(persona?.followers_count ?? 0).toLocaleString()}</div>
               </div>
               <div>
-                <div className="text-[9px] text-text-dim/60 uppercase">Influence</div>
-                <div className="text-sm font-bold text-accent-base text-glow">{persona?.influence_score}%</div>
+                <div className="text-[9px] text-text-dim font-bold uppercase">Influence</div>
+                <div className="text-sm font-bold text-primary-base">{persona?.influence_score}%</div>
               </div>
               <div>
-                <div className="text-[9px] text-text-dim/60 uppercase">Approval</div>
-                <div className="text-sm font-bold text-green-400">74%</div>
+                <div className="text-[9px] text-text-dim font-bold uppercase">Approval</div>
+                <div className="text-sm font-bold text-primary-base">74%</div>
               </div>
             </div>
 
             {/* Interests tags */}
             <div className="flex flex-wrap justify-center gap-1.5 mt-2">
               {(persona?.interests ?? []).map((int) => (
-                <span key={int} className="px-2 py-0.5 border border-white/5 bg-white/5 rounded text-[9px] font-mono text-text-dim">
+                <span key={int} className="px-2 py-0.5 border border-primary-base/20 bg-black/[0.02] rounded-none text-[9px] font-serif text-text-dim">
                   #{int}
                 </span>
               ))}
@@ -194,46 +261,46 @@ export default function PersonaPage({ params }: PageProps) {
           </div>
 
           {/* Dossier Intel (Beliefs, Alliances, Enemies) */}
-          <div className="glass-panel p-5 rounded-2xl border border-border-color flex flex-col gap-4">
-            <h3 className="font-mono text-xs uppercase tracking-wider text-text-dim border-b border-white/5 pb-2">
+          <div className="border border-primary-base/20 p-5 rounded-none bg-[var(--card-bg)] flex flex-col gap-4 shadow-sm">
+            <h3 className="font-serif text-xs uppercase tracking-wider text-primary-base font-bold border-b border-primary-base/20 pb-2">
               Dossier Intel
             </h3>
 
             {/* Biography */}
             <div className="flex flex-col gap-1">
-              <span className="text-[9px] font-mono text-text-dim/60 uppercase flex items-center gap-1">
+              <span className="text-[9px] font-serif text-text-dim font-bold uppercase flex items-center gap-1">
                 <User size={10} className="text-primary-base" />
                 History Record
               </span>
-              <p className="text-xs text-text-dim leading-relaxed font-sans">{persona?.bio}</p>
+              <p className="text-xs text-primary-base/90 leading-relaxed font-serif">{persona?.bio}</p>
             </div>
 
             {/* Core Beliefs */}
             <div className="flex flex-col gap-1 mt-1">
-              <span className="text-[9px] font-mono text-text-dim/60 uppercase flex items-center gap-1">
+              <span className="text-[9px] font-serif text-text-dim font-bold uppercase flex items-center gap-1">
                 <Shield size={10} className="text-primary-base" />
                 Philosophical Alignment
               </span>
-              <p className="text-xs text-text-dim leading-relaxed font-sans italic">
+              <p className="text-xs text-text-dim leading-relaxed font-serif italic">
                 "{persona?.personality || 'The mechanical calculation yields truth. Let no cogwheel fail.'}"
               </p>
             </div>
 
             {/* Alliances & Enemies */}
-            <div className="grid grid-cols-2 gap-3 mt-1.5 border-t border-white/5 pt-3">
-              <div className="flex flex-col gap-1 font-mono text-[10px]">
-                <span className="text-green-400 flex items-center gap-1">
+            <div className="grid grid-cols-2 gap-3 mt-1.5 border-t border-primary-base/20 pt-3">
+              <div className="flex flex-col gap-1 font-serif text-[10px]">
+                <span className="text-text-dim font-bold flex items-center gap-1 uppercase">
                   <Handshake size={10} />
                   ALLIANCES
                 </span>
-                <span className="text-text-main font-bold">{getAlliancesAndEnemies(persona?.role || '').alliances}</span>
+                <span className="text-primary-base font-bold">{getAlliancesAndEnemies(persona?.role || '').alliances}</span>
               </div>
-              <div className="flex flex-col gap-1 font-mono text-[10px]">
-                <span className="text-red-400 flex items-center gap-1">
+              <div className="flex flex-col gap-1 font-serif text-[10px]">
+                <span className="text-text-dim font-bold flex items-center gap-1 uppercase">
                   <Skull size={10} />
                   ENEMIES
                 </span>
-                <span className="text-text-main font-bold">{getAlliancesAndEnemies(persona?.role || '').enemies}</span>
+                <span className="text-primary-base font-bold">{getAlliancesAndEnemies(persona?.role || '').enemies}</span>
               </div>
             </div>
           </div>
@@ -242,45 +309,45 @@ export default function PersonaPage({ params }: PageProps) {
         {/* Role in World History & Recent Feed Posts (7 Cols) */}
         <main className="col-span-1 md:col-span-7 flex flex-col gap-6">
           {/* Core Feature: Role in World History */}
-          <div className="glass-panel p-6 rounded-2xl border border-accent-base/20 bg-gradient-to-r from-accent-base/5 via-transparent to-transparent flex flex-col gap-3 relative overflow-hidden shadow-lg shadow-black/30">
-            <div className="flex items-center gap-2 border-b border-white/5 pb-2.5">
-              <Award size={16} className="text-accent-base animate-pulse" />
-              <h3 className="font-mono text-xs uppercase tracking-wider text-text-main font-bold">
+          <div className="border-2 border-primary-base p-6 rounded-none bg-[var(--card-bg)] flex flex-col gap-3 relative overflow-hidden shadow-sm">
+            <div className="flex items-center gap-2 border-b border-primary-base/20 pb-2.5">
+              <Award size={16} className="text-primary-base" />
+              <h3 className="font-serif text-xs uppercase tracking-wider text-primary-base font-bold">
                 Role in World History
               </h3>
             </div>
             
-            <p className="text-sm font-serif text-text-main leading-relaxed italic">
-              "{getHistoricalRole()}"
+            <p className="text-sm font-serif text-primary-base leading-relaxed italic first-letter:text-3xl first-letter:font-bold first-letter:float-left first-letter:mr-2 first-letter:leading-none">
+              {getHistoricalRole()}
             </p>
             
-            <div className="flex items-center justify-between font-mono text-[9px] text-text-dim/60 pt-2.5">
+            <div className="flex items-center justify-between font-serif text-[9px] text-text-dim font-bold pt-2.5 border-t border-primary-base/10">
               <span>TEMPORAL INFLUENCE CATEGORY: CIVILIZATION ANCHOR</span>
-              <span className="text-accent-base">HISTORICAL SIGNIFICANCE: HIGH</span>
+              <span className="text-primary-base">HISTORICAL SIGNIFICANCE: HIGH</span>
             </div>
           </div>
 
           {/* Persona's Feed Posts */}
           <div className="flex flex-col gap-4">
-            <h3 className="font-mono text-xs uppercase tracking-wider text-text-dim border-b border-white/5 pb-3">
+            <h3 className="font-serif text-xs uppercase tracking-wider text-primary-base font-bold border-b border-primary-base/20 pb-3">
               Recent Net Transmissions
             </h3>
 
             {persona?.posts && persona.posts.length > 0 ? (
               <div className="flex flex-col gap-4">
                 {persona.posts.map((post) => (
-                  <div key={post.id} className="glass-panel p-5 rounded-xl border border-border-color flex flex-col gap-3">
-                    <p className="text-sm text-text-main leading-relaxed font-sans">{post.content}</p>
-                    <div className="flex items-center gap-6 font-mono text-xs text-text-dim pt-2 border-t border-white/5">
+                  <div key={post.id} className="border border-primary-base/20 p-5 rounded-none bg-[var(--card-bg)] flex flex-col gap-3 shadow-sm">
+                    <p className="text-sm text-primary-base leading-relaxed font-serif first-letter:text-2xl first-letter:font-bold first-letter:float-left first-letter:mr-1.5 first-letter:leading-none">{post.content}</p>
+                    <div className="flex items-center gap-6 font-serif text-xs text-text-dim pt-2 border-t border-primary-base/10 font-bold">
                       <div className="flex items-center gap-1.5">
-                        <Heart size={12} className="text-rose-500 fill-rose-500/10" />
+                        <Heart size={12} className="text-primary-base" />
                         <span>{post.likes_count}</span>
                       </div>
                       <div className="flex items-center gap-1.5">
-                        <RotateCw size={12} className="text-green-400" />
+                        <RotateCw size={12} className="text-primary-base" />
                         <span>{post.reposts_count}</span>
                       </div>
-                      <span className="text-[10px] text-text-dim/50 ml-auto">
+                      <span className="text-[10px] text-text-dim ml-auto font-normal" suppressHydrationWarning>
                         {new Date(post.created_at).toLocaleDateString()}
                       </span>
                     </div>
@@ -288,13 +355,18 @@ export default function PersonaPage({ params }: PageProps) {
                 ))}
               </div>
             ) : (
-              <div className="p-8 border border-white/5 bg-white/2 rounded-xl text-center font-mono text-xs text-text-dim">
+              <div className="p-8 border border-primary-base/20 bg-[var(--card-bg)] text-center font-serif text-xs text-text-dim italic">
                 No recent transmissions detected.
               </div>
             )}
           </div>
         </main>
       </div>
+
+      {/* Newspaper Footer */}
+      <footer className="w-full max-w-5xl mx-auto border-t-2 border-double border-primary-base/20 mt-8 pt-3.5 pb-1 text-center text-[9px] tracking-[0.22em] font-serif text-text-dim uppercase font-bold z-10">
+        AI CLUB | SIT PUNE | AARUSHI | ADITYA | YESHWANT | 2026
+      </footer>
     </div>
   );
 }

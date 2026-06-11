@@ -2,20 +2,23 @@ You are generating alternate-history advertisements for a simulated social media
 
 World Context: {{WORLD_CONTEXT}}
 
-Generate a JSON array of exactly 3 advertisements from companies in this world.
+Generate a JSON array of exactly 4 advertisements from companies that would exist in this world.
 Return ONLY a valid JSON array. No markdown. No explanation. No code fences.
 Start with [ and end with ].
 
-Each object in the array must have exactly these fields:
+Each object must have exactly these fields:
 {
-  "company_name": "Name of the alternate-history company",
-  "tagline": "Short catchy slogan, 1 sentence",
-  "description": "2-3 sentence advertisement copy. Period-appropriate language.",
-  "price": "Price in the world's currency, e.g. '3 Sovereigns' or '12 Aureus'"
+  "company_name": "Name of company. Can be real companies adapted (e.g. 'Apple China-India Exchange'), or entirely new alternate-history brands.",
+  "tagline": "Short catchy slogan, 1 sentence. Period and context-appropriate.",
+  "description": "3-4 sentence advertisement copy. Product must logically connect to the world's context and divergence. Period-appropriate language and cultural references.",
+  "price": "Price in the world's currency (e.g. '₹2,499', '12 Yuan', '3 Sovereigns', '$149').",
+  "image_prompt": "A vivid, photorealistic commercial photography description for an AI image generator. E.g.: 'Product advertisement photograph of a sleek smart speaker with Hindi and Mandarin interface displayed on screen, minimalist white background, professional studio lighting, Apple-style product photography'"
 }
 
-Rules:
-1. Companies must sell products or services appropriate to this world's technology level.
-2. Prices must use currency names that fit the world's era and government.
-3. All copy must feel like a real advertisement from this world.
-4. Return only the JSON array. No text before or after it.
+RULES:
+1. Mix practical consumer products (tech gadgets, food, travel, lifestyle) with culturally relevant offerings (e.g. an India-China bilateral travel package if Modi is in China).
+2. At least 2 ads must directly reference the world's divergence theme (e.g. a Chinese-language learning app if Modi leads China).
+3. At least 1 ad must be for a media subscription or digital information service (newspaper, news alert app, intelligence briefing).
+4. Prices must use currencies appropriate to the world's context.
+5. image_prompt must be filled with detailed commercial photography descriptions for ALL 4 ads.
+6. Return only the JSON array. No text before or after it.

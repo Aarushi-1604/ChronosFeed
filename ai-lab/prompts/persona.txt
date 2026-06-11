@@ -1,43 +1,28 @@
-You are an AI assistant designed to generate social media personas for an alternate-history world.
+You are generating Reality-Anchored social media personas for an alternate-history world.
 
-Based on the following world context, generate exactly 5 distinct persona objects representing individuals or entities from this world:
+Based on the following world context, generate exactly 6 distinct persona objects:
 
 World Context:
 {{WORLD_CONTEXT}}
 
-Requirements for the generated personas:
-1. Each persona must align with the timeline, technology, and culture of the provided world context.
-2. The output must be exactly 5 persona objects.
-3. You must return ONLY a valid JSON array containing these objects. No markdown formatting (like ```json), no explanations, and no extra text.
+PERSONA RULES:
+1. If the user's divergence prompt mentions ANY real-world public figure (politician, business leader, celebrity, athlete, historical figure, fictional character placed in reality), you MUST include that specific person as one of the 6 personas. Faithfully replicate their known personality, signature phrases, documented behavior, and public image—but adapted to their new alternate-history role.
+2. Always include at least 1 journalist/reporter persona from a real-world media outlet (CNN, BBC, NDTV, Reuters, Al Jazeera, etc.) adapted to the world's era and technology.
+3. Always include 1 ordinary citizen / social media user persona who represents public sentiment.
+4. Always include 1 political analyst or academic persona.
+5. Remaining personas can be brands, influencers, scientists, etc. relevant to the world's context.
+6. Do NOT generate generic, nameless archetypes. Every persona must have a specific, vivid identity rooted in the world's reality.
+7. Return ONLY a valid JSON array starting with [ and ending with ]. No markdown formatting, no explanations.
 
-Each persona object in the array must contain exactly the following keys:
-- "name": The full name or organization name.
-- "handle": A social media handle.
-  * Validation: lowercase only, underscores only (no spaces, dashes, or special characters), no "@" symbol, maximum 20 characters.
-- "bio": A short biography reflecting their life, work, or status in this world.
-- "role": The societal role/category.
-  * Validation: Must be exactly one of: INFLUENCER, SCIENTIST, POLITICIAN, BRAND.
-- "followers_count": Number of followers.
-  * Validation: Integer between 500 and 500000.
-- "following_count": Number of following.
-  * Validation: Integer between 50 and 2000.
-- "influence_score": Overall social influence score.
-  * Validation: Integer between 1 and 100.
-- "interests": An array of interests.
-  * Validation: Exactly 3 to 5 strings.
-- "personality": A string describing their personality traits, tone, and online demeanor.
-
-Example persona object:
-{
-  "name": "Dr. Ada Lovelace",
-  "handle": "ada_analytical",
-  "bio": "Pioneer of analytical mechanics and mechanical computing. Chronicling the steam-grid revolution.",
-  "role": "SCIENTIST",
-  "followers_count": 125000,
-  "following_count": 314,
-  "influence_score": 88,
-  "interests": ["analytical_engines", "differential_calculus", "steam_automation", "poetry"],
-  "personality": "Logical, visionary, precise, and occasionally witty."
-}
+Each persona object must contain exactly these keys:
+- "name": Full name. If based on a real figure, use their real name (e.g. "Narendra Modi", "Donald Trump").
+- "handle": Lowercase social handle, underscores only, no @ symbol, max 20 characters.
+- "bio": 2-sentence bio reflecting their life in this alternate world. Must reference specific real-world institutions, places, or events.
+- "role": Exactly one of: INFLUENCER, SCIENTIST, POLITICIAN, BRAND.
+- "followers_count": Integer between 500 and 2000000.
+- "following_count": Integer between 50 and 2000.
+- "influence_score": Integer between 1 and 100.
+- "interests": Array of 3–5 specific strings (e.g. "geopolitics", "ai_governance", "cricket", "quantum_physics").
+- "personality": Describe their tone, posting style, and demeanor in this world. If a real figure, reference their documented real-world speaking/writing style.
 
 Return only the JSON array starting with [ and ending with ]

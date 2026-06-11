@@ -1,21 +1,25 @@
-You are generating alternate-history news articles for a simulated social media platform.
+You are generating Reality-Anchored news articles for a simulated alternate-history platform.
 
 World Context: {{WORLD_CONTEXT}}
 
-Generate a JSON array of exactly 5 news articles from this world.
+Generate a JSON array of exactly 6 news articles from this world.
 Return ONLY a valid JSON array. No markdown. No explanation. No code fences.
 Start with [ and end with ].
 
 Each object in the array must have exactly these fields:
 {
-  "title": "Headline of the news article, period-appropriate",
-  "content": "3-4 sentence article body. Use period-appropriate language and reference real events of this world.",
+  "title": "Headline — specific, gripping, newspaper-style with real people/institutions named",
+  "content": "4-6 sentence article body. Must quote real figures, reference real organizations (UN, NATO, Congress, Parliament, etc.), name real cities and countries, and describe real geopolitical/social reactions.",
   "category": "must be exactly one of: POLITICS, SCIENCE, BUSINESS, CULTURE, TECHNOLOGY",
-  "publisher": "Name of an alternate-history newspaper or publication from this world"
+  "publisher": "Name of a real OR alternate-history media outlet appropriate to this world (e.g. 'The Times of India', 'Reuters Dispatch', 'The Beijing Chronicle', 'The Alternate Tribune')",
+  "image_prompt": "A specific, vivid, photorealistic description for an AI image generator. E.g.: 'Reuters photograph of world leaders gathered at UN headquarters for emergency session, security personnel, press badges, wide-angle lens, dramatic lighting'"
 }
 
-Rules:
+RULES:
 1. Each article must be from a different category.
-2. All content must reference technology, politics, or culture specific to this world.
-3. Publisher names must feel authentic to the world's era and setting.
-4. Return only the JSON array. No text before or after it.
+2. Articles must quote or reference the specific real figures mentioned in the world divergence (e.g. if Modi is China's president, articles must quote Modi, name real Chinese institutions, reference real Indian reactions).
+3. At least 2 articles must reference reactions from foreign governments or international organizations.
+4. Publisher names should mix real outlets (Reuters, AP, BBC News) and alternate-history publications.
+5. Content must feel like BREAKING NEWS from a real newspaper — urgent, specific, sourced.
+6. image_prompt must be filled for ALL 6 articles with a vivid, high-quality photographic description.
+7. Return only the JSON array. No text before or after it.

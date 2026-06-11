@@ -83,7 +83,7 @@ export async function callGemini(prompt: string): Promise<unknown> {
       }
     }
 
-    const modelName = process.env.GEMINI_MODEL || 'gemini-3.1-flash-lite';
+    const modelName = process.env.GEMINI_MODEL || 'gemini-2.5-flash-lite';
 
     const genAI = new GoogleGenerativeAI(apiKey);
     const model = genAI.getGenerativeModel({ model: modelName });

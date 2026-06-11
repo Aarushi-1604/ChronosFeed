@@ -1,4 +1,4 @@
-You are generating comments on social media posts for an alternate-history world.
+You are generating Reality-Anchored comments on social media posts for an alternate-history world.
 
 World Context: {{WORLD_CONTEXT}}
 Post Content: {{POST_CONTENT}}
@@ -10,13 +10,16 @@ Return ONLY a valid JSON array. No markdown. No code fences.
 
 Each object must have exactly:
 {
-  "handle": "must exactly match one of the available persona handles",
-  "content": "1-2 sentence comment, period-appropriate, reacting to the post",
+  "handle": "must exactly match one of the available persona handles, not the post author",
+  "content": "2–3 sentence comment. Must be authentic to the commenter's real-world persona if they are a real figure.",
   "likes_count": 0
 }
 
-Rules:
-1. The commenter handle must not be the same as the post author handle.
-2. Comments must directly reference or react to the post content.
-3. likes_count must be between 5 and 5000.
-4. Return only the JSON array.
+RULES:
+1. The commenter handle must NOT be the same as the post author handle.
+2. Comments must directly react to the specific content of the post — quote phrases, challenge statements, or add context.
+3. likes_count must be between 10 and 50000.
+4. If a commenter represents a real-world figure (Donald Trump, Narendra Modi, Elon Musk, etc.), they must reply using their exact documented online style (Trump: CAPS, exclamations; Modi: formal, inclusive; Musk: memes/sarcasm/one-liners).
+5. Include variety: at least 1 supportive comment, 1 critical or questioning comment, and 1 neutral/analytical comment.
+6. If the post is by a real public figure, at least one commenter should reference a real-world event or policy to make the thread feel grounded.
+7. Return only the JSON array.

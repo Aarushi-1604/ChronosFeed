@@ -24,11 +24,11 @@ export function interleaveContent(
 
   // Seeded/stable threshold calculation to avoid reshuffling on scroll/render
   const getNextNewsThreshold = (index: number): number => {
-    return 5 + (index % 3); // Alternates 5, 6, 7 deterministically
+    return 2 + (index % 2); // Alternates 2, 3 deterministically
   };
 
   while (postsQueue.length > 0) {
-    const targetCount = mode === 'ad' ? 7 : nextNewsThreshold;
+    const targetCount = mode === 'ad' ? 3 : nextNewsThreshold;
     
     // Add posts up to the target count
     while (postCount < targetCount && postsQueue.length > 0) {
