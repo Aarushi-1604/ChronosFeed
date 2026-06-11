@@ -30,15 +30,42 @@ export default function FeedColumn({
   isLoadingMore,
   feedLoading,
 }: FeedColumnProps) {
+  const observerRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    if (!hasMore || isLoadingMore) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          onLoadMore();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    const currentTarget = observerRef.current;
+    if (currentTarget) {
+      observer.observe(currentTarget);
+    }
+
+    return () => {
+      if (currentTarget) {
+        observer.unobserve(currentTarget);
+      }
+    };
+  }, [hasMore, isLoadingMore, onLoadMore]);
 
   return (
-    <div className="flex flex-col gap-9 h-full md:max-h-[calc(100vh-140px)] max-h-none overflow-y-auto pr-2 custom-scrollbar select-none">
+    <div className="flex flex-col gap-9 h-full max-h-full overflow-y-auto pr-5 custom-scrollbar select-none">
       {/* Compose Feed Box */}
-      <FeedComposer onPublish={onAddLocalPost} />
+      <div className="flex-shrink-0">
+        <FeedComposer onPublish={onAddLocalPost} />
+      </div>
 
       {/* Feed Stream */}
       {feedLoading ? (
-        <div className="flex flex-col gap-9">
+        <div className="flex flex-col gap-9 flex-shrink-0">
           {/* Post Skeleton */}
           <div className="glass-panel p-5 rounded-xl border border-border-color/40 flex flex-col gap-4 animate-pulse">
             <div className="flex items-start justify-between">
@@ -88,7 +115,7 @@ export default function FeedColumn({
           <div className="bg-[#0b2447]/20 border border-[#19376d]/40 p-6 rounded-lg font-mono flex flex-col justify-between h-[280px] animate-pulse">
             <div>
               <div className="flex items-center justify-between border-b border-[#19376d]/20 pb-2.5 mb-3.5">
-                <div className="h-3 bg-[#5fd6fa]/10 rounded w-20" />
+                <div className="w-16 h-3 bg-white/10 rounded" />
                 <div className="h-4 bg-[#5fd6fa]/15 rounded w-12" />
               </div>
               <div className="h-5 bg-white/5 rounded w-1/3 mb-2" />
@@ -106,18 +133,18 @@ export default function FeedColumn({
           </div>
         </div>
       ) : initialItems.length > 0 ? (
-        <div className="flex flex-col gap-9">
+        <div className="flex flex-col gap-9 flex-shrink-0">
           <AnimatePresence initial={false}>
             {initialItems.map((item) => {
               // Create unique key based on type + ID
               const itemKey = `${item.type}-${item.type === 'post' ? item.data.id : item.type === 'news' ? item.data.id : item.data.id}`;
               return (
                 <motion.div
-                  key={itemKey}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  transition={{ type: 'spring', stiffness: 200, damping: 20 }}
+                   key={itemKey}
+                   initial={{ opacity: 0, y: 20 }}
+                   animate={{ opacity: 1, y: 0 }}
+                   exit={{ opacity: 0, scale: 0.95 }}
+                   transition={{ type: 'spring', stiffness: 200, damping: 20 }}
                 >
                   <FeedCard item={item} onPersonaClick={onPersonaClick} />
                 </motion.div>
@@ -125,32 +152,19 @@ export default function FeedColumn({
             })}
           </AnimatePresence>
 
-          {/* Load More Button */}
+          {/* Infinite Scroll Trigger element */}
           {hasMore && (
-            <div className="flex justify-center mt-2 mb-6">
-              <button
-                onClick={onLoadMore}
-                disabled={isLoadingMore}
-                className="glass-button w-full py-3.5 rounded-xl text-xs font-mono uppercase tracking-wider font-bold flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
-              >
-                {isLoadingMore ? (
-                  <>
-                    <RefreshCw className="animate-spin" size={14} />
-                    <span>Syncing Temporal Stream...</span>
-                  </>
-                ) : (
-                  <>
-                    <Database size={14} />
-                    <span>Retrieve Further Records</span>
-                  </>
-                )}
-              </button>
+            <div ref={observerRef} className="flex justify-center items-center py-6 mt-2 flex-shrink-0">
+              <RefreshCw className="animate-spin text-primary-base" size={18} />
+              <span className="font-serif text-xs text-text-dim ml-2 font-bold uppercase tracking-wider">
+                Syncing Temporal Dispatch Stream...
+              </span>
             </div>
           )}
         </div>
       ) : (
-        <div className="flex flex-col items-center justify-center p-16 glass-panel rounded-xl text-center border-dashed">
-          <span className="font-mono text-sm text-text-dim">No transmissions detected in this reality.</span>
+        <div className="flex flex-col items-center justify-center p-16 border border-dashed border-primary-base/20 rounded-none bg-black/[0.005] text-center flex-shrink-0">
+          <span className="font-serif text-sm text-text-dim italic">No transmissions detected in this reality.</span>
         </div>
       )}
     </div>

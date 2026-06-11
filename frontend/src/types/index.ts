@@ -81,6 +81,7 @@ export interface News {
   category: NewsCategory;
   publisher: string;
   created_at: string;
+  image_url?: string | null;
 }
 
 export interface Ad {

@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { Heart, RotateCw, Newspaper, Tag, Compass, Binary, AlertTriangle, MessageSquare } from 'lucide-react';
 import { Post, News, Ad, Comment } from '../../types';
 import { api } from '../../lib/api';
+import { useTheme } from '../../context/theme-context';
 
 export type FeedItem =
   | { type: 'post'; data: Post }
@@ -17,6 +18,9 @@ interface FeedCardProps {
 }
 
 export default function FeedCard({ item, onPersonaClick }: FeedCardProps) {
+  const { theme } = useTheme();
+  const isNewspaper = theme.startsWith('newspaper');
+
   const [liked, setLiked] = useState(false);
   const [reposted, setReposted] = useState(false);
   const [likesCount, setLikesCount] = useState(
@@ -68,10 +72,10 @@ export default function FeedCard({ item, onPersonaClick }: FeedCardProps) {
   // RENDERING: 1. NEWS CARD (THE CHRONOS TELEGRAPH)
   // -------------------------------------------------------------
   if (item.type === 'news') {
-    const { title, content, category, publisher, created_at } = item.data;
+    const { title, content, category, publisher, created_at, image_url } = item.data;
     return (
       <motion.div
-        className="bg-[#f2ebd9] text-[#1f1a14] border-2 border-[#806f50] p-6 rounded-sm shadow-md font-serif relative overflow-hidden select-none hover:shadow-[0_0_20px_rgba(128,111,80,0.35)] hover:border-[#5a4e37] transition-all duration-300"
+        className="bg-[var(--card-bg)] text-text-main border-2 border-primary-base/30 p-6 rounded-none shadow-md font-serif relative overflow-hidden select-none hover:border-primary-base transition-all duration-300"
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
@@ -80,27 +84,44 @@ export default function FeedCard({ item, onPersonaClick }: FeedCardProps) {
         <div className="absolute inset-0 opacity-5 pointer-events-none bg-[radial-gradient(#000_1px,transparent_1px)] bg-[size:4px_4px]" />
         
         {/* Masthead */}
-        <div className="flex flex-col items-center border-b-2 border-double border-[#806f50] pb-3 mb-4">
-          <div className="flex items-center gap-2 text-[10px] tracking-widest font-mono font-bold uppercase text-[#5a4e37]">
+        <div className="flex flex-col items-center border-b-2 border-double border-primary-base/30 pb-3 mb-4">
+          <div className="flex items-center gap-2 text-[10px] tracking-widest font-serif font-bold uppercase text-text-dim">
             <Newspaper size={12} />
             {publisher || 'The Chronos daily'}
           </div>
-          <h4 className="text-3xl font-black uppercase text-center my-1.5 tracking-tight font-serif text-[#111]">
+          <h4 className="text-3xl font-black uppercase text-center my-1.5 tracking-tight font-serif text-text-main">
             {title}
           </h4>
-          <div className="flex justify-between w-full text-[9px] font-mono uppercase text-[#5a4e37] pt-1 border-t border-[#806f50]/40">
+          <div className="flex justify-between w-full text-[9px] font-serif uppercase text-text-dim pt-1 border-t border-primary-base/20">
             <span>Section: {category}</span>
-            <span>{new Date(created_at).toLocaleDateString()}</span>
+            <span suppressHydrationWarning>{new Date(created_at).toLocaleDateString()}</span>
           </div>
         </div>
 
         {/* Content */}
-        <p className="text-xs leading-relaxed text-[#2a231b] first-letter:text-4xl first-letter:font-bold first-letter:float-left first-letter:mr-2 first-letter:leading-none">
+        <p className="text-xs leading-relaxed text-text-main/90 first-letter:text-4xl first-letter:font-bold first-letter:float-left first-letter:mr-2 first-letter:leading-none">
           {content}
         </p>
 
+        {image_url && (
+          <div className={
+            isNewspaper
+              ? "w-full overflow-hidden mt-3 border border-primary-base/20 rounded-none"
+              : "w-full overflow-hidden mt-3 border border-white/10 rounded-lg"
+          }>
+            <img
+              src={image_url}
+              alt="Telegraph news photo"
+              className={`w-full h-auto object-cover max-h-[180px] ${
+                isNewspaper ? 'filter sepia contrast-125 brightness-95 grayscale' : ''
+              }`}
+              loading="lazy"
+            />
+          </div>
+        )}
+
         {/* Newspaper Footer */}
-        <div className="mt-4 pt-3 border-t border-dashed border-[#806f50]/50 flex justify-between items-center text-[10px] font-mono text-[#5a4e37]">
+        <div className="mt-4 pt-3 border-t border-dashed border-primary-base/30 flex justify-between items-center text-[10px] font-serif text-text-dim">
           <span>PRICE: 1 PENNY</span>
           <span>IMPERIAL PRESS LICENSE #408</span>
         </div>
@@ -111,11 +132,63 @@ export default function FeedCard({ item, onPersonaClick }: FeedCardProps) {
   // -------------------------------------------------------------
   // RENDERING: 2. ADVERTISEMENT CARD (BLUEPRINT SOLUTION)
   // -------------------------------------------------------------
+  // -------------------------------------------------------------
+  // RENDERING: 2. ADVERTISEMENT CARD (BLUEPRINT SOLUTION)
+  // -------------------------------------------------------------
   if (item.type === 'ad') {
-    const { company_name, tagline, description, price, created_at } = item.data;
+    const { company_name, tagline, description, price, created_at, image_url } = item.data;
+    if (isNewspaper) {
+      return (
+        <motion.div
+          className="bg-[var(--card-bg)] text-primary-base border-2 border-dashed border-primary-base/30 p-6 rounded-none font-serif relative overflow-hidden flex flex-col justify-between min-h-[280px] h-auto select-none hover:border-primary-base hover:bg-black/[0.01] transition-all duration-300"
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+        >
+          {/* Half-tone noise effect */}
+          <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[radial-gradient(#000_1px,transparent_1px)] bg-[size:4px_4px]" />
+          
+          <div>
+            <div className="flex items-center justify-between border-b border-primary-base/20 pb-2 mb-3">
+              <span className="text-[10px] tracking-widest text-text-dim uppercase flex items-center gap-1.5 font-bold">
+                <Tag size={12} className="text-primary-base" />
+                Patent Commercial
+              </span>
+              <span className="text-xs font-bold border border-primary-base px-2 py-0.5 uppercase">
+                {price}
+              </span>
+            </div>
+
+            <h4 className="text-lg font-black text-primary-base tracking-wide uppercase font-serif mb-1">
+              {company_name}
+            </h4>
+            <p className="text-xs text-text-dim italic mb-3">"{tagline}"</p>
+            <p className="text-xs text-primary-base/80 leading-relaxed font-sans line-clamp-4">
+              {description}
+            </p>
+            {image_url && (
+              <div className="w-full overflow-hidden mt-3 border border-primary-base/20 rounded-none">
+                <img
+                  src={image_url}
+                  alt="Patent commercial illustration"
+                  className="w-full h-auto object-cover max-h-[140px] filter sepia contrast-125 brightness-95 grayscale"
+                  loading="lazy"
+                />
+              </div>
+            )}
+          </div>
+
+          <div className="border-t border-primary-base/20 mt-4 pt-2 flex justify-between items-center text-[9px] text-text-dim">
+            <span>BABBAGE ENTERPRISES CO.</span>
+            <span suppressHydrationWarning>{new Date(created_at).toLocaleDateString()}</span>
+          </div>
+        </motion.div>
+      );
+    }
+
     return (
       <motion.div
-        className="bg-[#0b2447] text-[#5fd6fa] border border-[#19376d] p-6 rounded-lg font-mono relative overflow-hidden flex flex-col justify-between h-[280px] select-none hover:border-[#5fd6fa]/50 hover:shadow-[0_0_25px_rgba(95,214,250,0.25)] transition-all duration-300"
+        className="bg-[#0b2447] text-[#5fd6fa] border border-[#19376d] p-6 rounded-lg font-mono relative overflow-hidden flex flex-col justify-between min-h-[280px] h-auto select-none hover:border-[#5fd6fa]/50 hover:shadow-[0_0_25px_rgba(95,214,250,0.25)] transition-all duration-300"
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
@@ -141,11 +214,21 @@ export default function FeedCard({ item, onPersonaClick }: FeedCardProps) {
           <p className="text-xs text-[#a5f3fc]/80 leading-relaxed font-sans line-clamp-4">
             {description}
           </p>
+          {image_url && (
+            <div className="w-full overflow-hidden mt-3 border border-white/10 rounded-lg">
+              <img
+                src={image_url}
+                alt="Blueprint commercial illustration"
+                className="w-full h-auto object-cover max-h-[140px]"
+                loading="lazy"
+              />
+            </div>
+          )}
         </div>
 
-        <div className="border-t border-[#19376d]/50 pt-2.5 flex justify-between items-center text-[9px] text-[#5fd6fa]/60">
+        <div className="border-t border-[#19376d]/50 mt-4 pt-2.5 flex justify-between items-center text-[9px] text-[#5fd6fa]/60">
           <span>BABBAGE ENTERPRISES CO.</span>
-          <span>{new Date(created_at).toLocaleDateString()}</span>
+          <span suppressHydrationWarning>{new Date(created_at).toLocaleDateString()}</span>
         </div>
       </motion.div>
     );
@@ -159,6 +242,39 @@ export default function FeedCard({ item, onPersonaClick }: FeedCardProps) {
 
   // Sub-classification of post styles based on Author Role
   const getPostStyle = (authorRole: string) => {
+    if (isNewspaper) {
+      switch (authorRole) {
+        case 'SCIENTIST':
+          return {
+            headerBg: 'border-primary-base/20 text-text-dim',
+            icon: <Binary size={12} className="text-primary-base" />,
+            badgeLabel: 'Research Ledger',
+            cardClass: 'border-primary-base/20 hover:border-primary-base/40 bg-black/[0.005]',
+          };
+        case 'POLITICIAN':
+          return {
+            headerBg: 'border-primary-base/20 text-text-dim',
+            icon: <AlertTriangle size={12} className="text-primary-base" />,
+            badgeLabel: 'State Gazette',
+            cardClass: 'border-primary-base/20 hover:border-primary-base/40 bg-black/[0.015]',
+          };
+        case 'BRAND':
+          return {
+            headerBg: 'border-primary-base/20 text-text-dim',
+            icon: <Compass size={12} className="text-primary-base" />,
+            badgeLabel: 'Industrial Dispatch',
+            cardClass: 'border-primary-base/20 hover:border-primary-base/40 bg-black/[0.005]',
+          };
+        default:
+          return {
+            headerBg: 'border-primary-base/20 text-text-dim',
+            icon: <Compass size={12} className="text-primary-base" />,
+            badgeLabel: 'Temporal Feed',
+            cardClass: 'border-primary-base/20 hover:border-primary-base/40 bg-black/[0.005]',
+          };
+      }
+    }
+
     switch (authorRole) {
       case 'SCIENTIST':
         return {
@@ -195,7 +311,11 @@ export default function FeedCard({ item, onPersonaClick }: FeedCardProps) {
 
   return (
     <motion.div
-      className={`glass-panel p-5 rounded-xl border border-border-color flex flex-col gap-4 select-none ${styleMeta.cardClass}`}
+      className={
+        isNewspaper
+          ? `border border-primary-base/20 p-5 rounded-none flex flex-col gap-4 select-none transition-all duration-300 shadow-sm hover:shadow-md ${styleMeta.cardClass}`
+          : `glass-panel p-5 rounded-xl border border-border-color flex flex-col gap-4 select-none ${styleMeta.cardClass}`
+      }
       initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.35 }}
@@ -203,38 +323,74 @@ export default function FeedCard({ item, onPersonaClick }: FeedCardProps) {
       {/* Author and Metadata Header */}
       <div className="flex items-start justify-between">
         <div 
-          className="flex items-center gap-3 cursor-pointer group/author"
-          onClick={() => onPersonaClick && onPersonaClick(persona?.id || '')}
+          className={`flex items-center gap-3 ${persona?.id === 'local-persona-id' ? 'select-none' : 'cursor-pointer group/author'}`}
+          onClick={() => persona?.id !== 'local-persona-id' && onPersonaClick && onPersonaClick(persona?.id || '')}
         >
           {/* Avatar Placeholder */}
-          <div className="w-10 h-10 rounded-full border border-white/10 bg-white/5 flex items-center justify-center font-serif font-bold text-accent-base text-sm group-hover/author:border-accent-base group-hover/author:text-glow transition-all duration-300">
+          <div className={
+            isNewspaper
+              ? "w-10 h-10 rounded-none border-2 border-primary-base bg-background flex items-center justify-center font-serif font-black text-primary-base text-sm hover:bg-black/[0.03] transition-colors"
+              : "w-10 h-10 rounded-full border border-white/10 bg-white/5 flex items-center justify-center font-serif font-bold text-accent-base text-sm group-hover/author:border-accent-base group-hover/author:text-glow transition-all duration-300"
+          }>
             {persona?.name ? persona.name.charAt(0) : '?'}
           </div>
 
           <div>
-            <div className="text-sm font-bold text-text-main group-hover/author:text-accent-base transition-colors duration-200 flex items-center gap-1.5">
+            <div className={`text-sm font-bold group-hover/author:text-accent-base transition-colors duration-200 flex items-center gap-1.5 ${
+              isNewspaper ? 'text-primary-base font-serif' : 'text-text-main'
+            }`}>
               {persona?.name || 'Charles Babbage III'}
-              <span className="text-[9px] font-mono bg-white/5 border border-white/10 text-text-dim px-1.5 py-0.5 rounded font-normal">
+              <span className={`text-[9px] px-1.5 py-0.5 border rounded font-normal ${
+                isNewspaper 
+                  ? 'bg-black/[0.02] border-primary-base/10 text-text-dim' 
+                  : 'bg-white/5 border-white/10 text-text-dim'
+              }`}>
                 Influence: {persona?.influence_score || 50}
               </span>
             </div>
-            <div className="text-xs text-text-dim">
+            <div className={`text-xs text-text-dim`}>
               @{persona?.handle || 'steam_coder_99'}
             </div>
           </div>
         </div>
 
         {/* Faction/Topic Classification Badge */}
-        <div className={`flex items-center gap-1 font-mono text-[9px] border rounded-full px-2.5 py-0.5 bg-white/5 ${styleMeta.headerBg}`}>
+        <div className={
+          isNewspaper
+            ? `flex items-center gap-1 font-serif text-[9px] border rounded-none px-2 py-0.5 bg-black/[0.01] ${styleMeta.headerBg}`
+            : `flex items-center gap-1 font-mono text-[9px] border rounded-full px-2.5 py-0.5 bg-white/5 ${styleMeta.headerBg}`
+        }>
           {styleMeta.icon}
           <span>{styleMeta.badgeLabel}</span>
         </div>
       </div>
 
       {/* Main Content */}
-      <p className="text-sm leading-relaxed text-text-main font-sans">
+      <p className={
+        isNewspaper 
+          ? "text-xs leading-relaxed text-primary-base/95 font-serif first-letter:text-3xl first-letter:font-bold first-letter:float-left first-letter:mr-2 first-letter:leading-none"
+          : "text-sm leading-relaxed text-text-main font-sans"
+      }>
         {content}
       </p>
+
+      {/* Post Image Attachment */}
+      {item.data.media_url && (
+        <div className={`w-full overflow-hidden mt-2 ${
+          isNewspaper
+            ? 'border border-primary-base/20 rounded-none'
+            : 'border border-white/10 rounded-lg'
+        }`}>
+          <img
+            src={item.data.media_url}
+            alt="Temporal feed media"
+            className={`w-full h-auto object-cover max-h-[300px] ${
+              isNewspaper ? 'filter sepia contrast-125 brightness-95 grayscale' : ''
+            }`}
+            loading="lazy"
+          />
+        </div>
+      )}
 
       {/* Social Engagement Panel */}
       <div className="flex justify-between items-center pt-3 border-t border-white/5 text-text-dim text-xs font-mono">
@@ -281,20 +437,26 @@ export default function FeedCard({ item, onPersonaClick }: FeedCardProps) {
           animate={{ height: 'auto', opacity: 1 }}
           exit={{ height: 0, opacity: 0 }}
           transition={{ duration: 0.3 }}
-          className="border-t border-white/5 pt-4 mt-2 overflow-hidden flex flex-col gap-3"
+          className={`pt-4 mt-2 overflow-hidden flex flex-col gap-3 border-t ${
+            isNewspaper ? 'border-primary-base/15' : 'border-white/5'
+          }`}
         >
-          <h5 className="text-[10px] font-bold font-mono text-text-dim uppercase tracking-wider">
-            COMMUNICATION THREAD
+          <h5 className={`text-[10px] font-bold uppercase tracking-wider ${
+            isNewspaper ? 'font-serif text-primary-base' : 'font-mono text-text-dim'
+          }`}>
+            {isNewspaper ? 'Communication Ledger' : 'COMMUNICATION THREAD'}
           </h5>
 
           {loadingComments && (
             <div className="space-y-3">
               {[1, 2].map((i) => (
                 <div key={i} className="animate-pulse flex items-start gap-3">
-                  <div className="w-8 h-8 rounded-full bg-white/5 border border-white/10" />
+                  <div className={`w-8 h-8 ${
+                    isNewspaper ? 'bg-black/5 border border-primary-base/10 rounded-none' : 'w-8 h-8 rounded-full bg-white/5 border border-white/10'
+                  }`} />
                   <div className="flex-1 space-y-1.5 py-0.5">
-                    <div className="h-2 bg-white/5 rounded w-1/4" />
-                    <div className="h-3 bg-white/5 rounded w-3/4" />
+                    <div className={`h-2 rounded w-1/4 ${isNewspaper ? 'bg-black/5' : 'bg-white/5'}`} />
+                    <div className={`h-3 rounded w-3/4 ${isNewspaper ? 'bg-black/5' : 'bg-white/5'}`} />
                   </div>
                 </div>
               ))}
@@ -302,13 +464,13 @@ export default function FeedCard({ item, onPersonaClick }: FeedCardProps) {
           )}
 
           {errorComments && (
-            <div className="text-xs text-rose-400 font-mono">
+            <div className={`text-xs ${isNewspaper ? 'font-serif text-primary-base' : 'font-mono text-rose-400'}`}>
               [TRANSMISSION ERROR]: {errorComments}
             </div>
           )}
 
           {!loadingComments && !errorComments && comments.length === 0 && (
-            <div className="text-xs text-text-dim/60 font-mono italic py-1">
+            <div className={`text-xs italic py-1 ${isNewspaper ? 'font-serif text-text-dim' : 'font-mono text-text-dim/60'}`}>
               No replies registered in this sector.
             </div>
           )}
@@ -327,20 +489,32 @@ export default function FeedCard({ item, onPersonaClick }: FeedCardProps) {
                     : 'text-accent-base';
 
                 return (
-                  <div key={comment.id} className="flex items-start gap-3 text-xs border-b border-white/[0.02] pb-3 last:border-0 last:pb-0">
-                    <div className="w-8 h-8 rounded-full border border-white/10 bg-white/5 flex items-center justify-center font-serif font-bold text-accent-base flex-shrink-0">
+                  <div key={comment.id} className={`flex items-start gap-3 text-xs pb-3 last:border-0 last:pb-0 border-b ${
+                    isNewspaper ? 'border-primary-base/10' : 'border-white/[0.02]'
+                  }`}>
+                    <div className={
+                      isNewspaper
+                        ? "w-8 h-8 border border-primary-base bg-background flex items-center justify-center font-serif font-bold text-primary-base flex-shrink-0"
+                        : "w-8 h-8 rounded-full border border-white/10 bg-white/5 flex items-center justify-center font-serif font-bold text-accent-base flex-shrink-0"
+                    }>
                       {comment.persona?.name ? comment.persona.name.charAt(0) : '?'}
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-1.5 flex-wrap">
-                        <span className="font-bold text-text-main">
+                        <span className={`font-bold ${isNewspaper ? 'text-primary-base font-serif' : 'text-text-main'}`}>
                           {comment.persona?.name || 'Unknown Citizen'}
                         </span>
-                        <span className={`font-mono text-[10px] ${roleColor}`}>
+                        <span className={
+                          isNewspaper
+                            ? 'font-serif text-[10px] text-text-dim'
+                            : `font-mono text-[10px] ${roleColor}`
+                        }>
                           @{comment.persona?.handle || 'unknown'}
                         </span>
                       </div>
-                      <p className="text-text-main/80 font-sans mt-1 leading-relaxed break-words">
+                      <p className={`mt-1 leading-relaxed break-words ${
+                        isNewspaper ? 'text-primary-base/90 font-serif' : 'text-text-main/80 font-sans'
+                      }`}>
                         {comment.content}
                       </p>
                     </div>
