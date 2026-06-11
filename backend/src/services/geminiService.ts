@@ -70,7 +70,7 @@ export function cleanJSON(text: string): string {
 export async function callGemini(prompt: string): Promise<unknown> {
   try {
     const apiKey = process.env.GEMINI_API_KEY;
-    const isDev = process.env.NODE_ENV === 'development';
+    const isDev = !process.env.NODE_ENV || process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test';
 
     if (!apiKey) {
       if (isDev) {
