@@ -1,6 +1,7 @@
 # ChronosFeed
 
-## Social Media for Alternate Histories
+## Social Media for Alternate Histories and Current Theories
+### Get all your "What If?" questions answered
 
 ChronosFeed is an AI-powered social media platform that generates entire alternate-history ecosystems from a single historical divergence.
 
