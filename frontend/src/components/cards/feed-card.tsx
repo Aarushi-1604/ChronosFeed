@@ -98,7 +98,11 @@ export default function FeedCard({ item, onPersonaClick }: FeedCardProps) {
     const { title, content, category, publisher, created_at, image_url } = item.data;
     return (
       <motion.div
-        className="bg-[var(--card-bg)] text-text-main border-2 border-primary-base/30 p-6 rounded-none shadow-md font-serif relative overflow-hidden select-none hover:border-primary-base transition-all duration-300"
+        className={`bg-[var(--card-bg)] text-text-main p-6 rounded-none shadow-md font-serif relative overflow-hidden select-none transition-all duration-300 ${
+          isNewspaper 
+            ? 'border-4 border-double border-primary-base/40 hover:border-primary-base/80' 
+            : 'border border-white/10 hover:border-accent-base/40'
+        }`}
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
@@ -107,15 +111,15 @@ export default function FeedCard({ item, onPersonaClick }: FeedCardProps) {
         <div className="absolute inset-0 opacity-5 pointer-events-none bg-[radial-gradient(#000_1px,transparent_1px)] bg-[size:4px_4px]" />
         
         {/* Masthead */}
-        <div className="flex flex-col items-center border-b-2 border-double border-primary-base/30 pb-3 mb-4">
-          <div className="flex items-center gap-2 text-[10px] tracking-widest font-serif font-bold uppercase text-text-dim">
-            <Newspaper size={12} />
-            {publisher || 'The Chronos daily'}
+        <div className="flex flex-col items-center border-b-4 border-double border-primary-base pb-3 mb-4">
+          <div className="flex items-center gap-2 text-[10px] tracking-[0.2em] font-serif font-black uppercase text-primary-base/80 mb-1">
+            <Newspaper size={12} className="text-primary-base" />
+            {publisher || 'The Chronos Daily'}
           </div>
-          <h4 className="text-3xl font-black uppercase text-center my-1.5 tracking-tight font-serif text-text-main">
+          <h4 className="text-3xl md:text-4xl font-black uppercase text-center my-3 tracking-tight font-serif text-primary-base leading-tight hover:opacity-95 transition-opacity">
             {title}
           </h4>
-          <div className="flex justify-between w-full text-[9px] font-serif uppercase text-text-dim pt-1 border-t border-primary-base/20">
+          <div className="flex justify-between w-full text-[9px] font-serif uppercase text-primary-base/70 pt-1.5 border-t border-primary-base/20 font-bold">
             <span>Section: {category}</span>
             <span suppressHydrationWarning>{new Date(created_at).toLocaleDateString()}</span>
           </div>
