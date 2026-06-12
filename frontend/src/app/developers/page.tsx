@@ -48,6 +48,12 @@ export default function DeveloperPortal() {
 
   const gitMilestones = [
     {
+      version: 'v1.2.0',
+      date: 'June 12, 2026',
+      title: 'UI Polish, Manual Guide & Header Alignments',
+      desc: 'Added step-by-step How to Use operator guide page. Implemented absolute desktop centering for issue volume indicators, prompt quote subtitles, and news feed headers. Refined newspaper card layouts with double-borders and high-contrast headlines.',
+    },
+    {
       version: 'v1.1.0',
       date: 'June 11, 2026',
       title: 'Retro Newspaper Theme & Dossier Polish',
@@ -373,7 +379,7 @@ export default function DeveloperPortal() {
             </h2>
             <div className={`text-xs leading-relaxed space-y-2.5 ${isNewspaper ? 'text-text-dim' : 'text-text-dim font-sans'}`}>
               <p>
-                We acknowledge the leverage of the following tools and framework systems that made this hackathon prototype possible:
+                We acknowledge the leverage of the following tools and framework systems that made this prototype possible:
               </p>
               <div className="list-disc pl-4 space-y-1">
                 <div><strong>Next.js 15</strong> & <strong>Tailwind CSS v4</strong> for the responsive client application.</div>
@@ -388,7 +394,7 @@ export default function DeveloperPortal() {
 
       {/* Newspaper Footer */}
       <footer className="w-full max-w-6xl mx-auto border-t-2 border-double border-primary-base/20 mt-8 pt-3.5 pb-1 text-center text-[9px] tracking-[0.22em] font-serif text-text-dim uppercase font-bold z-10">
-        AI CLUB | SIT PUNE | AARUSHI | ADITYA | YESHWANT | 2026
+        AI CLUB | SIT PUNE | AARUSHI | ADITYA | YESHWANT | v1.2.0 | 2026
       </footer>
     </div>
   );
