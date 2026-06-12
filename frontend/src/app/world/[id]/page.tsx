@@ -252,14 +252,20 @@ export default function WorldPage({ params }: PageProps) {
       {isCompiled ? (
         <header className="w-full max-w-7xl mx-auto flex flex-col items-center border-b-4 border-double border-primary-base pb-3.5 mb-6 z-10 text-primary-base font-serif">
           {/* Top meta row */}
-          <div className="flex justify-between w-full text-[10px] uppercase tracking-widest border-b border-primary-base/20 pb-2 mb-3 items-center font-bold">
-            <div className="flex items-center gap-3">
+          <div className="relative flex flex-col md:flex-row justify-between w-full text-[10px] uppercase tracking-widest border-b border-primary-base/20 pb-2 mb-3 items-center font-bold gap-3 md:gap-0">
+            <div className="flex flex-wrap items-center gap-2 justify-center md:justify-start">
               <button
                 onClick={() => router.push('/')}
                 className="border border-primary-base px-3 py-1 font-serif text-[10px] tracking-wider font-bold uppercase hover:bg-primary-base hover:text-[var(--bg-color)] transition-all duration-300 cursor-pointer flex items-center gap-1"
               >
                 <ArrowLeft size={10} />
                 <span>Return to Console</span>
+              </button>
+              <button
+                onClick={() => router.push('/guide')}
+                className="border border-primary-base px-3 py-1 font-serif text-[10px] tracking-wider font-bold uppercase hover:bg-primary-base hover:text-[var(--bg-color)] transition-all duration-300 cursor-pointer"
+              >
+                How to Use
               </button>
               <button
                 onClick={() => router.push('/developers')}
@@ -275,15 +281,15 @@ export default function WorldPage({ params }: PageProps) {
                 {theme === 'newspaper' ? '☾ Dark Press' : '☼ Light Press'}
               </button>
             </div>
-            <span>VOLUME CCLXVIII // NO. 45091</span>
-            <span>PRICE: 2 CENTS</span>
+            <span className="md:absolute md:left-1/2 md:transform md:-translate-x-1/2 text-center">VOLUME CCLXVIII // NO. 45091</span>
+            <span className="text-center">PRICE: 2 CENTS</span>
           </div>
 
           {/* Banner Masthead */}
           <div className="flex items-center justify-between w-full py-1">
             <div className="hidden md:block w-24 h-[1px] bg-primary-base/30" />
             <div className="flex flex-col items-center">
-              <h1 className="text-4xl md:text-5xl font-black uppercase tracking-tight font-serif text-center leading-none text-text-main flex items-center gap-3">
+              <h1 className="text-4xl md:text-5xl font-black uppercase tracking-tight font-serif text-center leading-none text-primary-base flex items-center gap-3">
                 <ChronosLogo size={52} className="text-primary-base" />
                 THE DAILY CHRONICLE
               </h1>
@@ -295,10 +301,12 @@ export default function WorldPage({ params }: PageProps) {
           </div>
 
           {/* Bottom meta row */}
-          <div className="flex justify-between w-full text-[10px] uppercase tracking-widest border-t border-primary-base/20 pt-2 mt-3 font-bold">
-            <span>REALITY KEY: {worldId.slice(0, 8)}</span>
-            <span className="font-bold italic normal-case text-text-dim max-w-xs truncate">&ldquo;{stripModePrefix(world?.prompt || '')}&rdquo;</span>
-            <span suppressHydrationWarning>{formattedDate}</span>
+          <div className="relative flex flex-col md:flex-row justify-between w-full text-[10px] uppercase tracking-widest border-t border-primary-base/20 pt-2 mt-3 font-bold gap-2 md:gap-0 items-center">
+            <span className="text-center">REALITY KEY: {worldId.slice(0, 8)}</span>
+            <span className="md:absolute md:left-1/2 md:transform md:-translate-x-1/2 text-center font-bold italic normal-case text-text-dim max-w-md truncate px-4">
+              &ldquo;{stripModePrefix(world?.prompt || '')}&rdquo;
+            </span>
+            <span className="text-center" suppressHydrationWarning>{formattedDate}</span>
           </div>
         </header>
       ) : (
