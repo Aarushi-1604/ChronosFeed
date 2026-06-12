@@ -73,7 +73,7 @@ The project uses the Google Gemini API free-tier credentials.
 
 ---
 
-## 🎨 7. UI Polish, Manual Guide, & Alignment Upgrades (June 12, 2026)
+## 🎨 7. UI Polish, Manual Guide, & Alignment Upgrades — v1.2.0 (June 12, 2026)
 *   **Comprehensive "How to Use" Guide**:
     - Created a dedicated manual page ([`guide/page.tsx`](file:///d:/ChronosFeed-main/ChronosFeed-main/frontend/src/app/guide/page.tsx)) containing step-by-step simulation instructions, simulation modes breakdown, and API quota/failover alerts.
     - Placed high-visibility "How to Use" navigation links in the header of the console (landing page) and the header of all compiled worlds next to the "Developer Portal".
