@@ -10,51 +10,18 @@ import { Post } from '../../types';
 interface FeedColumnProps {
   initialItems: FeedItem[];
   worldId: string;
-  hasMore: boolean;
-  nextCursor: string | null;
-  onLoadMore: () => Promise<void>;
   onPersonaClick?: (personaId: string) => void;
   onAddLocalPost: (content: string, faction: string) => void;
-  isLoadingMore: boolean;
   feedLoading: boolean;
 }
 
 export default function FeedColumn({
   initialItems,
   worldId,
-  hasMore,
-  nextCursor,
-  onLoadMore,
   onPersonaClick,
   onAddLocalPost,
-  isLoadingMore,
   feedLoading,
 }: FeedColumnProps) {
-  const observerRef = React.useRef<HTMLDivElement>(null);
-
-  React.useEffect(() => {
-    if (!hasMore || isLoadingMore) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-          onLoadMore();
-        }
-      },
-      { threshold: 0.1 }
-    );
-
-    const currentTarget = observerRef.current;
-    if (currentTarget) {
-      observer.observe(currentTarget);
-    }
-
-    return () => {
-      if (currentTarget) {
-        observer.unobserve(currentTarget);
-      }
-    };
-  }, [hasMore, isLoadingMore, onLoadMore]);
 
   return (
     <div className="flex flex-col gap-9 h-full max-h-full overflow-y-auto pr-5 custom-scrollbar select-none">
@@ -151,16 +118,6 @@ export default function FeedColumn({
               );
             })}
           </AnimatePresence>
-
-          {/* Infinite Scroll Trigger element */}
-          {hasMore && (
-            <div ref={observerRef} className="flex justify-center items-center py-6 mt-2 flex-shrink-0">
-              <RefreshCw className="animate-spin text-primary-base" size={18} />
-              <span className="font-serif text-xs text-text-dim ml-2 font-bold uppercase tracking-wider">
-                Syncing Temporal Dispatch Stream...
-              </span>
-            </div>
-          )}
         </div>
       ) : (
         <div className="flex flex-col items-center justify-center p-16 border border-dashed border-primary-base/20 rounded-none bg-black/[0.005] text-center flex-shrink-0">

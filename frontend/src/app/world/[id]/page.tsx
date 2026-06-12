@@ -33,13 +33,10 @@ export default function WorldPage({ params }: PageProps) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Feed Items & Pagination State
+  // Feed Items State
   const [posts, setPosts] = useState<Post[]>([]);
   const [news, setNews] = useState<News[]>([]);
   const [ads, setAds] = useState<Ad[]>([]);
-  const [hasMore, setHasMore] = useState(false);
-  const [nextCursor, setNextCursor] = useState<string | null>(null);
-  const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [feedLoading, setFeedLoading] = useState(true);
 
   // Derive interleaved feed items dynamically
@@ -90,8 +87,9 @@ export default function WorldPage({ params }: PageProps) {
     async function loadInitialFeed() {
       setFeedLoading(true);
       try {
+        // Fetch up to 100 posts to load the entire timeline feed at once
         const [feedRes, newsRes, adsRes] = await Promise.all([
-          api.getWorldFeed(worldId, 10),
+          api.getWorldFeed(worldId, 100),
           api.getWorldNews(worldId),
           api.getWorldAds(worldId),
         ]);
@@ -103,8 +101,6 @@ export default function WorldPage({ params }: PageProps) {
         }));
         setNews(enrichedNews);
         setAds(adsRes);
-        setHasMore(feedRes.hasMore);
-        setNextCursor(feedRes.nextCursor);
       } catch (err) {
         console.error('Error loading initial polymorphic feed, using local fallback:', err);
         const seeded = getSeededFeedItems();
@@ -118,8 +114,6 @@ export default function WorldPage({ params }: PageProps) {
         });
         setNews(enrichedSeededNews);
         setAds(seeded.filter((x) => x.type === 'ad').map((x) => x.data as Ad));
-        setHasMore(false);
-        setNextCursor(null);
       } finally {
         setFeedLoading(false);
       }
@@ -127,31 +121,6 @@ export default function WorldPage({ params }: PageProps) {
 
     loadInitialFeed();
   }, [world]);
-
-  // 3. Load More Paginated Posts
-  const handleLoadMore = async () => {
-    if (isLoadingMore || !hasMore) return;
-    setIsLoadingMore(true);
-
-    try {
-      const feedRes = await api.getWorldFeed(worldId, 8, nextCursor || undefined);
-
-      setPosts((prev) => {
-        const updated = [...prev, ...feedRes.posts];
-        updated.sort(
-          (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-        );
-        return updated;
-      });
-
-      setHasMore(feedRes.hasMore);
-      setNextCursor(feedRes.nextCursor);
-    } catch (err) {
-      console.error('Failed loading page cursors:', err);
-    } finally {
-      setIsLoadingMore(false);
-    }
-  };
 
   // 4. Inject Local proclamation (Transmissions)
   const handleAddLocalPost = (content: string, faction: string) => {
@@ -400,12 +369,8 @@ export default function WorldPage({ params }: PageProps) {
           <FeedColumn
             initialItems={feedItems}
             worldId={worldId}
-            hasMore={hasMore}
-            nextCursor={nextCursor}
-            onLoadMore={handleLoadMore}
             onPersonaClick={handlePersonaProfileRedirect}
             onAddLocalPost={handleAddLocalPost}
-            isLoadingMore={isLoadingMore}
             feedLoading={feedLoading}
           />
         </main>
