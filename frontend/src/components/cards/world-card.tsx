@@ -98,7 +98,7 @@ export default function WorldCard({ world }: WorldCardProps) {
         <p className={`text-xs leading-relaxed line-clamp-3 my-1 ${
           isNewspaper ? 'font-serif text-text-dim' : 'text-text-dim font-sans'
         }`}>
-          {world.summary || 'Chronos anomaly generated from: ' + world.prompt}
+          {world.summary || 'Chronos anomaly generated from: ' + (world.prompt || '').replace(/^\[Mode:\s*(anchored|ripple|chaos)\]\s*/i, '')}
         </p>
       </div>
 
