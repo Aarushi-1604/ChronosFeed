@@ -7,6 +7,29 @@ import { Post, News, Ad, Comment } from '../../types';
 import { api } from '../../lib/api';
 import { useTheme } from '../../context/theme-context';
 
+function getFallbackUnsplashUrl(content: string): string {
+  const text = (content || '').toLowerCase();
+  let photoId = 'photo-1457369804613-52c61a468e7d'; // Default vintage writing desk
+  
+  if (text.includes('rome') || text.includes('caesar') || text.includes('senat') || text.includes('empire') || text.includes('roman')) {
+    photoId = 'photo-1552832230-c0197dd311b5'; // Rome Colosseum
+  } else if (text.includes('modi') || text.includes('india') || text.includes('delhi') || text.includes('jaipur')) {
+    photoId = 'photo-1524492412937-b28074a5d7da'; // Taj Mahal / India
+  } else if (text.includes('trump') || text.includes('america') || text.includes('washington') || text.includes('president') || text.includes('white house')) {
+    photoId = 'photo-1508009603885-50cf7c579365'; // Washington DC / Capitol
+  } else if (text.includes('china') || text.includes('beijing') || text.includes('xi ') || text.includes('president of china')) {
+    photoId = 'photo-1508009603885-50cf7c579365'; // Fallback
+  } else if (text.includes('steam') || text.includes('babbage') || text.includes('engine') || text.includes('gear') || text.includes('tesla') || text.includes('edison')) {
+    photoId = 'photo-1508962914676-134849a727f0'; // Old gears / Steampunk
+  } else if (text.includes('mars') || text.includes('space') || text.includes('rocket') || text.includes('nasa') || text.includes('coloniz')) {
+    photoId = 'photo-1614728894747-a83421e2b9c9'; // Mars
+  } else if (text.includes('alexandria') || text.includes('library') || text.includes('book') || text.includes('read') || text.includes('burn')) {
+    photoId = 'photo-1507842217343-583bb7270b66'; // Old library
+  }
+  
+  return `https://images.unsplash.com/${photoId}?auto=format&fit=crop&w=600&q=80`;
+}
+
 export type FeedItem =
   | { type: 'post'; data: Post }
   | { type: 'news'; data: News }
@@ -116,6 +139,10 @@ export default function FeedCard({ item, onPersonaClick }: FeedCardProps) {
                 isNewspaper ? 'filter sepia contrast-125 brightness-95 grayscale' : ''
               }`}
               loading="lazy"
+              onError={(e) => {
+                e.currentTarget.onerror = null;
+                e.currentTarget.src = getFallbackUnsplashUrl(title + " " + content);
+              }}
             />
           </div>
         )}
@@ -173,6 +200,10 @@ export default function FeedCard({ item, onPersonaClick }: FeedCardProps) {
                   alt="Patent commercial illustration"
                   className="w-full h-auto object-cover max-h-[140px] filter sepia contrast-125 brightness-95 grayscale"
                   loading="lazy"
+                  onError={(e) => {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src = getFallbackUnsplashUrl(company_name + " " + tagline + " " + description);
+                  }}
                 />
               </div>
             )}
@@ -221,6 +252,10 @@ export default function FeedCard({ item, onPersonaClick }: FeedCardProps) {
                 alt="Blueprint commercial illustration"
                 className="w-full h-auto object-cover max-h-[140px]"
                 loading="lazy"
+                onError={(e) => {
+                  e.currentTarget.onerror = null;
+                  e.currentTarget.src = getFallbackUnsplashUrl(company_name + " " + tagline + " " + description);
+                }}
               />
             </div>
           )}
@@ -388,6 +423,10 @@ export default function FeedCard({ item, onPersonaClick }: FeedCardProps) {
               isNewspaper ? 'filter sepia contrast-125 brightness-95 grayscale' : ''
             }`}
             loading="lazy"
+            onError={(e) => {
+              e.currentTarget.onerror = null;
+              e.currentTarget.src = getFallbackUnsplashUrl(item.data.content);
+            }}
           />
         </div>
       )}
