@@ -391,7 +391,7 @@ export default function WorldPage({ params }: PageProps) {
 
       {/* Newspaper Footer */}
       <footer className="w-full max-w-7xl mx-auto border-t-2 border-double border-primary-base/20 mt-4 pt-3.5 pb-1 text-center text-[9px] tracking-[0.22em] font-serif text-text-dim uppercase font-bold z-10">
-        AI CLUB | SIT PUNE | AARUSHI | ADITYA | YESHWANT | 2026
+        AI CLUB | SIT PUNE | AARUSHI | ADITYA | YESHWANT | v1.2.0 | 2026
       </footer>
 
       {/* -------------------------------------------------------------
