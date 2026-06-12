@@ -192,9 +192,9 @@ export default function LandingPage() {
 
       {/* Header Log */}
       <header className="w-full max-w-7xl mx-auto flex flex-col items-center border-b-4 border-double border-primary-base pb-3.5 mb-8 z-10 text-primary-base font-serif">
-        <div className="flex justify-between w-full text-[10px] uppercase tracking-widest border-b border-primary-base/20 pb-2 mb-3 items-center font-bold">
+        <div className="relative flex justify-between w-full text-[10px] uppercase tracking-widest border-b border-primary-base/20 pb-2 mb-3 items-center font-bold">
           <span>REALITY SIMULATION CONSOLE</span>
-          <span>VOLUME CCLXVIII // NO. 45090</span>
+          <span className="md:absolute md:left-1/2 md:transform md:-translate-x-1/2">VOLUME CCLXVIII // NO. 45090</span>
           <div className="flex items-center gap-3">
             <button
               type="button"
@@ -211,7 +211,7 @@ export default function LandingPage() {
         <div className="flex items-center justify-between w-full py-1">
           <div className="hidden md:block w-24 h-[1px] bg-primary-base/30" />
           <div className="flex flex-col items-center">
-            <h1 className="text-4xl md:text-5xl font-black uppercase tracking-tight font-serif text-center leading-none text-text-main flex items-center gap-3">
+            <h1 className="text-4xl md:text-5xl font-black uppercase tracking-tight font-serif text-center leading-none text-primary-base flex items-center gap-3">
               <ChronosLogo size={46} className="text-primary-base" />
               CHRONOS REALITY PRESS
             </h1>
@@ -221,16 +221,24 @@ export default function LandingPage() {
           </div>
           <div className="hidden md:block w-24 h-[1px] bg-primary-base/30" />
         </div>
-
-        <div className="flex justify-between w-full text-[10px] uppercase tracking-widest border-t border-primary-base/20 pt-2.5 mt-3 font-bold">
+        <div className="relative flex justify-between w-full text-[10px] uppercase tracking-widest border-t border-primary-base/20 pt-2.5 mt-3 font-bold items-center">
           <span>PORTAL KEY: CF-9901</span>
-          <button
-            onClick={() => router.push('/developers')}
-            suppressHydrationWarning
-            className="border border-primary-base px-3 py-1 font-serif text-[10px] tracking-wider font-bold uppercase hover:bg-primary-base hover:text-[var(--bg-color)] transition-all duration-300 cursor-pointer"
-          >
-            Developer Portal
-          </button>
+          <div className="md:absolute md:left-1/2 md:transform md:-translate-x-1/2 flex gap-2.5">
+            <button
+              onClick={() => router.push('/guide')}
+              suppressHydrationWarning
+              className="border border-primary-base px-3 py-1 font-serif text-[10px] tracking-wider font-bold uppercase hover:bg-primary-base hover:text-[var(--bg-color)] transition-all duration-300 cursor-pointer"
+            >
+              How to Use
+            </button>
+            <button
+              onClick={() => router.push('/developers')}
+              suppressHydrationWarning
+              className="border border-primary-base px-3 py-1 font-serif text-[10px] tracking-wider font-bold uppercase hover:bg-primary-base hover:text-[var(--bg-color)] transition-all duration-300 cursor-pointer"
+            >
+              Developer Portal
+            </button>
+          </div>
           <span suppressHydrationWarning>{formattedDate}</span>
         </div>
       </header>
