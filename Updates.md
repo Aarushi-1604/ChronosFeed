@@ -47,6 +47,7 @@ All prompt templates have been rewritten to implement the reality-anchored rules
     - Avoided locale-dependent SSR discrepancies by wrapping header dates (`toLocaleDateString`) inside a client-side mounting effect (`useState` + `useEffect`).
     - Added `suppressHydrationWarning` to parent `<html>`/`<body>` nodes and interactive form tags to silence React hydration warnings caused by browser extensions injecting attributes (like Grammarly's `data-gr-*` or FormDirector's `fdprocessedid`).
 *   **Inline Newspaper Error Banners**: Replaced standard JS alerts with retro, period-themed inline warnings (*"The Babbage Engine encountered a fault..."*) when world compilation fails.
+*   **Simplified Feed Stream (Pagination Removal)**: Removed IntersectionObserver-based infinite scroll pagination. The feed column now loads all posts (up to 100) instantly on initial load, preventing UI loading indicator freezes and enhancing layout usability.
 
 ---
 
