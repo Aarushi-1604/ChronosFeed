@@ -10,7 +10,7 @@ import TimelineSidebar from '../../../components/dashboard/timeline-sidebar';
 import FeedColumn from '../../../components/dashboard/feed-column';
 import IntelligencePanel from '../../../components/dashboard/intelligence-panel';
 import { FeedItem } from '../../../components/cards/feed-card';
-import { World, Post, News, Ad, NewsCategory } from '../../../types';
+import { World, Post, News, Ad, NewsCategory, OperatorPersona } from '../../../types';
 import { api } from '../../../lib/api';
 import { interleaveContent } from '../../../lib/feed/interleaveContent';
 import ChronosLogo from '../../../components/branding/chronos-logo';
@@ -30,6 +30,7 @@ export default function WorldPage({ params }: PageProps) {
 
   // World Data & State
   const [world, setWorld] = useState<World | null>(null);
+  const [operator, setOperator] = useState<OperatorPersona | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -63,12 +64,28 @@ export default function WorldPage({ params }: PageProps) {
         const data = await api.getWorld(worldId);
         if (!active) return;
         setWorld(data);
+        
+        try {
+          const op = await api.getOperatorPersona(worldId);
+          if (active) setOperator(op);
+        } catch (opErr) {
+          console.warn('Failed to load operator persona on mount:', opErr);
+        }
+        
         setLoading(false);
       } catch (err) {
         if (!active) return;
         console.warn('World fetch failed, using Victorian stub fallback:', err);
         const fallback = getFallbackWorld();
         setWorld(fallback);
+        
+        try {
+          const op = await api.getOperatorPersona(worldId);
+          if (active) setOperator(op);
+        } catch (opErr) {
+          console.warn('Failed to load operator persona on fallback mount:', opErr);
+        }
+        
         setLoading(false);
       }
     }
@@ -355,7 +372,11 @@ export default function WorldPage({ params }: PageProps) {
         const expandedNews = expandNews(enrichedNews, 25, 6);
         const expandedAds = expandAds(adsRes, 20, 8);
 
-        setPosts(expandedPosts);
+        // Load local user posts
+        const savedPostsRaw = typeof window !== 'undefined' ? localStorage.getItem(`chronos-user-posts-${worldId}`) : null;
+        const userPosts: Post[] = savedPostsRaw ? JSON.parse(savedPostsRaw) : [];
+
+        setPosts([...userPosts, ...expandedPosts]);
         setNews(expandedNews);
         setAds(expandedAds);
       } catch (err) {
@@ -377,7 +398,11 @@ export default function WorldPage({ params }: PageProps) {
         const expandedNews = expandNews(enrichedSeededNews, 25, 6);
         const expandedAds = expandAds(rawAds, 20, 8);
 
-        setPosts(expandedPosts);
+        // Load local user posts
+        const savedPostsRaw = typeof window !== 'undefined' ? localStorage.getItem(`chronos-user-posts-${worldId}`) : null;
+        const userPosts: Post[] = savedPostsRaw ? JSON.parse(savedPostsRaw) : [];
+
+        setPosts([...userPosts, ...expandedPosts]);
         setNews(expandedNews);
         setAds(expandedAds);
       } finally {
@@ -389,11 +414,21 @@ export default function WorldPage({ params }: PageProps) {
   }, [world]);
 
   // 4. Inject Local proclamation (Transmissions)
-  const handleAddLocalPost = (content: string, faction: string) => {
+  const handleAddLocalPost = async (content: string, faction: string) => {
+    let activeOperator = operator;
+    if (!activeOperator) {
+      try {
+        activeOperator = await api.instantiateOperatorPersona(worldId, faction);
+        setOperator(activeOperator);
+      } catch (err) {
+        console.error('Failed to instantiate operator persona:', err);
+      }
+    }
+
     const newPost: Post = {
       id: `local-${Date.now()}`,
       world_id: worldId,
-      persona_id: 'local-user',
+      persona_id: activeOperator ? activeOperator.id : 'local-user',
       content,
       media_url: null,
       media_type: 'TEXT',
@@ -401,14 +436,21 @@ export default function WorldPage({ params }: PageProps) {
       reposts_count: 0,
       created_at: new Date().toISOString(),
       persona: {
-        id: 'local-persona-id',
-        name: 'Temporal Observer',
-        handle: 'temp_anchor_01',
+        id: activeOperator ? activeOperator.id : 'local-persona-id',
+        name: activeOperator ? activeOperator.name : 'Temporal Observer',
+        handle: activeOperator ? activeOperator.handle : 'temp_anchor_01',
         avatar: '',
-        role: faction,
-        influence_score: 99,
+        role: activeOperator ? activeOperator.role : faction,
+        influence_score: activeOperator ? activeOperator.influence_score : 99,
       },
     };
+
+    // Save user post locally to persist across page reloads
+    if (typeof window !== 'undefined') {
+      const savedPostsRaw = localStorage.getItem(`chronos-user-posts-${worldId}`);
+      const userPosts: Post[] = savedPostsRaw ? JSON.parse(savedPostsRaw) : [];
+      localStorage.setItem(`chronos-user-posts-${worldId}`, JSON.stringify([newPost, ...userPosts]));
+    }
 
     setPosts((prev) => [newPost, ...prev]);
   };
@@ -532,6 +574,12 @@ export default function WorldPage({ params }: PageProps) {
                 className="border border-primary-base px-3 py-1 font-serif text-[10px] tracking-wider font-bold uppercase hover:bg-primary-base hover:text-[var(--bg-color)] transition-all duration-300 cursor-pointer"
               >
                 How to Use
+              </button>
+              <button
+                onClick={() => router.push(`/world/${worldId}/persona/operator`)}
+                className="border border-primary-base px-3 py-1 font-serif text-[10px] tracking-wider font-bold uppercase hover:bg-primary-base hover:text-[var(--bg-color)] transition-all duration-300 cursor-pointer text-accent-base border-accent-base/50"
+              >
+                Operator Dossier
               </button>
             </div>
             <span className="md:absolute md:left-1/2 md:transform md:-translate-x-1/2 text-center">VOLUME CCLXVIII // NO. 45091</span>
