@@ -8,6 +8,8 @@ import {
   getWorldNews,
   getWorldAds,
   getWorldStatus,
+  getOperatorPersona,
+  createOperatorPersona,
 } from '../controllers/worldController';
 import { requireFields } from '../middleware/validateBody';
 
@@ -34,5 +36,9 @@ router.get('/:id/news', getWorldNews);
 
 // GET /api/worlds/:id/ads
 router.get('/:id/ads', getWorldAds);
+
+// GET & POST /api/worlds/:id/operator
+router.get('/:id/operator', getOperatorPersona);
+router.post('/:id/operator', requireFields(['role']), createOperatorPersona);
 
 export default router;

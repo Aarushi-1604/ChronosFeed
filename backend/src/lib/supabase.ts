@@ -120,6 +120,8 @@ class MockSupabaseClient {
               }
             }
           ];
+        } else if (table === 'operator_personas') {
+          data = [];
         }
 
         const queryChain = {
