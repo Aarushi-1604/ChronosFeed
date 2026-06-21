@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { worldService } from '../services/worldService';
 import { generateWorld } from '../services/generationService';
+import { worldTokenUsage } from '../services/geminiService';
 
 // POST /api/worlds
 export const createWorld = async (
@@ -72,7 +73,7 @@ export const getWorldFeed = async (
 ): Promise<void> => {
   try {
     const worldId = String(req.params.id);
-    const limit = Math.min(parseInt(req.query.limit as string) || 10, 20);
+    const limit = Math.min(parseInt(req.query.limit as string) || 10, 100);
     const cursor = req.query.cursor ? String(req.query.cursor) : undefined;
 
     const world = await worldService.getWorldById(worldId);
@@ -176,6 +177,7 @@ export const getWorldStatus = async (
         status: world.status,
         name: world.name || null,
         era: world.era || null,
+        tokensUsed: worldTokenUsage.get(world.id) || 0,
       },
     });
   } catch (err) {

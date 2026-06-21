@@ -264,7 +264,7 @@ export async function generateWorld(worldId: string, fullPrompt: string): Promis
         // Step 1 — Generate world data
         // ==========================================
         const worldGenesisPrompt = buildWorldGenesisPrompt(userPrompt, mode);
-        const worldResultRaw = await callGemini(worldGenesisPrompt);
+        const worldResultRaw = await callGemini(worldGenesisPrompt, worldId);
 
         const worldResult = worldResultRaw as {
             name: string;
@@ -336,7 +336,7 @@ export async function generateWorld(worldId: string, fullPrompt: string): Promis
         // Step 2 — Generate personas
         // ==========================================
         const personaPrompt = buildPersonaPrompt(worldContext);
-        const personaResultRaw = await callGemini(personaPrompt);
+        const personaResultRaw = await callGemini(personaPrompt, worldId);
 
         if (!Array.isArray(personaResultRaw)) {
             throw new Error('Invalid response from Gemini for personas: expected an array.');
@@ -390,7 +390,7 @@ export async function generateWorld(worldId: string, fullPrompt: string): Promis
         try {
             const personaHandles = personasList.map(p => p.handle);
             const postPrompt = buildPostPrompt(worldContext, personaHandles);
-            const postResultRaw = await callGemini(postPrompt);
+            const postResultRaw = await callGemini(postPrompt, worldId);
 
             if (!Array.isArray(postResultRaw)) {
                 throw new Error('Invalid response from Gemini for posts: expected an array.');
@@ -463,7 +463,7 @@ export async function generateWorld(worldId: string, fullPrompt: string): Promis
         // ==========================================
         try {
             const newsPrompt = buildNewsPrompt(worldContext);
-            const newsResultRaw = await callGemini(newsPrompt);
+            const newsResultRaw = await callGemini(newsPrompt, worldId);
 
             if (!Array.isArray(newsResultRaw)) {
                 console.warn('Invalid response from Gemini for news: expected an array.');
@@ -524,7 +524,7 @@ export async function generateWorld(worldId: string, fullPrompt: string): Promis
         // ==========================================
         try {
             const adsPrompt = buildAdsPrompt(worldContext);
-            const adsResultRaw = await callGemini(adsPrompt);
+            const adsResultRaw = await callGemini(adsPrompt, worldId);
 
             if (!Array.isArray(adsResultRaw)) {
                 console.warn('Invalid response from Gemini for ads: expected an array.');
@@ -598,7 +598,7 @@ export async function generateWorld(worldId: string, fullPrompt: string): Promis
                     }
 
                     const commentPrompt = buildCommentPrompt(worldContext, post.content, authorHandle, personaHandles);
-                    const commentResultRaw = await callGemini(commentPrompt);
+                    const commentResultRaw = await callGemini(commentPrompt, worldId);
 
                     if (!Array.isArray(commentResultRaw)) {
                         console.warn(`Invalid response from Gemini for comments on post ${post.id}: expected an array.`);

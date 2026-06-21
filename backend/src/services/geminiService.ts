@@ -61,13 +61,21 @@ export function cleanJSON(text: string): string {
   return cleaned;
 }
 
+export const worldTokenUsage = new Map<string, number>();
+
+export function recordTokens(worldId: string, tokens: number) {
+  const current = worldTokenUsage.get(worldId) || 0;
+  worldTokenUsage.set(worldId, current + tokens);
+}
+
 /**
  * Calls the Gemini API with the provided prompt and returns the parsed JSON response.
  * 
  * @param prompt The generation prompt
+ * @param worldId Optional world ID to record token usage
  * @returns The parsed JSON object
  */
-export async function callGemini(prompt: string): Promise<unknown> {
+export async function callGemini(prompt: string, worldId?: string): Promise<unknown> {
   try {
     const apiKey = process.env.GEMINI_API_KEY;
     const isDev = !process.env.NODE_ENV || process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test';
@@ -77,6 +85,9 @@ export async function callGemini(prompt: string): Promise<unknown> {
         console.warn(
           '⚠️ GEMINI_API_KEY is missing in development mode. Activating offline fallback mock response.'
         );
+        if (worldId) {
+          recordTokens(worldId, 380); // Record mock tokens for development offline mode
+        }
         return getMockGeminiResponse(prompt);
       } else {
         throw new Error('GEMINI_API_KEY not set in environment.');
@@ -90,6 +101,12 @@ export async function callGemini(prompt: string): Promise<unknown> {
 
     const result = await model.generateContent(prompt);
     const text = result.response.text();
+
+    // Record token usage
+    const tokens = result.response.usageMetadata?.totalTokenCount || Math.ceil(text.length / 4);
+    if (worldId) {
+      recordTokens(worldId, tokens);
+    }
 
     const cleanedText = cleanJSON(text);
 
