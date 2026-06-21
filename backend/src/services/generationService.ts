@@ -666,3 +666,40 @@ export async function generateWorld(worldId: string, fullPrompt: string): Promis
         }
     }
 }
+
+export async function generateOperatorPersona(
+    worldId: string,
+    worldPrompt: string,
+    era: string,
+    techLevel: string,
+    govType: string,
+    role: string
+): Promise<{ name: string; handle: string; bio: string; custom_stat_label: string; custom_stat_value: number }> {
+    try {
+        const filePath = path.join(process.cwd(), '..', 'ai-lab', 'prompts', 'operator_persona.txt');
+        const template = fs.readFileSync(filePath, 'utf8');
+        let prompt = template.split('{{WORLD_PROMPT}}').join(worldPrompt);
+        prompt = prompt.split('{{WORLD_ERA}}').join(era);
+        prompt = prompt.split('{{WORLD_TECH}}').join(techLevel);
+        prompt = prompt.split('{{WORLD_GOV}}').join(govType);
+        prompt = prompt.split('{{OPERATOR_ROLE}}').join(role);
+
+        const resultRaw = await callGemini(prompt, worldId);
+        return resultRaw as { name: string; handle: string; bio: string; custom_stat_label: string; custom_stat_value: number };
+    } catch (error) {
+        console.error('Operator persona generation failed, using defaults:', error);
+        const mockName = role === 'REBEL' ? 'Rebel Outlaw' : role === 'TECHNOLOGIST' ? 'Chief Mechanician' : role === 'IMPERIAL' ? 'Imperial Sentinel' : 'Ordinary Citizen';
+        const mockHandle = role.toLowerCase() + '_agent';
+        const mockBio = `I operate in this alternate reality as a ${role.toLowerCase()}. Compiling temporal dispatches for public records.`;
+        const mockStatLabel = role === 'REBEL' ? 'Anarchy Quotient' : role === 'TECHNOLOGIST' ? 'Calculation Output' : role === 'IMPERIAL' ? 'Fealty Level' : 'Timeline Alignment';
+        
+        return {
+            name: mockName,
+            handle: mockHandle,
+            bio: mockBio,
+            custom_stat_label: mockStatLabel,
+            custom_stat_value: 75
+        };
+    }
+}
+

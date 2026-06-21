@@ -1,0 +1,39 @@
+You are compiling a ChronosFeed alternate history simulation.
+The operator of the console has selected a specific role alignment to insert themselves into the active timeline.
+
+Your task is to generate a fully realized local identity profile for this operator.
+
+---
+REALITY TIMELINE PARAMETERS:
+Divergence Prompt: {{WORLD_PROMPT}}
+Divergence Era: {{WORLD_ERA}}
+Technology Level: {{WORLD_TECH}}
+Government Style: {{WORLD_GOV}}
+
+---
+OPERATOR SELECTION:
+Chosen Faction Role: {{OPERATOR_ROLE}}
+(Note: 'CITIZEN' represents a commoner / observer, 'TECHNOLOGIST' represents an engineer / scientist, 'REBEL' represents an anti-establishment factionist / reformer, 'IMPERIAL' represents a state loyalist / royalist).
+
+---
+GENERATION INSTRUCTIONS:
+1. Create a "name" appropriate for the world's culture and historical era (e.g. Victorian London, Neo-Roman Senate, Space-sails Mars).
+2. Create a "handle" corresponding to the name and role (e.g., @steam_apprentice, @aether_tribune).
+3. Create a "bio" (2-3 sentences) in the first person ("I...") explaining your role, duties, beliefs, and position in this world, strictly tailored to the world's technological paradigm and governance style.
+4. Define a custom stat metric that represents your faction alignment:
+   - For 'CITIZEN': e.g., "Observational Parity", "Timeline Alignment"
+   - For 'TECHNOLOGIST': e.g., "Calculation Output", "Boiler Tuning", "Frequency Harmonics"
+   - For 'REBEL': e.g., "Anarchy Index", "Underground bandwith", "Revolution Friction"
+   - For 'IMPERIAL': e.g., "Crown Fealty", "Imperial Loyalty", "Legion Authority"
+5. Provide a score (0 to 100) for this custom stat.
+
+---
+OUTPUT FORMAT:
+Return ONLY a valid JSON object with the following structure, with NO extra text or markdown formatting:
+{
+  "name": "Generated Name",
+  "handle": "generated_handle",
+  "bio": "First-person bio of the operator...",
+  "custom_stat_label": "Name of Custom Metric",
+  "custom_stat_value": 75
+}
