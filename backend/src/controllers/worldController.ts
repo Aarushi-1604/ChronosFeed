@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { worldService } from '../services/worldService';
-import { generateWorld } from '../services/generationService';
+import { generateWorld, generateOperatorPersona } from '../services/generationService';
 import { worldTokenUsage } from '../services/geminiService';
 
 // POST /api/worlds
@@ -184,3 +184,61 @@ export const getWorldStatus = async (
     next(err);
   }
 };
+
+// GET /api/worlds/:id/operator
+export const getOperatorPersona = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const worldId = String(req.params.id);
+    const operator = await worldService.getOperatorPersona(worldId);
+    res.status(200).json({ data: operator });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// POST /api/worlds/:id/operator
+export const createOperatorPersona = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const worldId = String(req.params.id);
+    const { role } = req.body;
+
+    const world = await worldService.getWorldById(worldId);
+    if (!world) {
+      res.status(404).json({ error: 'World not found' });
+      return;
+    }
+
+    const existing = await worldService.getOperatorPersona(worldId);
+    if (existing) {
+      res.status(200).json({ data: existing });
+      return;
+    }
+
+    const operatorData = await generateOperatorPersona(
+      worldId,
+      world.prompt,
+      world.era,
+      world.tech_level,
+      world.gov_type,
+      String(role).toUpperCase()
+    );
+
+    const newOperator = await worldService.createOperatorPersona(
+      worldId,
+      String(role).toUpperCase(),
+      operatorData
+    );
+
+    res.status(201).json({ data: newOperator });
+  } catch (err) {
+    next(err);
+  }
+};
