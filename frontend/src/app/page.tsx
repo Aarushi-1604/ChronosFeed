@@ -12,6 +12,8 @@ import { World } from '../types';
 import { api } from '../lib/api';
 import { useWorldStatus } from '../hooks/useWorldStatus';
 import { useTheme } from '../context/theme-context';
+import { getAudioEngine } from '../lib/audio-engine';
+import { MOCK_WORLDS } from '../lib/mock-worlds';
 
 type RealityMode = 'anchored' | 'ripple' | 'chaos';
 
@@ -93,7 +95,7 @@ export default function LandingPage() {
       try {
         const fetched = await api.getWorlds();
         if (fetched && fetched.length > 0) {
-          const readyWorlds = fetched.filter((w) => w.status === 'ready');
+          const readyWorlds = fetched.filter((w: World) => w.status === 'ready');
           setWorlds(readyWorlds.length > 0 ? readyWorlds : getFallbackWorlds());
         } else {
           setWorlds(getFallbackWorlds());
@@ -117,11 +119,20 @@ export default function LandingPage() {
     setIsAnimationComplete(false);
     setGeneratedWorldId(null);
 
+    // Play Morse code telegraph sound sequence
+    const engine = getAudioEngine();
+    if (engine) {
+      engine.playTelegraphSequence();
+    }
+
     // Prepend mode prefix to the prompt
     const fullPrompt = `[Mode: ${realityMode}] ${prompt.trim()}`;
 
     try {
       const result = await api.createWorld(fullPrompt);
+      if (result.worldId && result.worldId !== 'stub-world-id') {
+        localStorage.setItem('chronos-active-world-id', result.worldId);
+      }
       setGeneratedWorldId(result.worldId);
     } catch (err) {
       console.error('Error generating world, falling back to stub-world-id:', err);
@@ -137,44 +148,7 @@ export default function LandingPage() {
     setIsAnimationComplete(true);
   };
 
-  const getFallbackWorlds = (): World[] => [
-    {
-      id: 'stub-world-id',
-      prompt: 'What if the internet was invented in 1890?',
-      name: 'The Victorian Web',
-      summary: 'In 1890, Charles Babbage completed the Analytical Engine, leading to a primitive steam-powered global network connecting major British colonies. The Empire\'s telegraph corps was repurposed overnight, as Reuters dispatches began flowing through electromechanical relays across three continents.',
-      era: 'Victorian Cyberpunk',
-      tech_level: 'Mechanical steam computation, punch-card routers',
-      gov_type: 'Corporatist Monarchy',
-      status: 'ready',
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-    },
-    {
-      id: 'roman-world-id',
-      prompt: 'What if Rome never fell?',
-      name: 'Imperium Nova',
-      summary: 'The Roman Empire survives into the modern era, merging ancient senatorial systems with geothermal grids and steam-powered legions. The Senate still convenes in the Curia Julia, now broadcasting imperial decrees via the Aetherwire — the world\'s only legal telecommunications grid.',
-      era: 'Roman Cyberpunk',
-      tech_level: 'Geothermal combustion, senatorial lattices',
-      gov_type: 'Senatorial Republic',
-      status: 'ready',
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-    },
-    {
-      id: 'mars-world-id',
-      prompt: 'What if humanity colonized Mars in 1900?',
-      name: 'The Rusty Mars Empire',
-      summary: 'Victorian steamships equipped with atmospheric coal sails colonized the red sands of Mars in 1900, creating a feudal station network ruled by copper baronies. The British Crown and German Kaiser both claim sovereignty over Olympus Mons, as reported by The Martian Gazette.',
-      era: 'Steampunk Space Era',
-      tech_level: 'Coal-sails space flight, pressurized biodomes',
-      gov_type: 'Industrial Feudalism',
-      status: 'ready',
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-    },
-  ];
+  const getFallbackWorlds = (): World[] => MOCK_WORLDS;
 
   const selectedMode = REALITY_MODES.find(m => m.id === realityMode)!;
 
@@ -191,31 +165,21 @@ export default function LandingPage() {
       </AnimatePresence>
 
       {/* Header Log */}
-      <header className="w-full max-w-7xl mx-auto flex flex-col items-center border-b-4 border-double border-primary-base pb-3.5 mb-8 z-10 text-primary-base font-serif">
+      <header className="w-full max-w-none mx-auto flex flex-col items-center border-b-4 border-double border-primary-base pb-3.5 mb-8 z-10 text-primary-base font-serif">
         <div className="relative flex justify-between w-full text-[10px] uppercase tracking-widest border-b border-primary-base/20 pb-2 mb-3 items-center font-bold">
           <span>REALITY SIMULATION CONSOLE</span>
           <span className="md:absolute md:left-1/2 md:transform md:-translate-x-1/2">VOLUME CCLXVIII // NO. 45090</span>
-          <div className="flex items-center gap-3">
-            <button
-              type="button"
-              onClick={toggleTheme}
-              suppressHydrationWarning
-              className="border border-primary-base px-2.5 py-0.5 font-serif text-[9px] tracking-wider font-bold uppercase hover:bg-primary-base hover:text-[var(--bg-color)] transition-all duration-300 cursor-pointer flex items-center gap-1"
-            >
-              {theme === 'newspaper' ? '☾ Dark Press' : '☼ Light Press'}
-            </button>
-            <span>PRICE: FREE PRESS</span>
-          </div>
+          <span>PRICE: FREE PRESS</span>
         </div>
         
-        <div className="flex items-center justify-between w-full py-1">
+        <div className="flex items-center justify-between w-full py-2.5">
           <div className="hidden md:block w-24 h-[1px] bg-primary-base/30" />
           <div className="flex flex-col items-center">
-            <h1 className="text-4xl md:text-5xl font-black uppercase tracking-tight font-serif text-center leading-none text-primary-base flex items-center gap-3">
-              <ChronosLogo size={46} className="text-primary-base" />
-              CHRONOS REALITY PRESS
+            <h1 className="text-4xl md:text-5xl font-black uppercase tracking-tight font-serif text-center leading-none text-primary-base flex items-center justify-center gap-4">
+              <ChronosLogo size={68} className="text-primary-base shrink-0" />
+              <span>CHRONOS REALITY PRESS</span>
             </h1>
-            <p className="text-[10px] tracking-[0.22em] uppercase mt-2.5 text-center text-text-dim font-bold italic">
+            <p className="text-[10px] tracking-[0.22em] uppercase mt-3 text-center text-text-dim font-bold italic">
               Dispatches from Divergent Timelines — Where History Chose Differently
             </p>
           </div>
@@ -231,20 +195,13 @@ export default function LandingPage() {
             >
               How to Use
             </button>
-            <button
-              onClick={() => router.push('/developers')}
-              suppressHydrationWarning
-              className="border border-primary-base px-3 py-1 font-serif text-[10px] tracking-wider font-bold uppercase hover:bg-primary-base hover:text-[var(--bg-color)] transition-all duration-300 cursor-pointer"
-            >
-              Developer Portal
-            </button>
           </div>
           <span suppressHydrationWarning>{formattedDate}</span>
         </div>
       </header>
 
       {/* Content Area */}
-      <div className="flex-1 w-full max-w-7xl mx-auto flex flex-col gap-16 justify-center z-10">
+      <div className="flex-1 w-full max-w-none mx-auto flex flex-col gap-16 justify-center z-10">
         
         {/* Prompt Console (Hero Section) */}
         <section className="flex flex-col items-center text-center max-w-3xl mx-auto gap-8 pt-8">
@@ -412,7 +369,7 @@ export default function LandingPage() {
       </div>
 
       {/* Newspaper Footer */}
-      <footer className="w-full max-w-7xl mx-auto border-t-2 border-double border-primary-base/20 mt-8 pt-3.5 pb-1 text-center text-[9px] tracking-[0.22em] font-serif text-text-dim uppercase font-bold z-10">
+      <footer className="w-full max-w-none mx-auto border-t-2 border-double border-primary-base/20 mt-8 pt-3.5 pb-1 text-center text-[9px] tracking-[0.22em] font-serif text-text-dim uppercase font-bold z-10">
         AI CLUB | SIT PUNE | AARUSHI | ADITYA | YESHWANT | v1.2.0 | 2026
       </footer>
     </main>
