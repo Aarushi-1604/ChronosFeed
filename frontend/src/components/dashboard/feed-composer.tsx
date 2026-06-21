@@ -15,7 +15,7 @@ export default function FeedComposer({ onPublish }: FeedComposerProps) {
     { value: 'CITIZEN', label: 'Citizen', color: 'border-white/10 text-text-dim' },
     { value: 'TECHNOLOGIST', label: 'Technologist', color: 'border-emerald-500/20 text-emerald-400' },
     { value: 'REBEL', label: 'Rebel / Factionist', color: 'border-red-500/20 text-red-400' },
-    { value: 'ROYALIST', label: 'Imperial / Royalist', color: 'border-amber-500/20 text-amber-400' },
+    { value: 'IMPERIAL', label: 'Imperial / Royalist', color: 'border-amber-500/20 text-amber-400' },
   ];
 
   const handleSubmit = (e: React.FormEvent) => {
