@@ -1,4 +1,13 @@
 import { World, WorldFeedResponse, Persona, News, Ad, Comment } from '../types';
+import { 
+  getMockWorld, 
+  getMockPersonas, 
+  getMockPersona, 
+  getMockFeed, 
+  getMockNews, 
+  getMockAds, 
+  getMockComments 
+} from './mock-worlds';
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
@@ -36,20 +45,46 @@ export const api = {
       body: JSON.stringify({ prompt }),
     }),
 
-  getWorlds: () => fetchJson<World[]>('/api/worlds'),
+  getWorlds: async () => {
+    try {
+      return await fetchJson<World[]>('/api/worlds');
+    } catch (err) {
+      console.warn('API getWorlds failed, using offline mock list:', err);
+      const { MOCK_WORLDS } = require('./mock-worlds');
+      return MOCK_WORLDS;
+    }
+  },
 
-  getWorld: (id: string) => fetchJson<World>(`/api/worlds/${id}`),
+  getWorld: async (id: string) => {
+    const mock = getMockWorld(id);
+    if (mock) return mock;
+    return fetchJson<World>(`/api/worlds/${id}`);
+  },
 
-  getWorldStatus: (id: string) =>
-    fetchJson<{
+  getWorldStatus: async (id: string) => {
+    const mock = getMockWorld(id);
+    if (mock) {
+      return {
+        worldId: id,
+        status: 'ready' as const,
+        name: mock.name,
+        era: mock.era,
+        tokensUsed: 0,
+      };
+    }
+    return fetchJson<{
       worldId: string;
       status: 'generating' | 'ready' | 'error' | 'failed';
       name: string | null;
       era: string | null;
-    }>(`/api/worlds/${id}/status`),
+      tokensUsed?: number;
+    }>(`/api/worlds/${id}/status`);
+  },
 
   // Feed
-  getWorldFeed: (id: string, limit = 10, cursor?: string) => {
+  getWorldFeed: async (id: string, limit = 10, cursor?: string) => {
+    const mockFeed = getMockFeed(id);
+    if (mockFeed && mockFeed.posts.length > 0) return mockFeed;
     let url = `/api/worlds/${id}/feed?limit=${limit}`;
     if (cursor) {
       url += `&cursor=${encodeURIComponent(cursor)}`;
@@ -58,12 +93,27 @@ export const api = {
   },
 
   // Personas
-  getWorldPersonas: (id: string) => fetchJson<Persona[]>(`/api/worlds/${id}/personas`),
+  getWorldPersonas: async (id: string) => {
+    const mock = getMockPersonas(id);
+    if (mock && mock.length > 0) return mock;
+    return fetchJson<Persona[]>(`/api/worlds/${id}/personas`);
+  },
 
-  getPersona: (id: string) => fetchJson<Persona & { posts: any[] }>(`/api/personas/${id}`),
+  getPersona: async (id: string) => {
+    const mock = getMockPersona(id);
+    if (mock) return mock;
+    return fetchJson<Persona & { posts: any[] }>(`/api/personas/${id}`);
+  },
 
   // News
-  getWorldNews: (id: string, category?: string) => {
+  getWorldNews: async (id: string, category?: string) => {
+    const mock = getMockNews(id);
+    if (mock && mock.length > 0) {
+      if (category) {
+        return mock.filter(n => n.category === category);
+      }
+      return mock;
+    }
     let url = `/api/worlds/${id}/news`;
     if (category) {
       url += `?category=${category}`;
@@ -72,8 +122,17 @@ export const api = {
   },
 
   // Ads
-  getWorldAds: (id: string) => fetchJson<Ad[]>(`/api/worlds/${id}/ads`),
+  getWorldAds: async (id: string) => {
+    const mock = getMockAds(id);
+    if (mock && mock.length > 0) return mock;
+    return fetchJson<Ad[]>(`/api/worlds/${id}/ads`);
+  },
 
   // Comments
-  getPostComments: (postId: string) => fetchJson<Comment[]>(`/api/posts/${postId}/comments`),
+  getPostComments: async (postId: string) => {
+    const originalId = postId.includes('-ext-') ? postId.split('-ext-')[0] : postId;
+    const mock = getMockComments(originalId);
+    if (mock && mock.length > 0) return mock;
+    return fetchJson<Comment[]>(`/api/posts/${originalId}/comments`);
+  },
 };
