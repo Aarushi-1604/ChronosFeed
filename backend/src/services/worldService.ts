@@ -7,6 +7,7 @@ import {
   News,
   Ad,
   NewsCategory,
+  OperatorPersona,
 } from '../types/database';
 
 export const worldService = {
@@ -195,4 +196,44 @@ export const worldService = {
     if (error) throw new Error(`Failed to fetch comments: ${error.message}`);
     return data ?? [];
   },
-};
+
+  async getOperatorPersona(worldId: string): Promise<OperatorPersona | null> {
+    const { data, error } = await supabase
+      .from('operator_personas')
+      .select('*')
+      .eq('world_id', worldId)
+      .single();
+
+    if (error) {
+      if (error.code === 'PGRST116') return null; // Single query no-row error code
+      throw new Error(`Failed to fetch operator persona: ${error.message}`);
+    }
+    return data as OperatorPersona;
+  },
+
+  async createOperatorPersona(
+    worldId: string,
+    role: string,
+    personaData: { name: string; handle: string; bio: string; custom_stat_label: string; custom_stat_value: number }
+  ): Promise<OperatorPersona> {
+    const { data, error } = await supabase
+      .from('operator_personas')
+      .insert({
+        world_id: worldId,
+        role,
+        name: personaData.name,
+        handle: personaData.handle,
+        bio: personaData.bio,
+        influence_score: 75,
+        followers_count: 12500,
+        following_count: 340,
+        custom_stat_label: personaData.custom_stat_label,
+        custom_stat_value: personaData.custom_stat_value,
+      })
+      .select()
+      .single();
+
+    if (error) throw new Error(`Failed to create operator persona: ${error.message}`);
+    return data as OperatorPersona;
+  },
+};
