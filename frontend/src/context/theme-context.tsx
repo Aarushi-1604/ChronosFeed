@@ -2,11 +2,11 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
-export type ThemeName = 'newspaper' | 'newspaper-dark';
+export type ThemeName = 'default' | 'steam' | 'roman' | 'mars' | 'newspaper' | 'newspaper-dark';
 
 interface ThemeContextType {
   theme: ThemeName;
-  setTheme: (theme: any) => void;
+  setTheme: (theme: ThemeName) => void;
   setThemeByEra: (era: string, prompt: string) => void;
   toggleTheme: () => void;
 }
@@ -20,42 +20,28 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const savedTheme = localStorage.getItem('chronos-theme') as ThemeName;
-      if (savedTheme === 'newspaper' || savedTheme === 'newspaper-dark') {
+      if (savedTheme) {
         setThemeState(savedTheme);
       }
     }
   }, []);
 
-  const setTheme = (newTheme: any) => {
-    // Force newspaper theme variations only
-    const resolvedTheme = newTheme === 'newspaper-dark' ? 'newspaper-dark' : 'newspaper';
-    
-    // In case theme unmount resets to 'default', keep current preference
-    let targetTheme: ThemeName = resolvedTheme;
-    if (newTheme === 'default' || newTheme === 'steam' || newTheme === 'roman' || newTheme === 'mars') {
-      // Keep whatever is currently set, or default to localStorage preference
-      if (typeof window !== 'undefined') {
-        const saved = localStorage.getItem('chronos-theme') as ThemeName;
-        targetTheme = saved === 'newspaper-dark' ? 'newspaper-dark' : 'newspaper';
-      } else {
-        targetTheme = theme;
-      }
-    }
-
-    setThemeState(targetTheme);
+  const setTheme = (newTheme: ThemeName) => {
+    setThemeState(newTheme);
     if (typeof window !== 'undefined') {
       const root = document.documentElement;
-      root.classList.remove('theme-steam', 'theme-roman', 'theme-mars', 'theme-default', 'theme-newspaper', 'theme-newspaper-dark');
-      root.classList.add(`theme-${targetTheme}`);
-      localStorage.setItem('chronos-theme', targetTheme);
+      root.classList.remove('theme-steam', 'theme-roman', 'theme-mars', 'theme-newspaper', 'theme-newspaper-dark');
+      if (newTheme !== 'default') {
+        root.classList.add(`theme-${newTheme}`);
+      }
+      localStorage.setItem('chronos-theme', newTheme);
     }
   };
 
   const setThemeByEra = (era: string, prompt: string) => {
-    // Keep current newspaper selection regardless of era
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('chronos-theme') as ThemeName;
-      setTheme(saved === 'newspaper-dark' ? 'newspaper-dark' : 'newspaper');
+      setTheme(saved || theme);
     } else {
       setTheme(theme);
     }
