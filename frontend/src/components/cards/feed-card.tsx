@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Heart, RotateCw, Newspaper, Tag, Compass, Binary, AlertTriangle, MessageSquare } from 'lucide-react';
-import { Post, News, Ad, Comment } from '../../types';
+import { Post, News, Ad, Comment, Persona } from '../../types';
 import { api } from '../../lib/api';
 import { useTheme } from '../../context/theme-context';
 
@@ -88,6 +88,28 @@ export default function FeedCard({ item, onPersonaClick }: FeedCardProps) {
   const [comments, setComments] = useState<Comment[]>([]);
   const [loadingComments, setLoadingComments] = useState(false);
   const [errorComments, setErrorComments] = useState<string | null>(null);
+  const [newCommentText, setNewCommentText] = useState('');
+  const [submittingComment, setSubmittingComment] = useState(false);
+  const [localCommentsCount, setLocalCommentsCount] = useState(0);
+  const [worldPersonas, setWorldPersonas] = useState<Persona[]>([]);
+
+  useEffect(() => {
+    if (item.type === 'post') {
+      const savedCommentsRaw = typeof window !== 'undefined' ? localStorage.getItem(`chronos-user-comments-${item.data.world_id}`) : null;
+      if (savedCommentsRaw) {
+        try {
+          const localComments: Comment[] = JSON.parse(savedCommentsRaw);
+          const count = localComments.filter(c => c.post_id === item.data.id).length;
+          setLocalCommentsCount(count);
+        } catch {}
+      }
+
+      // Load world personas for simulating replies
+      api.getWorldPersonas(item.data.world_id)
+        .then(setWorldPersonas)
+        .catch(err => console.warn('Failed to load personas for reply simulation:', err));
+    }
+  }, [item]);
 
   const handleToggleComments = async (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -98,7 +120,10 @@ export default function FeedCard({ item, onPersonaClick }: FeedCardProps) {
         setErrorComments(null);
         try {
           const data = await api.getPostComments(item.data.id);
-          setComments(data);
+          const savedCommentsRaw = typeof window !== 'undefined' ? localStorage.getItem(`chronos-user-comments-${item.data.world_id}`) : null;
+          const localComments: Comment[] = savedCommentsRaw ? JSON.parse(savedCommentsRaw) : [];
+          const postLocalComments = localComments.filter(c => c.post_id === item.data.id);
+          setComments([...postLocalComments, ...data]);
         } catch (err: any) {
           setErrorComments(err.message || 'Failed to load comments');
         } finally {
@@ -107,6 +132,157 @@ export default function FeedCard({ item, onPersonaClick }: FeedCardProps) {
       }
     } else {
       setShowComments(false);
+    }
+  };
+
+  const handleCommentSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newCommentText.trim() || item.type !== 'post') return;
+
+    setSubmittingComment(true);
+    try {
+      const worldId = item.data.world_id;
+      const postId = item.data.id;
+      
+      let activeOperator = await api.getOperatorPersona(worldId);
+      if (!activeOperator) {
+        activeOperator = await api.instantiateOperatorPersona(worldId, 'CITIZEN');
+      }
+
+      const randomLikes = Math.floor(Math.random() * 45) + 5;
+      const randomReposts = Math.floor(randomLikes * 0.35) + 1;
+
+      const newComment: Comment = {
+        id: `local-comment-${Date.now()}`,
+        post_id: postId,
+        persona_id: activeOperator ? activeOperator.id : 'operator',
+        content: newCommentText,
+        likes_count: randomLikes,
+        created_at: new Date().toISOString(),
+        persona: {
+          id: 'operator',
+          world_id: worldId,
+          name: activeOperator ? activeOperator.name : 'Citizen Operator',
+          handle: activeOperator ? activeOperator.handle : 'citizen_operator',
+          avatar: '',
+          role: activeOperator 
+            ? (activeOperator.role === 'CITIZEN' ? 'INFLUENCER' : activeOperator.role === 'IMPERIAL' ? 'POLITICIAN' : activeOperator.role === 'TECHNOLOGIST' ? 'SCIENTIST' : 'INFLUENCER')
+            : 'INFLUENCER',
+          followers_count: activeOperator ? activeOperator.followers_count : 8400,
+          following_count: activeOperator ? activeOperator.following_count : 210,
+          influence_score: activeOperator ? activeOperator.influence_score : 72,
+          interests: [],
+          personality: '',
+        } as any
+      };
+      
+      (newComment as any).reposts_count = randomReposts;
+
+      const savedCommentsRaw = typeof window !== 'undefined' ? localStorage.getItem(`chronos-user-comments-${worldId}`) : null;
+      const localComments: Comment[] = savedCommentsRaw ? JSON.parse(savedCommentsRaw) : [];
+      localComments.unshift(newComment);
+      if (typeof window !== 'undefined') {
+        localStorage.setItem(`chronos-user-comments-${worldId}`, JSON.stringify(localComments));
+      }
+
+      setComments(prev => [newComment, ...prev]);
+      setLocalCommentsCount(prev => prev + 1);
+      setNewCommentText('');
+
+      // Also dynamically boost the post counts to simulate viral engagement!
+      setLikesCount(prev => prev + Math.floor(Math.random() * 8) + 2);
+      setRepostsCount(prev => prev + Math.floor(Math.random() * 4) + 1);
+
+      // Simulate a random persona replying to the user's comment after a delay
+      const operatorHandle = activeOperator ? activeOperator.handle : 'citizen_operator';
+      
+      setTimeout(() => {
+        if (worldPersonas.length > 0) {
+          const randomPersona = worldPersonas[Math.floor(Math.random() * worldPersonas.length)];
+          const replyTemplates = [
+            "Agreed. The mechanical net stream registers this as highly probable.",
+            "I must disagree. The calculations do not support this hypothesis.",
+            "Intriguing transmission. We should monitor this node closely.",
+            "Is this officially sanctioned by the High Directorate?",
+            "This signal must be amplified. Re-transmitting to my grid nodes.",
+            `Fascinating perspective, @${operatorHandle}! I am archiving this for analysis.`,
+            "The steam pressure rises! This debate is heating up.",
+            "Excellent dispatch. This is exactly what the public needs to hear.",
+            "Are you suggesting a modification to the central punch-cards?",
+            "A bold statement. Let's see how the Chancellor reacts to this.",
+            "Temporal synchronization levels are fluctuating due to this debate.",
+            `Interesting point, @${operatorHandle}. But have you considered the ripple effects on the central cog matrix?`
+          ];
+          const replyContent = replyTemplates[Math.floor(Math.random() * replyTemplates.length)];
+          const replyLikes = Math.floor(Math.random() * 25) + 1;
+          const replyReposts = Math.floor(replyLikes * 0.3);
+
+          const reactionComment: Comment = {
+            id: `sim-comment-${Date.now()}`,
+            post_id: postId,
+            persona_id: randomPersona.id,
+            content: replyContent,
+            likes_count: replyLikes,
+            created_at: new Date().toISOString(),
+            persona: randomPersona
+          } as any;
+          (reactionComment as any).reposts_count = replyReposts;
+
+          const currentSaved = localStorage.getItem(`chronos-user-comments-${worldId}`);
+          const currentLocalComments: Comment[] = currentSaved ? JSON.parse(currentSaved) : [];
+          currentLocalComments.unshift(reactionComment);
+          localStorage.setItem(`chronos-user-comments-${worldId}`, JSON.stringify(currentLocalComments));
+
+          setComments(prev => [reactionComment, ...prev]);
+          setLocalCommentsCount(prev => prev + 1);
+        }
+      }, 1500);
+
+      // Trigger a potential second reply 3.5 seconds later (40% chance)
+      if (Math.random() < 0.4) {
+        setTimeout(() => {
+          if (worldPersonas.length > 0) {
+            const otherPersonas = worldPersonas.filter(p => p.name !== newComment.persona?.name);
+            const chosenList = otherPersonas.length > 0 ? otherPersonas : worldPersonas;
+            const randomPersona = chosenList[Math.floor(Math.random() * chosenList.length)];
+            
+            const secondTemplates = [
+              `I side with @${randomPersona.handle} on this. This alternative is dangerous.`,
+              `Indeed! The timeline requires this exact calibration.`,
+              `Can we get confirmation on this signal?`,
+              `Fascinating indeed. Retransmitting.`
+            ];
+            
+            const replyContent = secondTemplates[Math.floor(Math.random() * secondTemplates.length)];
+            const replyLikes = Math.floor(Math.random() * 15);
+            const replyReposts = Math.floor(replyLikes * 0.2);
+
+            const reactionComment: Comment = {
+              id: `sim-comment-2-${Date.now()}`,
+              post_id: postId,
+              persona_id: randomPersona.id,
+              content: replyContent,
+              likes_count: replyLikes,
+              created_at: new Date().toISOString(),
+              persona: randomPersona
+            } as any;
+            (reactionComment as any).reposts_count = replyReposts;
+
+            const currentSaved = localStorage.getItem(`chronos-user-comments-${worldId}`);
+            const currentLocalComments: Comment[] = currentSaved ? JSON.parse(currentSaved) : [];
+            currentLocalComments.unshift(reactionComment);
+            localStorage.setItem(`chronos-user-comments-${worldId}`, JSON.stringify(currentLocalComments));
+
+            setComments(prev => [reactionComment, ...prev]);
+            setLocalCommentsCount(prev => prev + 1);
+          }
+        }, 3500);
+      }
+
+    } catch (err: any) {
+      setErrorComments(err.message || 'Failed to submit reply');
+    } finally {
+      setSubmittingComment(false);
     }
   };
 
@@ -493,7 +669,7 @@ export default function FeedCard({ item, onPersonaClick }: FeedCardProps) {
             }`}
           >
             <MessageSquare size={14} />
-            <span>{comments.length > 0 ? comments.length : Math.floor(likesCount * 0.15)}</span>
+            <span>{comments.length > 0 ? comments.length : (localCommentsCount + Math.floor(likesCount * 0.15))}</span>
           </button>
         </div>
 
@@ -518,6 +694,32 @@ export default function FeedCard({ item, onPersonaClick }: FeedCardProps) {
           }`}>
             {isNewspaper ? 'Communication Ledger' : 'COMMUNICATION THREAD'}
           </h5>
+
+          {/* Comment composer */}
+          <form onSubmit={handleCommentSubmit} className="flex gap-2 items-stretch mt-1 mb-2">
+            <input
+              type="text"
+              value={newCommentText}
+              onChange={(e) => setNewCommentText(e.target.value)}
+              placeholder={isNewspaper ? "Draft dispatch reply..." : "Transmit reply signal..."}
+              className={
+                isNewspaper
+                  ? "flex-1 bg-black/[0.01] border border-primary-base/20 px-3 py-1.5 text-xs text-primary-base focus:outline-none focus:border-primary-base placeholder-primary-base/40 font-serif"
+                  : "flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-1.5 text-xs text-text-main focus:outline-none focus:border-accent-base focus:ring-1 focus:ring-accent-base/30 transition-all font-sans placeholder-text-dim/50"
+              }
+            />
+            <button
+              type="submit"
+              disabled={!newCommentText.trim() || submittingComment}
+              className={
+                isNewspaper
+                  ? "border border-primary-base px-3 py-1.5 text-[10px] font-serif font-bold uppercase hover:bg-primary-base hover:text-[var(--bg-color)] transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center gap-1.5 shrink-0"
+                  : "border border-accent-base hover:bg-accent-base/15 text-accent-base px-3 py-1.5 rounded-lg text-[10px] font-mono font-bold uppercase tracking-wider transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center gap-1.5 shrink-0"
+              }
+            >
+              <span>{submittingComment ? 'Sending...' : 'Reply'}</span>
+            </button>
+          </form>
 
           {loadingComments && (
             <div className="space-y-3">
@@ -589,6 +791,21 @@ export default function FeedCard({ item, onPersonaClick }: FeedCardProps) {
                       }`}>
                         {comment.content}
                       </p>
+                      
+                      {/* Comment Engagement row */}
+                      <div className="flex items-center gap-4 mt-1.5 text-[9px] font-mono text-text-dim/75 select-none">
+                        <span className="flex items-center gap-1">
+                          <Heart size={10} className="text-primary-base" />
+                          <span>{comment.likes_count}</span>
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <RotateCw size={10} className="text-primary-base" />
+                          <span>{(comment as any).reposts_count ?? Math.max(1, Math.floor(comment.likes_count * 0.3))}</span>
+                        </span>
+                        <span className="text-[8px] text-text-dim/50 ml-auto" suppressHydrationWarning>
+                          {new Date(comment.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        </span>
+                      </div>
                     </div>
                   </div>
                 );
