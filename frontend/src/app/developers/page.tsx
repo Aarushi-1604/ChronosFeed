@@ -101,7 +101,7 @@ export default function DeveloperPortal() {
       {!isNewspaper && <CanvasGrid />}
 
       {/* Header */}
-      <header className={`w-full max-w-6xl mx-auto flex items-center justify-between pb-4 mb-8 z-10 ${
+      <header className={`w-full max-w-none mx-auto flex items-center justify-between pb-4 mb-8 z-10 ${
         isNewspaper ? 'border-b-4 border-double border-primary-base text-primary-base' : 'border-b border-white/5'
       }`}>
         <div className="flex items-center gap-4">
@@ -116,7 +116,7 @@ export default function DeveloperPortal() {
             <ArrowLeft size={16} />
           </button>
           <div className="flex items-center gap-3">
-            <ChronosLogo size={40} className="text-primary-base" />
+            <ChronosLogo size={46} className="text-primary-base" />
             <div>
               <h1 className={`text-xl font-bold tracking-tight leading-none ${isNewspaper ? 'text-primary-base' : 'text-text-main'}`}>
                 DEVELOPER INFORMATION PAGE
@@ -134,7 +134,7 @@ export default function DeveloperPortal() {
       </header>
 
       {/* Main Grid */}
-      <main className="flex-1 w-full max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-8 z-10 relative">
+      <main className="flex-1 w-full max-w-none mx-auto grid grid-cols-1 md:grid-cols-12 gap-8 z-10 relative">
         {/* Left column: Overview, Stack & Stats (7 Cols) */}
         <div className="md:col-span-7 flex flex-col gap-8">
           
@@ -393,7 +393,7 @@ export default function DeveloperPortal() {
       </main>
 
       {/* Newspaper Footer */}
-      <footer className="w-full max-w-6xl mx-auto border-t-2 border-double border-primary-base/20 mt-8 pt-3.5 pb-1 text-center text-[9px] tracking-[0.22em] font-serif text-text-dim uppercase font-bold z-10">
+      <footer className="w-full max-w-none mx-auto border-t-2 border-double border-primary-base/20 mt-8 pt-3.5 pb-1 text-center text-[9px] tracking-[0.22em] font-serif text-text-dim uppercase font-bold z-10">
         AI CLUB | SIT PUNE | AARUSHI | ADITYA | YESHWANT | v1.2.0 | 2026
       </footer>
     </div>

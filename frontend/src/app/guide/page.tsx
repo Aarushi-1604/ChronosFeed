@@ -78,7 +78,7 @@ export default function GuidePage() {
       {!isNewspaper && <CanvasGrid />}
 
       {/* Header */}
-      <header className={`relative w-full max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between pb-4 mb-8 z-10 gap-3 md:gap-0 ${
+      <header className={`relative w-full max-w-none mx-auto flex flex-col md:flex-row items-center justify-between pb-4 mb-8 z-10 gap-3 md:gap-0 ${
         isNewspaper ? 'border-b-4 border-double border-primary-base text-primary-base' : 'border-b border-white/5'
       }`}>
         <div className="flex items-center gap-3">
@@ -104,13 +104,13 @@ export default function GuidePage() {
       </header>
 
       {/* Content */}
-      <main className="w-full max-w-4xl mx-auto z-10 flex flex-col gap-10">
+      <main className="w-full max-w-none mx-auto z-10 flex flex-col gap-10">
         
         {/* Title Block */}
-        <div className="text-center flex flex-col items-center gap-2">
-          <ChronosLogo size={48} className="text-primary-base" />
-          <h1 className="text-3xl md:text-4xl font-black uppercase tracking-tight font-serif mt-2">
-            HOW TO OPERATE CHRONOSFEED
+        <div className="text-center flex flex-col items-center">
+          <h1 className="text-3xl md:text-4xl font-black uppercase tracking-tight font-serif flex items-center justify-center gap-3.5 mt-2">
+            <ChronosLogo size={60} className="text-primary-base shrink-0" />
+            <span>HOW TO OPERATE CHRONOSFEED</span>
           </h1>
           <p className="text-[10px] uppercase tracking-widest text-text-dim max-w-md mx-auto italic">
             "A comprehensive guide to generating, parsing, and exploring divergent historical timelines."
@@ -186,7 +186,7 @@ export default function GuidePage() {
       </main>
 
       {/* Newspaper Footer */}
-      <footer className="w-full max-w-4xl mx-auto border-t-2 border-double border-primary-base/20 mt-8 pt-3.5 pb-1 text-center text-[9px] tracking-[0.22em] font-serif text-text-dim uppercase font-bold z-10">
+      <footer className="w-full max-w-none mx-auto border-t-2 border-double border-primary-base/20 mt-8 pt-3.5 pb-1 text-center text-[9px] tracking-[0.22em] font-serif text-text-dim uppercase font-bold z-10">
         AI CLUB | SIT PUNE | AARUSHI | ADITYA | YESHWANT | v1.2.0 | 2026
       </footer>
     </div>
