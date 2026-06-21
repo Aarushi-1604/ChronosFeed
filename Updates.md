@@ -86,7 +86,25 @@ The project uses the Google Gemini API free-tier credentials.
 
 ---
 
-## 🚀 8. Future Roadmap Recommendations
+## 🎭 8. Steampunk Atmospheric & Audio Upgrades (June 12, 2026)
+*   **Generative Web Audio Synthesizer**:
+    - Created an asset-free, pure code sound synthesizer ([`audio-engine.ts`](file:///d:/ChronosFeed-main/ChronosFeed-main/frontend/src/lib/audio-engine.ts)) utilizing the HTML5 Web Audio API.
+    - Synthesizes a deep low-frequency steam-engine rumble LFO hum, realistic clockwork ticking gears, satisfying mechanical typewriter click sounds for keypress typing, soft friction newspaper page rustling sounds on navigation, and Morse code telegraph sequence chirps when realities are compiled.
+    - Rendered a vintage fixed-position floating bottom-right `♨ Audio On/Off` toggle button widget ([`audio-toggle.tsx`](file:///d:/ChronosFeed-main/ChronosFeed-main/frontend/src/components/ui/audio-toggle.tsx)) globally via layout wrappers. This keeps header alignments clean and provides a persistent, aligned controls widget across all pages.
+*   **Parchment Texture Overlay & Mouse-repelling Dust Particles**:
+    - Embedded a detailed SVG paper-grain noise filter (`feTurbulence`) directly into the background overlay, transforming flat background panels into physical parchment texture.
+    - Upgraded floating particulate dust motes in [`canvas-grid.tsx`](file:///d:/ChronosFeed-main/ChronosFeed-main/frontend/src/components/ui/canvas-grid.tsx) with client-side mouse-move listeners. Dust particles now dynamically drift away from the user's cursor path and drift back gently.
+*   **Teletype Live News-Print Effect**:
+    - Integrated a progressive character chunk-loader inside the news card feed ([`feed-card.tsx`](file:///d:/ChronosFeed-main/ChronosFeed-main/frontend/src/components/cards/feed-card.tsx)) that prints out text with a blinking terminal block cursor (`█`) when dispatches load, replicating a physical telegraph machine printing live feeds.
+*   **Steampunk Pressure Stability Gauge**:
+    - Designed an ornate circular clockwork dial indicator in [`reality-score.tsx`](file:///d:/ChronosFeed-main/ChronosFeed-main/frontend/src/components/ui/reality-score.tsx) for the newspaper theme. Renders dial marks, serif index numbers, and a vibrating brass needle that quivers with high-frequency LFO jitters to simulate live steam pressure.
+*   **Highly Detailed Steampunk Logo**:
+    - Replaced the simple geometric hourglass icon in [`chronos-logo.tsx`](file:///d:/ChronosFeed-main/ChronosFeed-main/frontend/src/components/branding/chronos-logo.tsx) with a rich, multi-layered SVG design matching the provided logo.
+    - Features clockwork Roman dial borders, opposite-rotating steampunk gears on the left and right, split Greek columns (past) vs. Space Rocket launch (future) duality backgrounds, and animated golden sand trickling through a 3D hourglass with glass reflections.
+
+---
+
+## 🚀 9. Future Roadmap Recommendations
 *   **API Queue Manager**: Implement a token bucket or queue scheduler in the backend to serialize Gemini API calls, spreading comment generation over a larger window to completely avoid `429` rate-limit errors.
 *   **Database Migrations**: Add the `image_url` column to the `news` table in the Supabase schema to render custom Pollinations.ai graphics for news updates:
     ```sql
