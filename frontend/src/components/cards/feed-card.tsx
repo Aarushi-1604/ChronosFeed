@@ -1,11 +1,42 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Heart, RotateCw, Newspaper, Tag, Compass, Binary, AlertTriangle, MessageSquare } from 'lucide-react';
 import { Post, News, Ad, Comment } from '../../types';
 import { api } from '../../lib/api';
 import { useTheme } from '../../context/theme-context';
+
+function TelegraphPrintText({ text }: { text: string }) {
+  const [displayedText, setDisplayedText] = useState('');
+  const [isPrinting, setIsPrinting] = useState(true);
+
+  useEffect(() => {
+    let index = 0;
+    let timer: any = null;
+    
+    const step = () => {
+      index += 4;
+      if (index >= text.length) {
+        setDisplayedText(text);
+        setIsPrinting(false);
+        clearInterval(timer);
+      } else {
+        setDisplayedText(text.slice(0, index));
+      }
+    };
+
+    timer = setInterval(step, 12);
+    return () => clearInterval(timer);
+  }, [text]);
+
+  return (
+    <p className="text-xs leading-relaxed text-text-main/90 first-letter:text-4xl first-letter:font-bold first-letter:float-left first-letter:mr-2 first-letter:leading-none">
+      {displayedText}
+      {isPrinting && <span className="animate-pulse font-sans font-bold text-primary-base ml-0.5">█</span>}
+    </p>
+  );
+}
 
 function getFallbackUnsplashUrl(content: string): string {
   const text = (content || '').toLowerCase();
@@ -126,9 +157,7 @@ export default function FeedCard({ item, onPersonaClick }: FeedCardProps) {
         </div>
 
         {/* Content */}
-        <p className="text-xs leading-relaxed text-text-main/90 first-letter:text-4xl first-letter:font-bold first-letter:float-left first-letter:mr-2 first-letter:leading-none">
-          {content}
-        </p>
+        <TelegraphPrintText text={content} />
 
         {image_url && (
           <div className={

@@ -104,50 +104,110 @@ export default function RealityScore({ score }: RealityScoreProps) {
       </div>
 
       <div className="flex items-center gap-6">
-        {/* Semi-Circle Gauge Dial */}
-        <div className="relative w-28 h-16 flex items-end justify-center select-none overflow-hidden">
-          {/* Arc Background */}
-          <div className={`absolute inset-0 w-28 h-28 border-[10px] rounded-full ${
-            isNewspaper ? 'border-primary-base/10' : 'border-white/5'
-          }`} />
+        {/* Steampunk / Cyberpunk Gauge Dial */}
+        {isNewspaper ? (
+          <div className="relative w-24 h-24 flex items-center justify-center select-none shrink-0 border-2 border-primary-base/20 rounded-full p-1 bg-black/[0.003]">
+            {/* Victorian Circular Dial Face */}
+            <svg className="w-full h-full text-primary-base" viewBox="0 0 100 100">
+              {/* Outer dial ring */}
+              <circle cx="50" cy="50" r="47" fill="none" stroke="currentColor" strokeWidth="1.2" className="opacity-40" />
+              <circle cx="50" cy="50" r="43" fill="none" stroke="currentColor" strokeWidth="0.5" className="opacity-25" />
+              
+              {/* Dial markings ticks */}
+              {[135, 168.75, 202.5, 236.25, 270, 303.75, 337.5, 371.25, 405].map((angle, i) => {
+                const rad = (angle * Math.PI) / 180;
+                const isMajor = i % 2 === 0;
+                const length = isMajor ? 6 : 3;
+                const x1 = 50 + Math.cos(rad) * (42 - length);
+                const y1 = 50 + Math.sin(rad) * (42 - length);
+                const x2 = 50 + Math.cos(rad) * 42;
+                const y2 = 50 + Math.sin(rad) * 42;
+                return (
+                  <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke="currentColor" strokeWidth={isMajor ? 1 : 0.6} className="opacity-40" />
+                );
+              })}
 
-          {/* Color Arc Indicator (clipped to half circle) */}
-          <svg className="absolute top-0 left-0 w-28 h-28 transform -rotate-180" viewBox="0 0 100 100">
-            <circle
-              cx="50"
-              cy="50"
-              r="40"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="10"
-              strokeDasharray="125 250"
-              className={isNewspaper ? 'text-primary-base opacity-20' : `${details.color} opacity-40`}
+              {/* Serif Numbers */}
+              <text x="23" y="77" fontSize="7" fontFamily="serif" textAnchor="middle" className="fill-current opacity-70 font-black">0</text>
+              <text x="17" y="49" fontSize="7" fontFamily="serif" textAnchor="middle" className="fill-current opacity-70 font-black">25</text>
+              <text x="50" y="19" fontSize="7" fontFamily="serif" textAnchor="middle" className="fill-current opacity-70 font-black">50</text>
+              <text x="83" y="49" fontSize="7" fontFamily="serif" textAnchor="middle" className="fill-current opacity-70 font-black">75</text>
+              <text x="77" y="77" fontSize="7" fontFamily="serif" textAnchor="middle" className="fill-current opacity-70 font-black">100</text>
+
+              {/* Gauge label text */}
+              <text x="50" y="66" fontSize="4.5" fontFamily="serif" textAnchor="middle" className="fill-current opacity-35 font-bold tracking-widest uppercase">TEMPORAL</text>
+              <text x="50" y="72" fontSize="4.5" fontFamily="serif" textAnchor="middle" className="fill-current opacity-35 italic font-bold">pressure</text>
+
+              {/* Center pivot pin */}
+              <circle cx="50" cy="50" r="3.5" className="fill-current text-primary-base" />
+              <circle cx="50" cy="50" r="1.5" fill="var(--bg-color)" />
+            </svg>
+
+            {/* Steampunk Vibrating Needle */}
+            <motion.div
+              className="absolute w-[2px] bg-primary-base origin-bottom z-10"
+              style={{
+                height: '35px',
+                bottom: '50%',
+                left: 'calc(50% - 1px)',
+              }}
+              animate={{ 
+                // dial ranges from -135deg (0 score) to +135deg (100 score)
+                rotate: [
+                  -135 + (score / 100) * 270 - 0.75,
+                  -135 + (score / 100) * 270 + 0.75,
+                  -135 + (score / 100) * 270
+                ]
+              }}
+              transition={{
+                rotate: {
+                  repeat: Infinity,
+                  repeatType: 'mirror',
+                  duration: 0.15,
+                  ease: 'easeInOut',
+                }
+              }}
             />
-          </svg>
+          </div>
+        ) : (
+          <div className="relative w-28 h-16 flex items-end justify-center select-none overflow-hidden shrink-0">
+            {/* Arc Background */}
+            <div className="absolute inset-0 w-28 h-28 border-[10px] rounded-full border-white/5" />
 
-          {/* Center Point */}
-          <div className={`absolute bottom-0 w-4 h-4 rounded-full z-20 border ${
-            isNewspaper ? 'bg-primary-base border-primary-base/20' : 'bg-text-main border-white/20'
-          }`} />
+            {/* Color Arc Indicator (clipped to half circle) */}
+            <svg className="absolute top-0 left-0 w-28 h-28 transform -rotate-180" viewBox="0 0 100 100">
+              <circle
+                cx="50"
+                cy="50"
+                r="40"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="10"
+                strokeDasharray="125 250"
+                className={`${details.color} opacity-40`}
+              />
+            </svg>
 
-          {/* Needle Arrow */}
-          <motion.div
-            className={`absolute bottom-0 w-1 z-10 origin-bottom ${
-              isNewspaper ? 'bg-primary-base' : 'bg-gradient-to-t from-text-main to-accent-base'
-            }`}
-            style={{
-              height: '42px',
-              x: '-50%',
-            }}
-            initial={{ rotate: -90 }}
-            animate={{ rotate: rotation }}
-            transition={{
-              type: 'spring',
-              stiffness: 80,
-              damping: 12,
-            }}
-          />
-        </div>
+            {/* Center Point */}
+            <div className="absolute bottom-0 w-4 h-4 rounded-full z-20 border bg-text-main border-white/20" />
+
+            {/* Needle Arrow */}
+            <motion.div
+              className="absolute bottom-0 w-1 z-10 origin-bottom bg-gradient-to-t from-text-main to-accent-base"
+              style={{
+                height: '42px',
+                x: '-50%',
+              }}
+              initial={{ rotate: -90 }}
+              animate={{ rotate: rotation }}
+              transition={{
+                type: 'spring',
+                stiffness: 80,
+                damping: 12,
+              }}
+            />
+          </div>
+        )}
 
         {/* Stability Percentage Output */}
         <div className="flex-1">

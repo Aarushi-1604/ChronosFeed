@@ -24,6 +24,23 @@ export default function CanvasGrid() {
 
     window.addEventListener('resize', handleResize);
 
+    // Track mouse coordinate offsets for interactive drift
+    let mouseX = -9999;
+    let mouseY = -9999;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+    };
+
+    const handleMouseLeave = () => {
+      mouseX = -9999;
+      mouseY = -9999;
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseleave', handleMouseLeave);
+
     // Particles representing "historical events" or nodes in the universe
     interface Particle {
       x: number;
@@ -36,17 +53,17 @@ export default function CanvasGrid() {
     }
 
     const particles: Particle[] = [];
-    const numParticles = 40;
+    const numParticles = 45;
 
     for (let i = 0; i < numParticles; i++) {
       particles.push({
         x: Math.random() * width,
         y: Math.random() * height,
-        vx: (Math.random() - 0.5) * 0.3,
-        vy: (Math.random() - 0.5) * 0.3,
+        vx: (Math.random() - 0.5) * 0.25,
+        vy: (Math.random() - 0.5) * 0.25,
         radius: Math.random() * 2 + 1,
-        alpha: Math.random() * 0.5 + 0.2,
-        pulse: Math.random() * 0.05 + 0.01,
+        alpha: Math.random() * 0.5 + 0.15,
+        pulse: Math.random() * 0.03 + 0.005,
       });
     }
 
@@ -67,12 +84,12 @@ export default function CanvasGrid() {
       const accentColor = `rgba(${colors.accent.replace(/\s+/g, ',')}, `;
 
       // Draw drifting Grid Lines
-      ctx.strokeStyle = `${primaryColor}0.035)`;
+      ctx.strokeStyle = `${primaryColor}0.025)`;
       ctx.lineWidth = 1;
 
-      const gridSize = 60;
-      const xOffset = (Date.now() * 0.005) % gridSize;
-      const yOffset = (Date.now() * 0.005) % gridSize;
+      const gridSize = 65;
+      const xOffset = (Date.now() * 0.003) % gridSize;
+      const yOffset = (Date.now() * 0.003) % gridSize;
 
       for (let x = xOffset; x < width; x += gridSize) {
         ctx.beginPath();
@@ -93,11 +110,25 @@ export default function CanvasGrid() {
         p.x += p.vx;
         p.y += p.vy;
 
+        // Boundary bounce
         if (p.x < 0 || p.x > width) p.vx *= -1;
         if (p.y < 0 || p.y > height) p.vy *= -1;
 
+        // Mouse repulsion: push particles away gently
+        if (mouseX !== -9999 && mouseY !== -9999) {
+          const dx = p.x - mouseX;
+          const dy = p.y - mouseY;
+          const dist = Math.hypot(dx, dy);
+          if (dist < 130) {
+            const force = (130 - dist) * 0.015;
+            p.x += (dx / dist) * force;
+            p.y += (dy / dist) * force;
+          }
+        }
+
+        // Pulse alpha
         p.alpha += p.pulse;
-        if (p.alpha > 0.8 || p.alpha < 0.15) {
+        if (p.alpha > 0.75 || p.alpha < 0.12) {
           p.pulse *= -1;
         }
 
@@ -110,13 +141,13 @@ export default function CanvasGrid() {
         for (let j = idx + 1; j < particles.length; j++) {
           const p2 = particles[j];
           const dist = Math.hypot(p.x - p2.x, p.y - p2.y);
-          if (dist < 150) {
-            const linkAlpha = (1 - dist / 150) * 0.08 * Math.min(p.alpha, p2.alpha);
+          if (dist < 160) {
+            const linkAlpha = (1 - dist / 160) * 0.06 * Math.min(p.alpha, p2.alpha);
             ctx.beginPath();
             ctx.moveTo(p.x, p.y);
             ctx.lineTo(p2.x, p2.y);
             ctx.strokeStyle = `${primaryColor}${linkAlpha})`;
-            ctx.lineWidth = 0.8;
+            ctx.lineWidth = 0.7;
             ctx.stroke();
           }
         }
@@ -129,9 +160,22 @@ export default function CanvasGrid() {
 
     return () => {
       window.removeEventListener('resize', handleResize);
+      window.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseleave', handleMouseLeave);
       cancelAnimationFrame(animationFrameId);
     };
   }, []);
 
-  return <canvas ref={canvasRef} className="fixed inset-0 pointer-events-none z-0" />;
+  return (
+    <>
+      <canvas ref={canvasRef} className="fixed inset-0 pointer-events-none z-0" />
+      {/* Tactile Parchment Paper Grain Overlay */}
+      <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" className="fixed inset-0 w-full h-full pointer-events-none opacity-[0.018] z-30">
+        <filter id="parchmentNoise">
+          <feTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="4" stitchTiles="stitch" />
+        </filter>
+        <rect width="100%" height="100%" filter="url(#parchmentNoise)" />
+      </svg>
+    </>
+  );
 }
