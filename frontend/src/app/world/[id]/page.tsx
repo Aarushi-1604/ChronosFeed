@@ -10,7 +10,7 @@ import TimelineSidebar from '../../../components/dashboard/timeline-sidebar';
 import FeedColumn from '../../../components/dashboard/feed-column';
 import IntelligencePanel from '../../../components/dashboard/intelligence-panel';
 import { FeedItem } from '../../../components/cards/feed-card';
-import { World, Post, News, Ad } from '../../../types';
+import { World, Post, News, Ad, NewsCategory } from '../../../types';
 import { api } from '../../../lib/api';
 import { interleaveContent } from '../../../lib/feed/interleaveContent';
 import ChronosLogo from '../../../components/branding/chronos-logo';
@@ -84,27 +84,285 @@ export default function WorldPage({ params }: PageProps) {
   useEffect(() => {
     if (!world) return;
 
+    // Helper to replace placeholders with world-specific metadata
+    const fillPlaceholders = (text: string, currentWorld: World, persona?: any): string => {
+      if (!text || !currentWorld) return text;
+      return text
+        .replace(/{{WORLD_NAME}}/g, currentWorld.name || 'the simulation')
+        .replace(/{{ERA}}/g, currentWorld.era || 'steampunk era')
+        .replace(/{{TECH_LEVEL}}/g, currentWorld.tech_level || 'steam computation')
+        .replace(/{{GOV_TYPE}}/g, currentWorld.gov_type || 'council governance')
+        .replace(/{{ROLE}}/g, persona?.role || 'OBSERVER')
+        .replace(/{{PERSONA_NAME}}/g, persona?.name || 'Observer')
+        .replace(/{{PERSONA_HANDLE}}/g, persona?.handle || 'observer_01');
+    };
+
+    // Expand posts by generating unique text from templates in the voice of world personas
+    const expandPosts = (
+      rawPosts: Post[],
+      personas: any[],
+      targetCount: number,
+      timeOffsetHours = 3
+    ): Post[] => {
+      const result = [...rawPosts];
+      if (result.length === 0) return [];
+      
+      const personasList = personas.length > 0 ? personas : [
+        { id: 'p1', name: 'Charles Babbage III', handle: 'steam_coder_99', role: 'SCIENTIST', influence_score: 87 },
+        { id: 'p2', name: 'Ada Lovelace Jr.', handle: 'analytical_genius', role: 'SCIENTIST', influence_score: 92 },
+        { id: 'p3', name: 'Baroness Sterling', handle: 'brass_nobility', role: 'POLITICIAN', influence_score: 75 },
+        { id: 'p4', name: 'Captain Copperfield', handle: 'aeronaut_pioneer', role: 'INFLUENCER', influence_score: 80 }
+      ];
+
+      const postTemplates = [
+        "As a {{ROLE}}, I must say the shift towards {{TECH_LEVEL}} is changing everything in {{WORLD_NAME}}.",
+        "Hearing reports that the {{GOV_TYPE}} is increasing monitoring on the steam-grid. Stay safe observers.",
+        "Just finished a debate with other {{ROLE}}s about our current era, {{ERA}}. Thoughts?",
+        "The steam pressure in the central grid is fluctuating again. Classic {{WORLD_NAME}} infrastructure.",
+        "Can anyone confirm if the Babbage Analytical Engine is down? I cannot synchronize my punch-cards.",
+        "We are witnessing the dawn of a new age. {{TECH_LEVEL}} is not just a tool, it's our future.",
+        "Rumors say that the {{GOV_TYPE}} is planning to tax cogwheel repairs. Unbelievable!",
+        "I've been analyzing the temporal telemetry. The timeline bifurcation of {{ERA}} is accelerating.",
+        "A new shipment of brass valves just arrived. Time to upgrade the server core!",
+        "The latest dispatch from the central archives is out. The impact of {{TECH_LEVEL}} is undeniable.",
+        "Who else is attending the grand exhibition of mechanical automata tonight?",
+        "The steam-grid is running at 94% capacity. We need more pressure regulators!",
+        "A reminder to all observers: keep your cogs oiled and your pressure gauges calibrated.",
+        "Fascinating data coming in from the outer rim. The expansion of {{WORLD_NAME}} is ahead of schedule.",
+        "Is it true that the high council is banishing code-punchers? We must organize!",
+        "No matter how advanced the {{TECH_LEVEL}} gets, we must never forget our roots in the early {{ERA}}.",
+        "Spotted a magnificent steam-carriage passing by the laboratory today. Simple engineering, but elegant.",
+        "The latest algorithms for the mechanical net are looking promising. Efficiency up by 15%!",
+        "Just read the latest morning dispatches. The news from {{WORLD_NAME}} is concerning.",
+        "Oiling the gear teeth is the best form of meditation. Let the mechanism find peace."
+      ];
+
+      let index = 0;
+      const baseTime = rawPosts.length > 0 
+        ? new Date(rawPosts[rawPosts.length - 1].created_at).getTime()
+        : Date.now();
+
+      while (result.length < targetCount) {
+        const template = postTemplates[index % postTemplates.length];
+        const persona = personasList[index % personasList.length];
+        const content = fillPlaceholders(template, world!, persona);
+
+        const newPost: Post = {
+          id: `gen-post-${index}-${Date.now()}`,
+          world_id: worldId,
+          persona_id: persona.id,
+          content,
+          media_url: null,
+          media_type: 'TEXT',
+          likes_count: Math.floor(10 + Math.random() * 500),
+          reposts_count: Math.floor(2 + Math.random() * 80),
+          created_at: new Date(baseTime - (index + 1) * timeOffsetHours * 3600000).toISOString(),
+          persona: persona
+        };
+        result.push(newPost);
+        index++;
+      }
+      return result;
+    };
+
+    // Expand news items by generating unique articles from templates
+    const expandNews = (
+      rawNews: News[],
+      targetCount: number,
+      timeOffsetHours = 6
+    ): News[] => {
+      const result = [...rawNews];
+      if (result.length === 0) return [];
+
+      const newsTemplates = [
+        {
+          title: "High Council Announces Infrastructure Reform for {{TECH_LEVEL}}",
+          content: "The High Council has unveiled a massive budget allocation to modernize {{WORLD_NAME}}'s central hubs, prioritizing the implementation of {{TECH_LEVEL}} networks.",
+          category: "POLITICS"
+        },
+        {
+          title: "Breakthrough in Mechanical Automation: New Steam-Driven Solvers Unveiled",
+          content: "Engineers at the Royal Academy have patented a new class of brass solvers capable of executing complex calculations at three times the speed of existing units.",
+          category: "SCIENCE"
+        },
+        {
+          title: "Stock Market Fluctuations in {{WORLD_NAME}} as Steampunk Tech Surges",
+          content: "The Exchange registered record trading volumes today as shares in steam-grid developers and copper extraction conglomerates rallied following positive forecasts.",
+          category: "BUSINESS"
+        },
+        {
+          title: "Citizens Assembly Protests {{GOV_TYPE}} Taxes on Coal and Copper",
+          content: "Hundreds gathered outside the parliament gates to voice their opposition to the new tariff proposal, claiming it hurts independent mechanics.",
+          category: "POLITICS"
+        },
+        {
+          title: "The Grand Chronicle Report: How {{ERA}} Redefined Modern Society",
+          content: "In this special retrospective, we examine how the shift in power during the {{ERA}} era paved the way for our current technological landscape.",
+          category: "CULTURE"
+        },
+        {
+          title: "Steampunk Net Reaches Record High of 10,000 Synchronized Cylinders",
+          content: "System observers confirmed the network handled over ten thousand simultaneous punch-card connections today without a single pressure drop.",
+          category: "TECHNOLOGY"
+        },
+        {
+          title: "Scientific Expedition Discovers Ancient Relics in Northern Wastelands",
+          content: "A team of researchers returned today with artifacts suggesting an advanced mechanical civilization occupied the waste sectors centuries ago.",
+          category: "SCIENCE"
+        },
+        {
+          title: "Tension Rises Between Guilds Over Control of the Central Steam-Grid",
+          content: "Negotiations stalled between the Steamwrights and the Analytical Engineers, raising concerns of a potential grid shutdown next week.",
+          category: "BUSINESS"
+        },
+        {
+          title: "New Imperial Decree: All Analytical Engines Must Undergo Safety Inspections",
+          content: "Under pressure from the safety committee, the crown has mandated strict quarterly testing for all mechanical computation systems exceeding 50 horsepower.",
+          category: "POLITICS"
+        },
+        {
+          title: "BabbageCo Launches Next-Generation Brass Router for Public Consumption",
+          content: "The new consumer-grade router promises seamless connection to the imperial network at a fraction of the size of industrial models.",
+          category: "TECHNOLOGY"
+        }
+      ];
+
+      let index = 0;
+      const baseTime = rawNews.length > 0
+        ? new Date(rawNews[rawNews.length - 1].created_at).getTime()
+        : Date.now();
+
+      while (result.length < targetCount) {
+        const template = newsTemplates[index % newsTemplates.length];
+        const title = fillPlaceholders(template.title, world!);
+        const content = fillPlaceholders(template.content, world!);
+
+        const newNews: News = {
+          id: `gen-news-${index}-${Date.now()}`,
+          world_id: worldId,
+          title,
+          content,
+          category: template.category as NewsCategory,
+          publisher: index % 2 === 0 ? "The Chronos Daily" : "Imperial Dispatch",
+          image_url: getPollinationsNewsUrl(title, content) || getNewsImageUrl(title, content),
+          created_at: new Date(baseTime - (index + 1) * timeOffsetHours * 3600000).toISOString()
+        };
+        result.push(newNews);
+        index++;
+      }
+      return result;
+    };
+
+    // Expand advertisements using alternate-history templates
+    const expandAds = (
+      rawAds: Ad[],
+      targetCount: number,
+      timeOffsetHours = 8
+    ): Ad[] => {
+      const result = [...rawAds];
+      if (result.length === 0) return [];
+
+      const adTemplates = [
+        {
+          company_name: "BabbageCo Steam Solutions",
+          tagline: "Compute at the speed of steam.",
+          description: "Our Mark VII Analytical Coprocessor handles 500 mechanical calculations per hour. Command gears to solve your ledgers. Order today from BabbageCo.",
+          price: "3 Sovereigns"
+        },
+        {
+          company_name: "Lubricants & Oils",
+          tagline: "Keep your cogs spinning smoothly.",
+          description: "Formulated specifically for high-pressure copper axles and delicate brass escapements. Tested and approved by the Royal Engineering Guild.",
+          price: "5 Shillings"
+        },
+        {
+          company_name: "Sterling Brass Enclosures",
+          tagline: "Secure your transmission link.",
+          description: "Heavy-duty brass shielding designed to protect your home router from coal ash, moisture, and high-frequency steam vibrations.",
+          price: "1 Sovereign"
+        },
+        {
+          company_name: "Reality Insurance Group",
+          tagline: "Protect your assets against temporal anomalies.",
+          description: "Ensure your estate and business remain intact across timeline bifurcations. Comprehensive coverage for divergence drifts up to 5%.",
+          price: "12 Sovereigns/yr"
+        },
+        {
+          company_name: "Royal Steam Academy",
+          tagline: "Learn the art of Mechanical Net coding.",
+          description: "Become a certified steam observer. Learn punch-card design, gear ratio optimization, and boiler pressure mathematics. Night classes available.",
+          price: "4 Sovereigns"
+        },
+        {
+          company_name: "The Steam Carriage Co.",
+          tagline: "Fast, clean, and powered by pure coal.",
+          description: "Introducing the Model IX Carriage. Boasting a dual-cylinder engine, leaf suspension, and brass accents. Stand out in the streets of London.",
+          price: "85 Sovereigns"
+        },
+        {
+          company_name: "Imperial Punch-Card Co.",
+          tagline: "Order your custom copper cards.",
+          description: "Pre-punched or blank sheets manufactured with durable reinforced copper alloy. Fits all standard Babbage-class processors.",
+          price: "8 Shillings/pack"
+        }
+      ];
+
+      let index = 0;
+      const baseTime = rawAds.length > 0
+        ? new Date(rawAds[rawAds.length - 1].created_at).getTime()
+        : Date.now();
+
+      while (result.length < targetCount) {
+        const template = adTemplates[index % adTemplates.length];
+        const companyName = fillPlaceholders(template.company_name, world!);
+        const description = fillPlaceholders(template.description, world!);
+
+        const newAd: Ad = {
+          id: `gen-ad-${index}-${Date.now()}`,
+          world_id: worldId,
+          company_name: companyName,
+          tagline: template.tagline,
+          description,
+          image_url: null,
+          price: template.price,
+          created_at: new Date(baseTime - (index + 1) * timeOffsetHours * 3600000).toISOString()
+        };
+        result.push(newAd);
+        index++;
+      }
+      return result;
+    };
+
     async function loadInitialFeed() {
       setFeedLoading(true);
       try {
         // Fetch up to 100 posts to load the entire timeline feed at once
-        const [feedRes, newsRes, adsRes] = await Promise.all([
+        const [feedRes, newsRes, adsRes, personasRes] = await Promise.all([
           api.getWorldFeed(worldId, 100),
           api.getWorldNews(worldId),
           api.getWorldAds(worldId),
+          api.getWorldPersonas(worldId).catch(() => []),
         ]);
 
-        setPosts(feedRes.posts);
+        const rawPosts = feedRes.posts;
         const enrichedNews = newsRes.map((n: News) => ({
           ...n,
           image_url: n.image_url || getPollinationsNewsUrl(n.title, n.content) || getNewsImageUrl(n.title, n.content),
         }));
-        setNews(enrichedNews);
-        setAds(adsRes);
+
+        // Expand items to ensure at least 65 total items (55 posts, 25 news, 20 ads)
+        const expandedPosts = expandPosts(rawPosts, personasRes, 55, 3);
+        const expandedNews = expandNews(enrichedNews, 25, 6);
+        const expandedAds = expandAds(adsRes, 20, 8);
+
+        setPosts(expandedPosts);
+        setNews(expandedNews);
+        setAds(expandedAds);
       } catch (err) {
         console.error('Error loading initial polymorphic feed, using local fallback:', err);
         const seeded = getSeededFeedItems();
-        setPosts(seeded.filter((x) => x.type === 'post').map((x) => x.data as Post));
+        const rawPosts = seeded.filter((x) => x.type === 'post').map((x) => x.data as Post);
+        const personasRes = rawPosts.map((p) => p.persona).filter(Boolean);
         const enrichedSeededNews = seeded.filter((x) => x.type === 'news').map((x) => {
           const n = x.data as News;
           return {
@@ -112,8 +370,16 @@ export default function WorldPage({ params }: PageProps) {
             image_url: n.image_url || getPollinationsNewsUrl(n.title, n.content) || getNewsImageUrl(n.title, n.content),
           };
         });
-        setNews(enrichedSeededNews);
-        setAds(seeded.filter((x) => x.type === 'ad').map((x) => x.data as Ad));
+        const rawAds = seeded.filter((x) => x.type === 'ad').map((x) => x.data as Ad);
+
+        // Expand items to ensure at least 65 total items
+        const expandedPosts = expandPosts(rawPosts, personasRes, 55, 3);
+        const expandedNews = expandNews(enrichedSeededNews, 25, 6);
+        const expandedAds = expandAds(rawAds, 20, 8);
+
+        setPosts(expandedPosts);
+        setNews(expandedNews);
+        setAds(expandedAds);
       } finally {
         setFeedLoading(false);
       }
@@ -250,7 +516,7 @@ export default function WorldPage({ params }: PageProps) {
 
       {/* World Page Header */}
       {isCompiled ? (
-        <header className="w-full max-w-7xl mx-auto flex flex-col items-center border-b-4 border-double border-primary-base pb-3.5 mb-6 z-10 text-primary-base font-serif">
+        <header className="w-full max-w-none mx-auto flex flex-col items-center border-b-4 border-double border-primary-base pb-3.5 mb-6 z-10 text-primary-base font-serif">
           {/* Top meta row */}
           <div className="relative flex flex-col md:flex-row justify-between w-full text-[10px] uppercase tracking-widest border-b border-primary-base/20 pb-2 mb-3 items-center font-bold gap-3 md:gap-0">
             <div className="flex flex-wrap items-center gap-2 justify-center md:justify-start">
@@ -267,33 +533,20 @@ export default function WorldPage({ params }: PageProps) {
               >
                 How to Use
               </button>
-              <button
-                onClick={() => router.push('/developers')}
-                className="border border-primary-base px-3 py-1 font-serif text-[10px] tracking-wider font-bold uppercase hover:bg-primary-base hover:text-[var(--bg-color)] transition-all duration-300 cursor-pointer"
-              >
-                Developer Portal
-              </button>
-              <button
-                type="button"
-                onClick={toggleTheme}
-                className="border border-primary-base px-3 py-1 font-serif text-[10px] tracking-wider font-bold uppercase hover:bg-primary-base hover:text-[var(--bg-color)] transition-all duration-300 cursor-pointer flex items-center gap-1"
-              >
-                {theme === 'newspaper' ? '☾ Dark Press' : '☼ Light Press'}
-              </button>
             </div>
             <span className="md:absolute md:left-1/2 md:transform md:-translate-x-1/2 text-center">VOLUME CCLXVIII // NO. 45091</span>
             <span className="text-center">PRICE: 2 CENTS</span>
           </div>
 
           {/* Banner Masthead */}
-          <div className="flex items-center justify-between w-full py-1">
+          <div className="flex items-center justify-between w-full py-2.5">
             <div className="hidden md:block w-24 h-[1px] bg-primary-base/30" />
             <div className="flex flex-col items-center">
-              <h1 className="text-4xl md:text-5xl font-black uppercase tracking-tight font-serif text-center leading-none text-primary-base flex items-center gap-3">
-                <ChronosLogo size={52} className="text-primary-base" />
-                THE DAILY CHRONICLE
+              <h1 className="text-4xl md:text-5xl font-black uppercase tracking-tight font-serif text-center leading-none text-primary-base flex items-center justify-center gap-4">
+                <ChronosLogo size={68} className="text-primary-base shrink-0" />
+                <span>THE DAILY CHRONICLE</span>
               </h1>
-              <p className="text-[10px] tracking-[0.22em] uppercase mt-2.5 text-center text-text-dim font-bold italic">
+              <p className="text-[10px] tracking-[0.22em] uppercase mt-3 text-center text-text-dim font-bold italic">
                 Chronology branches compiled from the temporal divergence compositor
               </p>
             </div>
@@ -310,7 +563,7 @@ export default function WorldPage({ params }: PageProps) {
           </div>
         </header>
       ) : (
-        <header className="w-full max-w-7xl mx-auto flex items-center justify-between border-b border-white/5 pb-4 mb-6 z-10">
+        <header className="w-full max-w-none mx-auto flex items-center justify-between border-b border-white/5 pb-4 mb-6 z-10">
           <div className="flex items-center gap-3">
             <button
               onClick={() => router.push('/')}
@@ -319,7 +572,7 @@ export default function WorldPage({ params }: PageProps) {
               <ArrowLeft size={16} />
             </button>
             <div className="flex items-center gap-3">
-              <ChronosLogo size={44} className="text-primary-base" />
+              <ChronosLogo size={46} className="text-primary-base" />
               <div>
                 <h1 className="text-xl font-bold font-serif text-text-main tracking-tight leading-none">
                   {world?.name}
@@ -350,12 +603,6 @@ export default function WorldPage({ params }: PageProps) {
           </div>
 
           <div className="hidden md:flex gap-6 font-mono text-[10px] text-text-dim items-center">
-            <button
-              onClick={() => router.push('/developers')}
-              className="glass-button px-5 py-2.5 rounded-lg text-xs font-mono uppercase tracking-wider font-bold cursor-pointer text-text-main hover:text-accent-base transition-all duration-300 border border-white/10 hover:border-accent-base/50"
-            >
-              DEVELOPER PORTAL
-            </button>
             <div className="flex gap-4">
               <span>REALITY_KEY: {worldId.slice(0, 8)}</span>
               <span className="text-emerald-400">STABILIZED</span>
@@ -365,7 +612,7 @@ export default function WorldPage({ params }: PageProps) {
       )}
 
       {/* Three Panel Layout Container */}
-      <div className="flex-1 min-h-0 w-full max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-6 z-10 relative">
+      <div className="flex-1 min-h-0 w-full max-w-none mx-auto grid grid-cols-1 md:grid-cols-12 gap-6 z-10 relative">
         
         {/* Left Panel: Cause-Effect Timeline (3 Cols on Desktop) */}
         <aside className={`hidden md:block md:col-span-3 h-full min-h-0 overflow-hidden ${isCompiled ? 'border-r border-primary-base/15 pl-4 pr-6' : ''}`}>
@@ -390,7 +637,7 @@ export default function WorldPage({ params }: PageProps) {
       </div>
 
       {/* Newspaper Footer */}
-      <footer className="w-full max-w-7xl mx-auto border-t-2 border-double border-primary-base/20 mt-4 pt-3.5 pb-1 text-center text-[9px] tracking-[0.22em] font-serif text-text-dim uppercase font-bold z-10">
+      <footer className="w-full max-w-none mx-auto border-t-2 border-double border-primary-base/20 mt-4 pt-3.5 pb-1 text-center text-[9px] tracking-[0.22em] font-serif text-text-dim uppercase font-bold z-10">
         AI CLUB | SIT PUNE | AARUSHI | ADITYA | YESHWANT | v1.2.0 | 2026
       </footer>
 
