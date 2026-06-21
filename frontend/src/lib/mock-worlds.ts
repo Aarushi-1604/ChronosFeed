@@ -1,4 +1,4 @@
-import { World, HistoricalEvent, Persona, Post, News, Ad, Comment, PersonaRole, MediaType, NewsCategory } from '../types';
+import { World, HistoricalEvent, Persona, Post, News, Ad, Comment, PersonaRole, MediaType, NewsCategory, OperatorPersona, OperatorRole } from '../types';
 
 interface WorldTemplate {
   id: string;
@@ -772,3 +772,113 @@ export function getMockComments(postId: string): Comment[] {
   
   return comments;
 }
+
+export function getMockOperatorPersona(worldId: string): OperatorPersona | null {
+  if (typeof window === 'undefined') return null;
+  const saved = localStorage.getItem(`chronos-operator-${worldId}`);
+  if (!saved) return null;
+  try {
+    return JSON.parse(saved) as OperatorPersona;
+  } catch {
+    return null;
+  }
+}
+
+export function createMockOperatorPersona(worldId: string, role: string): OperatorPersona {
+  const template = TEMPLATES.find(t => t.id === worldId);
+  const era = template ? template.era : 'Alternate Era';
+  
+  let name = '';
+  let handle = '';
+  let bio = '';
+  let customStatLabel = '';
+  let customStatValue = 75;
+
+  const cleanRole = role.toUpperCase() as OperatorRole;
+
+  switch (cleanRole) {
+    case 'CITIZEN':
+      name = 'Observer Agent';
+      handle = 'chronos_spectator';
+      bio = `Decoupled from standard chronological stream. Documenting the social dispatches of this ${era} reality.`;
+      customStatLabel = 'Observational Parity';
+      break;
+    case 'TECHNOLOGIST':
+      name = 'Lattice Compiler';
+      handle = 'grid_compiler';
+      bio = `Compiling the primary analytical matrices. Developing localized nodes for the global computational grid.`;
+      customStatLabel = 'Calculation Output';
+      break;
+    case 'REBEL':
+      name = 'Faction Leader';
+      handle = 'dissident_press';
+      bio = `Injecting unofficial signals into the censored networks. We will reclaim control over our timelines!`;
+      customStatLabel = 'Revolution Friction';
+      break;
+    case 'IMPERIAL':
+      name = 'Ministry Surveyor';
+      handle = 'crown_auditor';
+      bio = `Official observer delegated by the High Directorate. Auditing chronological stability and public fealty.`;
+      customStatLabel = 'Crown Fealty';
+      break;
+  }
+
+  if (worldId === 'roman-world-id') {
+    if (cleanRole === 'REBEL') {
+      name = 'Tribune Appius V';
+      handle = 'plebs_voice';
+      bio = `Broadcasting illegal aetherwire streams from the sub-forum insulae. Down with Senatorial geothermal hoarding!`;
+    } else if (cleanRole === 'TECHNOLOGIST') {
+      name = 'Julius the Mechanician';
+      handle = 'aether_coder';
+    } else if (cleanRole === 'IMPERIAL') {
+      name = 'Aurelius Prefect';
+      handle = 'praetorian_eye';
+    }
+  } else if (worldId === 'stub-world-id') {
+    if (cleanRole === 'REBEL') {
+      name = 'Silas the Luddite';
+      handle = 'cog_striker';
+    } else if (cleanRole === 'TECHNOLOGIST') {
+      name = 'Ada Apprentice';
+      handle = 'steam_logic_dev';
+    } else if (cleanRole === 'IMPERIAL') {
+      name = 'Lord Sterling Auditor';
+      handle = 'royal_censor';
+    }
+  } else if (worldId === 'mars-world-id') {
+    if (cleanRole === 'REBEL') {
+      name = 'Miner Jack';
+      handle = 'oxygen_stealer';
+    } else if (cleanRole === 'TECHNOLOGIST') {
+      name = 'Navigator Evans';
+      handle = 'sand_filterer';
+    } else if (cleanRole === 'IMPERIAL') {
+      name = 'Deputy Klausen';
+      handle = 'dome_enforcer';
+    }
+  }
+
+  const newPersona: OperatorPersona = {
+    id: 'operator',
+    world_id: worldId,
+    name,
+    handle,
+    avatar: '',
+    bio,
+    role: cleanRole,
+    followers_count: 8400,
+    following_count: 210,
+    influence_score: 72,
+    custom_stat_label: customStatLabel,
+    custom_stat_value: customStatValue,
+    created_at: new Date().toISOString()
+  };
+
+  if (typeof window !== 'undefined') {
+    localStorage.setItem(`chronos-operator-${worldId}`, JSON.stringify(newPersona));
+  }
+
+  return newPersona;
+}
+
