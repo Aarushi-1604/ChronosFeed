@@ -4,7 +4,7 @@ import React, { useEffect, useState, use } from 'react';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, Award, Shield, User, Heart, RotateCw, Skull, Handshake, Network } from 'lucide-react';
 import CanvasGrid from '../../../../../components/ui/canvas-grid';
-import { Persona } from '../../../../../types';
+import { Persona, OperatorPersona, OperatorRole, Post } from '../../../../../types';
 import { api } from '../../../../../lib/api';
 import ChronosLogo from '../../../../../components/branding/chronos-logo';
 import { useTheme } from '../../../../../context/theme-context';
@@ -171,7 +171,41 @@ function PersonaLogo({ name, role }: { name: string; role: string }) {
   );
 }
 
-const getRelationship = (roleA: string, roleB: string) => {
+const getRelationship = (
+  roleA: string,
+  roleB: string,
+  operatorRole?: OperatorRole,
+  otherOperatorRole?: OperatorRole
+) => {
+  if (operatorRole) {
+    if (operatorRole === 'REBEL') {
+      if (roleB === 'POLITICIAN') return { type: 'enemy', label: 'Insurgency vs State Authority' };
+      if (roleB === 'INFLUENCER') return { type: 'alliance', label: 'Popular Resistance Coalition' };
+      if (roleB === 'BRAND') return { type: 'enemy', label: 'Sabotage of Corporate Assets' };
+      return { type: 'neutral', label: 'Clandestine Neutrality' };
+    }
+    if (operatorRole === 'IMPERIAL') {
+      if (roleB === 'POLITICIAN' || roleB === 'BRAND') return { type: 'alliance', label: 'State-Sanctioned Syndicate' };
+      if (roleB === 'INFLUENCER') return { type: 'enemy', label: 'Suppression of Dissident Media' };
+      return { type: 'neutral', label: 'Imperial Surveillance' };
+    }
+    if (operatorRole === 'TECHNOLOGIST') {
+      if (roleB === 'SCIENTIST') return { type: 'alliance', label: 'Technocratic Research Alliance' };
+      if (roleB === 'BRAND') return { type: 'alliance', label: 'Industrial Automation Integration' };
+      return { type: 'neutral', label: 'Calculated Indifference' };
+    }
+    if (operatorRole === 'CITIZEN') {
+      if (roleB === 'INFLUENCER') return { type: 'alliance', label: 'Grassroots Community Network' };
+      if (roleB === 'POLITICIAN') return { type: 'neutral', label: 'Civilian-State Interface' };
+      if (roleB === 'BRAND') return { type: 'neutral', label: 'Consumer Market Access' };
+      return { type: 'neutral', label: 'Ordinary Public Life' };
+    }
+  }
+
+  if (otherOperatorRole) {
+    return getRelationship(roleB, roleA, otherOperatorRole, undefined);
+  }
+
   if (roleA === roleB) {
     if (roleA === 'BRAND') return { type: 'enemy', label: 'Commercial Rivalry' };
     return { type: 'alliance', label: 'Faction Coalition' };
@@ -205,7 +239,8 @@ export default function PersonaPage({ params }: PageProps) {
 
   const { theme, toggleTheme } = useTheme();
 
-  const [persona, setPersona] = useState<(Persona & { posts?: any[] }) | null>(null);
+  const [persona, setPersona] = useState<(Persona & { posts?: any[]; operatorRole?: OperatorRole }) | null>(null);
+  const [isUninstantiated, setIsUninstantiated] = useState(false);
   const [world, setWorld] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -223,7 +258,31 @@ export default function PersonaPage({ params }: PageProps) {
     async function loadAllPersonas() {
       try {
         const data = await api.getWorldPersonas(worldId);
-        setAllPersonas(data);
+        try {
+          const op = await api.getOperatorPersona(worldId);
+          if (op) {
+            const opPersona: Persona & { operatorRole?: OperatorRole } = {
+              id: 'operator',
+              world_id: worldId,
+              name: op.name,
+              handle: op.handle,
+              avatar: '',
+              role: op.role === 'CITIZEN' ? 'INFLUENCER' : op.role === 'IMPERIAL' ? 'POLITICIAN' : op.role === 'TECHNOLOGIST' ? 'SCIENTIST' : 'INFLUENCER',
+              influence_score: op.influence_score,
+              followers_count: op.followers_count,
+              following_count: op.following_count,
+              interests: [op.custom_stat_label.toLowerCase().replace(/\s+/g, '-')],
+              bio: op.bio,
+              personality: `Faction alignment: ${op.role}. Stat profile: ${op.custom_stat_label} is registered at ${op.custom_stat_value}%.`,
+              operatorRole: op.role,
+            };
+            setAllPersonas([...data, opPersona]);
+          } else {
+            setAllPersonas(data);
+          }
+        } catch {
+          setAllPersonas(data);
+        }
       } catch (err) {
         console.warn('Failed to load all personas for relational net:', err);
       }
@@ -246,6 +305,43 @@ export default function PersonaPage({ params }: PageProps) {
 
   useEffect(() => {
     async function loadPersonaDetails() {
+      if (personaId === 'operator') {
+        try {
+          const op = await api.getOperatorPersona(worldId);
+          if (op) {
+            const savedPostsRaw = typeof window !== 'undefined' ? localStorage.getItem(`chronos-user-posts-${worldId}`) : null;
+            const userPosts: Post[] = savedPostsRaw ? JSON.parse(savedPostsRaw) : [];
+            
+            setPersona({
+              id: 'operator',
+              world_id: worldId,
+              name: op.name,
+              handle: op.handle,
+              avatar: '',
+              role: op.role === 'CITIZEN' ? 'INFLUENCER' : op.role === 'IMPERIAL' ? 'POLITICIAN' : op.role === 'TECHNOLOGIST' ? 'SCIENTIST' : 'INFLUENCER',
+              influence_score: op.influence_score,
+              followers_count: op.followers_count,
+              following_count: op.following_count,
+              interests: [op.custom_stat_label.toLowerCase().replace(/\s+/g, '-')],
+              bio: op.bio,
+              personality: `Faction alignment: ${op.role}. Stat profile: ${op.custom_stat_label} is registered at ${op.custom_stat_value}%.`,
+              posts: userPosts,
+              operatorRole: op.role,
+            });
+            setIsUninstantiated(false);
+          } else {
+            setIsUninstantiated(true);
+            setPersona(null);
+          }
+        } catch (err) {
+          console.error('Failed to load operator persona:', err);
+          setError('Failed to retrieve operator persona dossier.');
+        } finally {
+          setLoading(false);
+        }
+        return;
+      }
+
       if (personaId === 'local-persona-id') {
         // Return a mock observer persona matching the layout
         setPersona({
@@ -357,6 +453,28 @@ export default function PersonaPage({ params }: PageProps) {
         <div className="flex flex-col items-center gap-3">
           <div className="w-8 h-8 rounded-none border border-primary-base border-t-transparent animate-spin" />
           <span className="text-text-dim animate-pulse">Retrieving Dossier Dossier...</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (isUninstantiated) {
+    return (
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center font-serif text-sm p-4 text-center">
+        <div className="flex flex-col items-center gap-4 max-w-lg border-4 border-double border-primary-base p-8 bg-[var(--card-bg)] text-primary-base">
+          <Shield className="text-accent-base animate-pulse" size={42} />
+          <h2 className="text-xl font-bold uppercase tracking-widest text-primary-base">OPERATOR DOSSIER CLASSIFIED</h2>
+          <span className="text-text-dim text-xs leading-relaxed max-w-md mt-2">
+            Temporal security protocols are active. Your operator dossier has not been instantiated for this reality yet. 
+            <br /><br />
+            To declassify your file and anchor your identity, return to the timeline console and **transmit your first dispatch** choosing an alignment role (Citizen, Technologist, Rebel, or Imperial).
+          </span>
+          <button
+            onClick={() => router.push(`/world/${worldId}`)}
+            className="border-2 border-primary-base px-6 py-2.5 font-serif font-bold uppercase tracking-wider cursor-pointer mt-4 hover:bg-primary-base hover:text-[var(--bg-color)] transition-all duration-300"
+          >
+            Return to Timeline Feed
+          </button>
         </div>
       </div>
     );
@@ -766,7 +884,12 @@ export default function PersonaPage({ params }: PageProps) {
                       const angle = (idx * 2 * Math.PI) / Math.max(otherNodes.length, 1) - Math.PI / 2;
                       const x = centerX + radius * Math.cos(angle);
                       const y = centerY + radius * Math.sin(angle);
-                      const rel = getRelationship(persona?.role || 'INFLUENCER', otherNode.role);
+                      const rel = getRelationship(
+                        persona?.role || 'INFLUENCER',
+                        otherNode.role,
+                        persona?.operatorRole,
+                        (otherNode as any).operatorRole
+                      );
                       
                       return (
                         <g key={otherNode.id}>
@@ -843,15 +966,44 @@ export default function PersonaPage({ params }: PageProps) {
                 {hoveredNode ? (
                   <div className="p-3 bg-primary-base/5 border border-primary-base/20 font-serif text-[11px] rounded-none animate-fadeIn">
                     <div className="flex justify-between items-center mb-1">
-                      <span className="font-bold text-primary-base uppercase">Link: {getRelationship(persona?.role || 'INFLUENCER', hoveredNode.role).label}</span>
-                      <span className={`text-[8px] px-1 border uppercase font-bold ${
-                        getRelationship(persona?.role || 'INFLUENCER', hoveredNode.role).type === 'enemy'
-                          ? 'border-red-600/30 text-red-600 bg-red-600/5'
-                          : getRelationship(persona?.role || 'INFLUENCER', hoveredNode.role).type === 'neutral'
-                          ? 'border-yellow-600/30 text-yellow-600 bg-yellow-600/5'
-                          : 'border-primary-base/30 text-primary-base bg-primary-base/5'
-                      }`}>
-                        {getRelationship(persona?.role || 'INFLUENCER', hoveredNode.role).type}
+                      <span className="font-bold text-primary-base uppercase">
+                        Link:{' '}
+                        {
+                          getRelationship(
+                            persona?.role || 'INFLUENCER',
+                            hoveredNode.role,
+                            persona?.operatorRole,
+                            (hoveredNode as any).operatorRole
+                          ).label
+                        }
+                      </span>
+                      <span
+                        className={`text-[8px] px-1 border uppercase font-bold ${
+                          getRelationship(
+                            persona?.role || 'INFLUENCER',
+                            hoveredNode.role,
+                            persona?.operatorRole,
+                            (hoveredNode as any).operatorRole
+                          ).type === 'enemy'
+                            ? 'border-red-600/30 text-red-600 bg-red-600/5'
+                            : getRelationship(
+                                persona?.role || 'INFLUENCER',
+                                hoveredNode.role,
+                                persona?.operatorRole,
+                                (hoveredNode as any).operatorRole
+                              ).type === 'neutral'
+                            ? 'border-yellow-600/30 text-yellow-600 bg-yellow-600/5'
+                            : 'border-primary-base/30 text-primary-base bg-primary-base/5'
+                        }`}
+                      >
+                        {
+                          getRelationship(
+                            persona?.role || 'INFLUENCER',
+                            hoveredNode.role,
+                            persona?.operatorRole,
+                            (hoveredNode as any).operatorRole
+                          ).type
+                        }
                       </span>
                     </div>
                     <p className="text-text-dim leading-relaxed">
