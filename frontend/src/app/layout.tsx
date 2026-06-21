@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import { ThemeProvider } from '../context/theme-context';
+import SettingsPortal from '../components/ui/settings-portal';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -23,6 +24,9 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col bg-background text-text-main" suppressHydrationWarning>
         <ThemeProvider>
           {children}
+          <div className="fixed bottom-6 left-6 z-50">
+            <SettingsPortal />
+          </div>
         </ThemeProvider>
       </body>
     </html>
