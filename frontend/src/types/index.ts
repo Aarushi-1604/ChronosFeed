@@ -100,3 +100,22 @@ export interface WorldFeedResponse {
   nextCursor: string | null;
   hasMore: boolean;
 }
+
+export type OperatorRole = 'CITIZEN' | 'TECHNOLOGIST' | 'REBEL' | 'IMPERIAL';
+
+export interface OperatorPersona {
+  id: 'operator';
+  world_id: string;
+  name: string;
+  handle: string;
+  avatar: string;
+  bio: string;
+  role: OperatorRole;
+  followers_count: number;
+  following_count: number;
+  influence_score: number;
+  custom_stat_label: string;
+  custom_stat_value: number;
+  created_at: string;
+}
+

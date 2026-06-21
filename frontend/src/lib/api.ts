@@ -1,4 +1,4 @@
-import { World, WorldFeedResponse, Persona, News, Ad, Comment } from '../types';
+import { World, WorldFeedResponse, Persona, News, Ad, Comment, OperatorPersona } from '../types';
 import { 
   getMockWorld, 
   getMockPersonas, 
@@ -6,7 +6,9 @@ import {
   getMockFeed, 
   getMockNews, 
   getMockAds, 
-  getMockComments 
+  getMockComments,
+  getMockOperatorPersona,
+  createMockOperatorPersona
 } from './mock-worlds';
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
@@ -135,4 +137,49 @@ export const api = {
     if (mock && mock.length > 0) return mock;
     return fetchJson<Comment[]>(`/api/posts/${originalId}/comments`);
   },
+
+  // Operator Personas
+  getOperatorPersona: async (worldId: string): Promise<OperatorPersona | null> => {
+    const isMock = getMockWorld(worldId);
+    if (isMock) {
+      return getMockOperatorPersona(worldId);
+    }
+    try {
+      const res = await fetchJson<OperatorPersona>(`/api/worlds/${worldId}/operator`);
+      if (res && typeof window !== 'undefined') {
+        localStorage.setItem(`chronos-operator-${worldId}`, JSON.stringify(res));
+      }
+      return res;
+    } catch {
+      if (typeof window !== 'undefined') {
+        const saved = localStorage.getItem(`chronos-operator-${worldId}`);
+        if (saved) {
+          try {
+            return JSON.parse(saved) as OperatorPersona;
+          } catch {}
+        }
+      }
+      return null;
+    }
+  },
+
+  instantiateOperatorPersona: async (worldId: string, role: string): Promise<OperatorPersona> => {
+    const isMock = getMockWorld(worldId);
+    if (isMock) {
+      return createMockOperatorPersona(worldId, role);
+    }
+    try {
+      const res = await fetchJson<OperatorPersona>(`/api/worlds/${worldId}/operator`, {
+        method: 'POST',
+        body: JSON.stringify({ role }),
+      });
+      if (res && typeof window !== 'undefined') {
+        localStorage.setItem(`chronos-operator-${worldId}`, JSON.stringify(res));
+      }
+      return res;
+    } catch {
+      return createMockOperatorPersona(worldId, role);
+    }
+  },
 };
+
