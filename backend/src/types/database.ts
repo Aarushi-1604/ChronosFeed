@@ -120,3 +120,20 @@ export interface PostSummary {
 export interface PersonaWithPosts extends Persona {
   posts: PostSummary[];
 }
+
+export type OperatorRole = 'CITIZEN' | 'TECHNOLOGIST' | 'REBEL' | 'IMPERIAL';
+
+export interface OperatorPersona {
+  id: string;
+  world_id: string;
+  role: OperatorRole;
+  name: string;
+  handle: string;
+  bio: string;
+  followers_count: number;
+  following_count: number;
+  influence_score: number;
+  custom_stat_label: string;
+  custom_stat_value: number;
+  created_at: string;
+}
